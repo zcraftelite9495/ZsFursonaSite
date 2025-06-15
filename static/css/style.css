@@ -295,6 +295,14 @@ input:checked + .slider::before {
     display: block;
 }
 
+.thumb-text .artist-name {
+    display: block;
+    font-style: italic;
+    font-size: 0.9em;
+    margin-top: 2px;
+    color: #ddd;
+}
+
 .badge-container {
     position: absolute;
     top: 5px;
