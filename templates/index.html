@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Z's World</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'nav.html' %}
+    <div class="container" style="margin-top: 50px;">
+        <h1>Welcome to Z's World</h1>
+        <p class="intro">
+            Meet <strong>Z</strong>, a unique female Protogen-Wolf hybrid with sleek, dark-magenta fur that exudes an air of mystery.
+            Sporting a skull with an integrated visor, Z's emotions and eyes are projected onto its screen, replacing traditional facial expressions.
+            Z possesses the extraordinary ability of metacognitive control, allowing her to manipulate her physiology with just a thought.
+            She also has reality-bending powers that let her shape the world around her.
+            <br><br>
+            Emerging from a secretive past, Z found solace in the dense forest, living freely like a character in a video game. 
+            She often shapeshifts into various animals, preferring her Primal or Humanoid forms.
+            <br><br>
+            Z is caring, loving, curious, and energetic—always eager to connect. Her journey reflects resilience and her pursuit of peace and love despite all odds.
+        </p>
+
+        <div class="gallery">
+            {% for img in images %}
+            <div class="thumb" onclick="openViewer('{{ img.filename }}', '{{ img.title }}', '{{ img.artist }}', '{{ img.artist_pic }}', '{{ img.shapeshiftForm }}', '{{ img.artName }}', '{{ img.isAI | string }}')">
+                <img src="{{ url_for('static', filename='images/' + img.filename) }}" alt="{{ img.title }}">
+                <div class="thumb-text">
+                    <span class="form-name">{{ img.shapeshiftForm }}</span><br>
+                    <span class="art-title">{{ img.artName or '' }}</span>
+                </div>
+                {% if img.isAI %}
+                <div class="ai-badge-thumb">AI</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% include 'viewer.html' %}
+
+    <script src="{{ url_for('static', filename='js/viewer.js') }}"></script>
+</body>
+</html>
