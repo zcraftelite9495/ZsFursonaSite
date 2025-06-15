@@ -36,37 +36,110 @@
     </div>
 </div>
 
+<!-- Global Functions -->
 <script src="{{ url_for('static', filename='js/globalFunc.js') }}"></script>
+
+<!-- Settings Sidebar -->
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const sidebar = document.getElementById('settings-sidebar');
-        const closeBtn = document.getElementById('close-settings');
-        const settingsBtn = document.getElementById('settings-toggle');
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('settings-sidebar');
+    const closeBtn = document.getElementById('close-settings');
+    const settingsBtn = document.getElementById('settings-toggle');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('hidden');
+    function toggleSidebar() {
+        sidebar.classList.toggle('hidden');
+    }
+
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', toggleSidebar);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', toggleSidebar);
+    }
+
+    function defaultToggleHandler(input, cookieName) {
+        setCookie(cookieName, input.checked ? 'True' : 'False', 365);
+        if (cookieName === 'showAI' || cookieName === 'showNSFW') {
+            window.location.reload();
         }
+    }
 
-        if (settingsBtn) {
-            settingsBtn.addEventListener('click', toggleSidebar);
-        }
-        if (closeBtn) {
-            closeBtn.addEventListener('click', toggleSidebar);
-        }
+    // Map of toggle IDs to custom handlers
+    window.customToggleHandlers = window.customToggleHandlers || {};
 
-        document.querySelectorAll('#settings-sidebar input[type="checkbox"]').forEach(input => {
-            const cookieName = input.getAttribute('cookieName');
-            if (!cookieName) return;
+    document.querySelectorAll('#settings-sidebar input[type="checkbox"]').forEach(input => {
+        const cookieName = input.getAttribute('cookieName');
+        if (!cookieName) return;
 
-            const cookieVal = getCookie(cookieName);
-            input.checked = cookieVal === 'True';
+        const cookieVal = getCookie(cookieName);
+        input.checked = cookieVal === 'True';
 
-            input.addEventListener('change', () => {
-                setCookie(cookieName, input.checked ? 'True' : 'False', 365);
-                if (cookieName === 'showAI' || cookieName === 'showNSFW') {
-                    window.location.reload();
-                }
-            });
+        const handler = window.customToggleHandlers[input.id] || defaultToggleHandler;
+
+        input.addEventListener('change', () => {
+            handler(input, cookieName);
         });
     });
+});
+</script>
+
+<!-- Settings Sidebar Toggle Warning -->
+<script>
+window.customToggleHandlers = window.customToggleHandlers || {};
+
+// Show AI Content - Warning
+window.customToggleHandlers['toggleAI'] = function(input, cookieName) {
+    if (input.checked) {
+        showPopup({
+            title: 'AI Content Warning',
+            message: 'AI-generated content is created by algorithms and may not always align with human values or ethics.<br><br>I use AI art because it offers a quick, affordable way to explore and visualize ideas that might be difficult or time-consuming to create otherwise. It helps me bring my character to life for roleplay and provides a starting point or reference for artists to build upon.<br><br>I do not support or condone using AI to plagiarize or copy others\' work.<br><br>By enabling AI content, you acknowledge and accept these limitations as well as my reasons for including it.',
+            buttons: [
+                {
+                    text: 'I Understand',
+                    onClick: () => {
+                        setCookie(cookieName, 'True', 365);
+                        window.location.reload();
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    onClick: () => {
+                        input.checked = false;
+                    }
+                }
+            ]
+        });
+    } else {
+        setCookie(cookieName, 'False', 365);
+        window.location.reload();
+    }
+};
+
+// Show NSFW Content - Warning
+window.customToggleHandlers['toggleNSFW'] = function(input, cookieName) {
+    if (input.checked) {
+        showPopup({
+            title: 'NSFW Content Warning',
+            message: 'NSFW content may contain adult themes and is not suitable for all audiences. Please proceed with caution.<br><br>By enabling NSFW content, you acknowledge that you are able to view such material and understand the nature of the content.',
+            buttons: [
+                {
+                    text: 'I Understand',
+                    onClick: () => {
+                        setCookie(cookieName, 'True', 365);
+                        window.location.reload();
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    onClick: () => {
+                        input.checked = false;
+                    }
+                }
+            ]
+        });
+    } else {
+        setCookie(cookieName, 'False', 365);
+        window.location.reload();
+    }
+};
 </script>
