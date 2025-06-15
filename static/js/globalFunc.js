@@ -6,42 +6,25 @@
 ███████╗░░░██████╔╝░░██║░░░░░╚██████╔╝██║░░██║██████╔╝╚█████╔╝██║░╚███║██║░░██║░░██████╔╝██║░░░██║░░░███████╗
 ╚══════╝░░░╚═════╝░░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚══╝╚═╝░░╚═╝░░╚═════╝░╚═╝░░░╚═╝░░░╚══════╝
 
-███████████████████████▀███████████████████████████████████████████████
-█▄─▄█▄─▀█▀─▄██▀▄─██─▄▄▄▄█▄─▄▄─███▄─█─▄█▄─▄█▄─▄▄─█▄─█▀▀▀█─▄█▄─▄▄─█▄─▄▄▀█
-██─███─█▄█─███─▀─██─██▄─██─▄█▀████▄▀▄███─███─▄█▀██─█─█─█─███─▄█▀██─▄─▄█
-▀▄▄▄▀▄▄▄▀▄▄▄▀▄▄▀▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▀▀▀▀▄▀▀▀▄▄▄▀▄▄▄▄▄▀▀▄▄▄▀▄▄▄▀▀▄▄▄▄▄▀▄▄▀▄▄▀
+█████▀████████████████████████████████████████████████████████████████████████████████████████
+█─▄▄▄▄█▄─▄███─▄▄─█▄─▄─▀██▀▄─██▄─▄█████▄─▄▄─█▄─██─▄█▄─▀█▄─▄█─▄▄▄─█─▄─▄─█▄─▄█─▄▄─█▄─▀█▄─▄█─▄▄▄▄█
+█─██▄─██─██▀█─██─██─▄─▀██─▀─███─██▀████─▄████─██─███─█▄▀─██─███▀███─████─██─██─██─█▄▀─██▄▄▄▄─█
+▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▀▄▄▄▄▀▀▄▄▀▄▄▀▄▄▄▄▄▀▀▀▄▄▄▀▀▀▀▄▄▄▄▀▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▄▀▄▄▄▀▀▄▄▀▄▄▄▄▄▀
 
 Made with love by ZcraftElite :3
 */
 
-/* ---- OPEN FUNCTION ---- */
-function openViewer(filename, title, artist, artistPic, shapeshiftForm, artName, isAI, isNSFW) {
-    document.getElementById('viewer-image').src = `/static/images/${filename}`;
-    document.getElementById('viewer-title').querySelector('#viewer-form').textContent = shapeshiftForm;
-    document.getElementById('viewer-title').querySelector('#viewer-artname').textContent = artName;
-    document.getElementById('viewer-artist').textContent = artist;
-    document.getElementById('viewer-artist-pic').src = `/static/images/artists/${artistPic}`;
-
-    const aiInfo = document.getElementById('ai-info');
-    const nsfwInfo = document.getElementById('nsfw-info');
-
-    if (isAI === 'True') {
-        aiInfo.classList.remove('hidden');
-    } else {
-        aiInfo.classList.add('hidden');
-    }
-
-    if (isNSFW === 'True') {
-        nsfwInfo.classList.remove('hidden');
-    } else {
-        nsfwInfo.classList.add('hidden');
-    }
-
-    document.getElementById('viewer').classList.remove('hidden');
+// ---- COOKIE FUNCTIONS ----
+// --- SET COOKIE ---
+function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days*864e5).toUTCString();
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 }
 
-
-/* ---- CLOSE FUNCTION ---- */
-function closeViewer() {
-    document.getElementById("viewer").classList.add("hidden");
+// --- FETCH COOKIE ---
+function getCookie(name) {
+    return document.cookie.split('; ').reduce((r, v) => {
+        const [k, val] = v.split('=');
+        return k === encodeURIComponent(name) ? decodeURIComponent(val) : r;
+    }, null);
 }

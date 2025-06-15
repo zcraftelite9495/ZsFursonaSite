@@ -1,8 +1,72 @@
-<!-- nav.html -->
 <nav class="navbar">
     <div class="nav-title">Z's World</div>
     <div class="nav-links">
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('library') }}">Gallery</a>
+        <button id="settings-toggle" class="nav-button">Settings</button>
     </div>
 </nav>
+
+<div id="settings-sidebar" class="settings-sidebar hidden">
+    <div class="sidebar-header">
+        <span>Settings</span>
+        <button id="close-settings" class="close-btn">✖</button>
+    </div>
+    <div class="sidebar-content">
+        <div class="settings-sidebar-row">
+            <div class="setting-label">
+                <label for="toggleAI">Show AI Content</label>
+                <div class="setting-description">Toggle whether AI-generated art is displayed.<br>Disabled by default.</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggleAI" cookieName="showAI">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="settings-sidebar-row">
+            <div class="setting-label">
+                <label for="toggleNSFW">Show NSFW Content</label>
+                <div class="setting-description">Toggle NSFW content on the site.<br>Disabled by default.</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggleNSFW" cookieName="showNSFW">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/globalFunc.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('settings-sidebar');
+        const closeBtn = document.getElementById('close-settings');
+        const settingsBtn = document.getElementById('settings-toggle');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('hidden');
+        }
+
+        if (settingsBtn) {
+            settingsBtn.addEventListener('click', toggleSidebar);
+        }
+        if (closeBtn) {
+            closeBtn.addEventListener('click', toggleSidebar);
+        }
+
+        document.querySelectorAll('#settings-sidebar input[type="checkbox"]').forEach(input => {
+            const cookieName = input.getAttribute('cookieName');
+            if (!cookieName) return;
+
+            const cookieVal = getCookie(cookieName);
+            input.checked = cookieVal === 'True';
+
+            input.addEventListener('change', () => {
+                setCookie(cookieName, input.checked ? 'True' : 'False', 365);
+                if (cookieName === 'showAI' || cookieName === 'showNSFW') {
+                    window.location.reload();
+                }
+            });
+        });
+    });
+</script>

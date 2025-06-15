@@ -6,7 +6,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (True Form) - Waving Sticker.png",
@@ -15,7 +16,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "Waving Sticker",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (True Form) - Starry Background.png",
@@ -24,7 +26,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "Starry Background",
-    "isAI": true
+    "isAI": true,
+    "isNSFW": false
   },
   {
     "filename": "Z (True Form) - You Glow Girl.png",
@@ -33,7 +36,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "You Glow Girl",
-    "isAI": true
+    "isAI": true,
+    "isNSFW": false
   },
   {
     "filename": "Z (Feral Form).png",
@@ -42,7 +46,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Feral Form",
     "artName": "",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Feral Form) - Sleeping in Grass.png",
@@ -51,7 +56,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Feral Form",
     "artName": "Sleeping in Grass",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Humanoid Form).png",
@@ -60,7 +66,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Humanoid Form",
     "artName": "",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Humanoid Form) - Ahego Face.png",
@@ -69,7 +76,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Ahego Face",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
@@ -78,7 +86,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Director of Metal Pipes Fanart",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Humanoid Form) - I See You Daddy.png",
@@ -87,7 +96,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Humanoid Form",
     "artName": "I See You Daddy",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Humanoid Form) - Siepa Face.png",
@@ -96,7 +106,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Siepa Face",
-    "isAI": true
+    "isAI": true,
+    "isNSFW": false
   },
   {
     "filename": "Z x Ecchi (Humanoid Form).png",
@@ -105,7 +116,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Z x Ecchi",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": true
   },
   {
     "filename": "Z x Miku (Humanoid Form).png",
@@ -114,7 +126,8 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Z x Miku",
-    "isAI": true
+    "isAI": true,
+    "isNSFW": false
   },
   {
     "filename": "Z (Gremlin Form).png",
@@ -123,7 +136,8 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Gremlin Form",
     "artName": "",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   },
   {
     "filename": "Z (Protogen Form).jpg",
@@ -132,6 +146,7 @@
     "artist_pic": "default.jpg",
     "shapeshiftForm": "Protogen Form",
     "artName": "",
-    "isAI": false
+    "isAI": false,
+    "isNSFW": false
   }
 ]

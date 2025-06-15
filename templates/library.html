@@ -11,15 +11,20 @@
         <h1>Z's Full Art Gallery</h1>
         <div class="gallery">
             {% for img in images %}
-            <div class="thumb" onclick="openViewer('{{ img.filename }}', '{{ img.title }}', '{{ img.artist }}', '{{ img.artist_pic }}', '{{ img.shapeshiftForm }}', '{{ img.artName }}', '{{ img.isAI | string }}')">
+            <div class="thumb" onclick="openViewer('{{ img.filename }}', '{{ img.title }}', '{{ img.artist }}', '{{ img.artist_pic }}', '{{ img.shapeshiftForm }}', '{{ img.artName }}', '{{ img.isAI | string }}', '{{ img.isNSFW | string }}')">
                 <img src="{{ url_for('static', filename='images/' + img.filename) }}" alt="{{ img.title }}">
                 <div class="thumb-text">
-                    <span class="form-name">{{ img.shapeshiftForm }}</span><br>
+                    <span class="form-name">{{ img.shapeshiftForm }}</span>
                     <span class="art-title">{{ img.artName or '' }}</span>
                 </div>
-                {% if img.isAI %}
-                <div class="ai-badge-thumb">AI</div>
-                {% endif %}
+                <div class="badge-container">
+                    {% if img.isNSFW %}
+                    <div class="nsfw-badge-thumb">NSFW</div>
+                    {% endif %}
+                    {% if img.isAI %}
+                    <div class="ai-badge-thumb">AI</div>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </div>
