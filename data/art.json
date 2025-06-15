@@ -17,7 +17,6 @@
     "artName": "Waving Sticker",
     "isAI": false
   },
-  
   {
     "filename": "Z (True Form) - Starry Background.png",
     "title": "Z (True Form) - Starry Background.png",
@@ -25,6 +24,15 @@
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "Starry Background",
+    "isAI": true
+  },
+  {
+    "filename": "Z (True Form) - You Glow Girl.png",
+    "title": "Z (True Form) - You Glow Girl.png",
+    "artist": "ZcraftElite",
+    "artist_pic": "zcraftelite.png",
+    "shapeshiftForm": "True Form",
+    "artName": "You Glow Girl",
     "isAI": true
   },
   {
