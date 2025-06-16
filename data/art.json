@@ -22,7 +22,7 @@
   {
     "filename": "Z (True Form) - Starry Background.png",
     "title": "Z (True Form) - Starry Background.png",
-    "artist": "ZcraftElite",
+    "artist": "ZcraftElite (Prompt)",
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "Starry Background",
@@ -32,7 +32,7 @@
   {
     "filename": "Z (True Form) - You Glow Girl.png",
     "title": "Z (True Form) - You Glow Girl.png",
-    "artist": "ZcraftElite",
+    "artist": "ZcraftElite (Prompt)",
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "True Form",
     "artName": "You Glow Girl",
@@ -102,7 +102,7 @@
   {
     "filename": "Z (Humanoid Form) - Siepa Face.png",
     "title": "Z (Humanoid Form) - Siepa Face.png",
-    "artist": "ZcraftElite",
+    "artist": "ZcraftElite (Prompt)",
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Siepa Face",
@@ -122,10 +122,20 @@
   {
     "filename": "Z x Miku (Humanoid Form).png",
     "title": "Z x Miku (Humanoid Form).png",
-    "artist": "OnceWasGreat1998",
+    "artist": "OnceWasGreat1998 (Prompt)",
     "artist_pic": "default.png",
     "shapeshiftForm": "Humanoid Form",
     "artName": "Z x Miku",
+    "isAI": true,
+    "isNSFW": false
+  },
+  {
+    "filename": "Z x Zorine (Humanoid Form).png",
+    "title": "Z x Zorine (Humanoid Form).png",
+    "artist": "ZcraftElite (Prompt)",
+    "artist_pic": "zcraftelite.png",
+    "shapeshiftForm": "Humanoid Form",
+    "artName": "Z x Zorine",
     "isAI": true,
     "isNSFW": false
   },
