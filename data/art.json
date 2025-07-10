@@ -60,6 +60,16 @@
     "isNSFW": false
   },
   {
+    "filename": "Z (Feral Form) - Wolf in da Box.jpg",
+    "title": "Z (Feral Form) - Wolf in da Box.jpg",
+    "artist": "mooreweirds",
+    "artist_pic": "default.jpg",
+    "shapeshiftForm": "Feral Form",
+    "artName": "Wolf in da Box",
+    "isAI": false,
+    "isNSFW": false
+  },
+  {
     "filename": "Z (Humanoid Form).png",
     "title": "Z (Humanoid Form).png",
     "artist": "ElexiaBrigitte",
@@ -110,8 +120,8 @@
     "isNSFW": false
   },
   {
-    "filename": "Z (Humanoid Form) - Put it in~.jpeg",
-    "title": "Z (Humanoid Form) - Put it in~.jpeg",
+    "filename": "Z (Humanoid Form) - Put it in.jpeg",
+    "title": "Z (Humanoid Form) - Put it in.jpeg",
     "artist": "ZcraftElite (Prompt)",
     "artist_pic": "zcraftelite.png",
     "shapeshiftForm": "Humanoid Form",
