@@ -90,16 +90,6 @@
     "isNSFW": false
   },
   {
-    "filename": "Z (Humanoid Form) - Hug Emote.png",
-    "title": "Z (Humanoid Form) - Hug Emote.png",
-    "artist": "MittensMiyuki",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Hug Emote",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
     "filename": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
     "title": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
     "artist": "ElexiaBrigitte",
@@ -177,6 +167,26 @@
     "shapeshiftForm": "Humanoid Form",
     "artName": "Z x Zorine: Star-filled Kiss",
     "isAI": true,
+    "isNSFW": false
+  },
+  {
+    "filename": "Z (Chibi Form) - Hug Emote.png",
+    "title": "Z (Chibi Form) - Hug Emote.png",
+    "artist": "MittensMiyuki",
+    "artist_pic": "default.jpg",
+    "shapeshiftForm": "Chibi Form",
+    "artName": "Hug Emote",
+    "isAI": false,
+    "isNSFW": false
+  },
+  {
+    "filename": "Z (Chibi Form) - Happy Chibi.png",
+    "title": "Z (Chibi Form) - Happy Chibi.png",
+    "artist": "ProtoPawzz",
+    "artist_pic": "default.jpg",
+    "shapeshiftForm": "Chibi Form",
+    "artName": "Happy Chibi",
+    "isAI": false,
     "isNSFW": false
   },
   {
