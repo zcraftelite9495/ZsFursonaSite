@@ -62,9 +62,11 @@ async function loadGallery(elementId, count = 0, randomize = false) {
                 ? `<span class="character-list">${img.characters.join(" x ")}</span>`
                 : "";
 
-            // create the thumbnail <img> using strippedFilename and .webp
+            // create the thumbnail <img>
             const imgEl = document.createElement("img");
-            imgEl.src = `/static/images/thumbs/${img.strippedFilename}.webp`;
+            imgEl.src = img.webLink 
+                ? img.webLink 
+                : `/static/images/thumbs/${img.strippedFilename}.webp`;
             imgEl.alt = img.title || "";
             imgEl.loading = "lazy";
             imgEl.decoding = "async";
@@ -145,7 +147,11 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
 
 /* ---- OPEN FUNCTION ---- */
 function openViewer(img) {
-    document.getElementById('viewer-image').src = `/static/images/${img.filename}`;
+    // Use webLink if available, otherwise fallback to local image
+    document.getElementById('viewer-image').src = img.webLink 
+        ? img.webLink 
+        : `/static/images/${img.filename}`;
+
     document.getElementById('viewer-title').querySelector('#viewer-form').textContent = img.shapeshiftForm || "";
     document.getElementById('viewer-title').querySelector('#viewer-artname').textContent = img.artName || "";
     document.getElementById('viewer-artist').textContent = img.artist || "";
