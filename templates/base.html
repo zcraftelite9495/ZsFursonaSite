@@ -114,30 +114,32 @@ document.addEventListener("DOMContentLoaded", () => {
         tooltip.innerHTML = text;
         document.body.appendChild(tooltip);
 
-        const offsetY = 12; // distance below cursor
+        const offsetY = 12;
+        let showTimeout;
 
         el.addEventListener("mouseenter", () => {
-            tooltip.style.opacity = "1";
+            showTimeout = setTimeout(() => {
+                tooltip.style.opacity = "1";
+            }, 1000);
         });
 
         el.addEventListener("mouseleave", () => {
+            clearTimeout(showTimeout);
             tooltip.style.opacity = "0";
         });
 
         el.addEventListener("mousemove", (e) => {
             const tooltipRect = tooltip.getBoundingClientRect();
 
-            // center horizontally under cursor
             let x = e.clientX - tooltipRect.width / 2;
             let y = e.clientY + offsetY;
 
-            // clamp inside viewport
             if (x < 5) x = 5;
             if (x + tooltipRect.width > window.innerWidth) {
                 x = window.innerWidth - tooltipRect.width - 5;
             }
             if (y + tooltipRect.height > window.innerHeight) {
-                y = e.clientY - tooltipRect.height - offsetY; // flip above cursor if no room below
+                y = e.clientY - tooltipRect.height - offsetY;
             }
 
             tooltip.style.left = x + "px";

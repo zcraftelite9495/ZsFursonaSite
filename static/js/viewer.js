@@ -329,51 +329,56 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
  * @property {string} [img.artist] - Name of the artist.
  * @property {string} [img.artist_pic] - Name of the artist's profile picture.
  * @property {string[]} [img.characters] - Array of characters in the art.
+ * @property {string} [img.creationDate] - Creation date of the art.
  * @property {boolean} [img.isAI] - Whether the image is AI-generated.
  * @property {boolean} [img.isNSFW] - Whether the image is NSFW.
  */
 function openViewer(img) {
-    // Use webLink if available, otherwise fallback to local image
-    document.getElementById('viewer-image').src = img.webLink 
-        ? img.webLink 
+    document.getElementById('viewer-image').src = img.webLink
+        ? img.webLink
         : `/static/images/${img.filename}`;
 
-    document.getElementById('viewer-title').querySelector('#viewer-form').textContent = img.shapeshiftForm || "";
-    document.getElementById('viewer-title').querySelector('#viewer-artname').textContent = img.artName || "";
     document.getElementById('viewer-artist').textContent = img.artist || "";
     document.getElementById('viewer-artist-pic').src = `/static/images/artists/${img.artist_pic}`;
 
-    const viewerChars = document.getElementById('viewer-characters');
-    if (viewerChars) {
-        viewerChars.innerHTML = (img.characters && img.characters.length > 0)
-            ? `<span class="character-list">${img.characters.join(" x ")}</span>`
-            : "";
-    }
+    const aiModelDiv = document.querySelector('.viewer-data.artAIModel span');
+    const charactersDiv = document.querySelector('.viewer-data.artCharacters span');
+    const formDiv = document.querySelector('.viewer-data.artForm span');
+    const artNameDiv = document.querySelector('.viewer-data.artName span');
+    const artCreationDateDiv = document.querySelector('.viewer-data.artCreationDate span');
 
-    const aiInfo = document.getElementById('ai-info');
-    const nsfwInfo = document.getElementById('nsfw-info');
+    aiModelDiv.textContent = img.aiModel || "Unknown Model";
+    charactersDiv.textContent = img.characters?.length > 0 ? img.characters.join(', ') : '';
+    formDiv.textContent = img.shapeshiftForm || '';
+    artNameDiv.textContent = img.artName || '';
+    artCreationDateDiv.textContent = img.creationDate || '';
+
+    const aiBadge = document.getElementById('viewer-ai-badge');
+    const nsfwBadge = document.getElementById('viewer-nsfw-badge');
 
     if (Boolean(img.isAI)) {
-        aiInfo.classList.remove('hidden');
+        aiBadge.classList.remove('hidden');
+        aiModelDiv.parentElement.style.display = "flex";
     } else {
-        aiInfo.classList.add('hidden');
+        aiBadge.classList.add('hidden');
+        aiModelDiv.parentElement.style.display = "none";
     }
 
     if (Boolean(img.isNSFW)) {
-        nsfwInfo.classList.remove('hidden');
+        nsfwBadge.classList.remove('hidden');
     } else {
-        nsfwInfo.classList.add('hidden');
+        nsfwBadge.classList.add('hidden');
     }
 
     document.getElementById('viewer').classList.remove('hidden');
 }
 
-
-/* ---- CLOSE FUNCTION ---- */
-/**
- * Closes the image viewer.
- * @function
- */
 function closeViewer() {
-    document.getElementById("viewer").classList.add("hidden");
+    document.getElementById('viewer').classList.add('hidden');
 }
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeViewer();
+    }
+});
