@@ -739,7 +739,7 @@ input:checked + .slider::before {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .favs-box .item {
@@ -801,6 +801,21 @@ input:checked + .slider::before {
     height: 4px;
     border-radius: 2px;
     background: linear-gradient(90deg, #fffa69, #fcf6a8);
+}
+
+.favs-container-heading {
+    font-family: var(--title-font);
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #fffa69, #fcf6a8);
+    -webkit-background-clip: text !important; 
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    position: relative;
+    display: inline-block;
+    margin-top: 0px;
 }
 
 #list-fav-creators .item {
