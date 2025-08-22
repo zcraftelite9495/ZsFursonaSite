@@ -717,6 +717,10 @@ input:checked + .slider::before {
     transition: background-color 0.2s ease;
 }
 
+.favs-box a {
+    text-decoration: none;
+}
+
 .favs-box .item:hover {
     background-color: #fff5bf;
 }
@@ -757,6 +761,10 @@ input:checked + .slider::before {
     height: 4px;
     border-radius: 2px;
     background: linear-gradient(90deg, #fffa69, #fcf6a8);
+}
+
+#list-fav-creators .item {
+    cursor: pointer;
 }
 
 
