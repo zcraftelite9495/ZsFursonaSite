@@ -1,8 +1,16 @@
 <nav class="navbar">
     <div class="nav-title">Z's World</div>
-    <div class="nav-links">
+
+    <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Toggle menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+    </button>
+
+    <div class="nav-links" id="nav-links" role="menu" aria-hidden="true">
         <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('library') }}">Gallery</a>
+        <a href="{{ url_for('library') }}">Art Gallery</a>
+        <a href="{{ url_for('favs') }}">My Favs</a>
         <button id="settings-toggle" class="nav-button">Settings</button>
     </div>
 </nav>
@@ -142,4 +150,17 @@ window.customToggleHandlers['toggleNSFW'] = function(input, cookieName) {
         window.location.reload();
     }
 };
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+        });
+    }
+});
 </script>

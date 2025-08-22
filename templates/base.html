@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+
+███████╗██╗░██████╗░░███████╗██╗░░░██╗██████╗░░██████╗░█████╗░███╗░░██╗░█████╗░░░░██████╗██╗████████╗███████╗
+╚════██║╚█║██╔════╝░░██╔════╝██║░░░██║██╔══██╗██╔════╝██╔══██╗████╗░██║██╔══██╗░░██╔════╝██║╚══██╔══╝██╔════╝
+░░███╔═╝░╚╝╚█████╗░░░█████╗░░██║░░░██║██████╔╝╚█████╗░██║░░██║██╔██╗██║███████║░░╚█████╗░██║░░░██║░░░█████╗░░
+██╔══╝░░░░░░╚═══██╗░░██╔══╝░░██║░░░██║██╔══██╗░╚═══██╗██║░░██║██║╚████║██╔══██║░░░╚═══██╗██║░░░██║░░░██╔══╝░░
+███████╗░░░██████╔╝░░██║░░░░░╚██████╔╝██║░░██║██████╔╝╚█████╔╝██║░╚███║██║░░██║░░██████╔╝██║░░░██║░░░███████╗
+╚══════╝░░░╚═════╝░░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚══╝╚═╝░░╚═╝░░╚═════╝░╚═╝░░░╚═╝░░░╚══════╝
+
+███████████████████████████████████████████████████████████████████████████████████████████████████████████
+█▄─▀█▀─▄██▀▄─██▄─▄▄▀█▄─▄▄─███▄─▄─▀█▄─█─▄███─▄▄─▄█─▄▄▄─█▄─▄▄▀██▀▄─██▄─▄▄─█─▄─▄─█▄─▄▄─█▄─▄███▄─▄█─▄─▄─█▄─▄▄─█
+██─█▄█─███─▀─███─██─██─▄█▀████─▄─▀██▄─▄█████▀▄█▀█─███▀██─▄─▄██─▀─███─▄█████─████─▄█▀██─██▀██─████─████─▄█▀█
+█▄▄▄█▄▄▄█▄▄█▄▄█▄▄▄▄██▄▄▄▄▄███▄▄▄▄███▄▄▄████▄▄▄▄▄█▄▄▄▄▄█▄▄█▄▄█▄▄█▄▄█▄▄▄████▄▄▄██▄▄▄▄▄█▄▄▄▄▄█▄▄▄██▄▄▄██▄▄▄▄▄█
+
+If you are seeing this, you most likely accidentally hit Ctrl + Shift + I on your keyboard, or were trying to "hack".
+-->
+<html lang="en">
+<head>
+    <!-- Manifest Info -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-title" content="Z's FurSite" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">    
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- NerdFonts Webfont           --><link rel="stylesheet" href="https://www.nerdfonts.com/assets/css/webfont.css">
+    <!-- Fredoka                     --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap">
+    <!-- Concert One                 --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap">
+    <!-- Noto Sans                   --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap">
+    <!-- Staatliches                 --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap">
+    <!-- Special Gothic Expanded One --><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap">
+
+    <!-- Page Title -->
+    <title>Z's World - {% block title %}{% endblock %}</title>
+</head>
+<script src="{{ url_for('static', filename='js/viewer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/globalFunc.js') }}"></script>
+{% block main %}
+
+{% endblock %}
+<!-- Tooltip Text -->
+<script>
+function setClassTooltip(className, tooltipText) {
+    document.querySelectorAll(`.${className}`).forEach(el => {
+        el.setAttribute("tooltip-text", tooltipText);
+    });
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("[tooltip-text]").forEach(el => {
+        const text = el.getAttribute("tooltip-text");
+        const tooltip = document.createElement("div");
+        tooltip.className = "tooltip-box";
+        tooltip.innerHTML = text;
+        document.body.appendChild(tooltip);
+
+        const offsetY = 12; // distance below cursor
+
+        el.addEventListener("mouseenter", () => {
+            tooltip.style.opacity = "1";
+        });
+
+        el.addEventListener("mouseleave", () => {
+            tooltip.style.opacity = "0";
+        });
+
+        el.addEventListener("mousemove", (e) => {
+            const tooltipRect = tooltip.getBoundingClientRect();
+
+            // center horizontally under cursor
+            let x = e.clientX - tooltipRect.width / 2;
+            let y = e.clientY + offsetY;
+
+            // clamp inside viewport
+            if (x < 5) x = 5;
+            if (x + tooltipRect.width > window.innerWidth) {
+                x = window.innerWidth - tooltipRect.width - 5;
+            }
+            if (y + tooltipRect.height > window.innerHeight) {
+                y = e.clientY - tooltipRect.height - offsetY; // flip above cursor if no room below
+            }
+
+            tooltip.style.left = x + "px";
+            tooltip.style.top = y + "px";
+        });
+    });
+});
+</script>
+</html>

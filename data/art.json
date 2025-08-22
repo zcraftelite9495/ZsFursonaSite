@@ -1,242 +1,342 @@
 [
-  {
-    "filename": "Z (True Form).png",
-    "title": "Z (True Form).png",
-    "artist": "ZcraftElite",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "True Form",
-    "artName": "",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (True Form) - Waving Sticker.png",
-    "title": "Z (True Form) - Waving Sticker.png",
-    "artist": "ZcraftElite",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "True Form",
-    "artName": "Waving Sticker",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (True Form) - Starry Background.png",
-    "title": "Z (True Form) - Starry Background.png",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "True Form",
-    "artName": "Starry Background",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (True Form) - You Glow Girl.png",
-    "title": "Z (True Form) - You Glow Girl.png",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "True Form",
-    "artName": "You Glow Girl",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Feral Form).png",
-    "title": "Z (Feral Form).png",
-    "artist": "ZcraftElite",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Feral Form",
-    "artName": "",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Feral Form) - Sleeping in Grass.png",
-    "title": "Z (Feral Form) - Sleeping in Grass.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Feral Form",
-    "artName": "Sleeping in Grass",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Feral Form) - Wolf in da Box.jpg",
-    "title": "Z (Feral Form) - Wolf in da Box.jpg",
-    "artist": "mooreweirds",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Feral Form",
-    "artName": "Wolf in da Box",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form).png",
-    "title": "Z (Humanoid Form).png",
-    "artist": "ElexiaBrigitte",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form) - Ahego Face.png",
-    "title": "Z (Humanoid Form) - Ahego Face.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Ahego Face",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
-    "title": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
-    "artist": "ElexiaBrigitte",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Director of Metal Pipes Fanart",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form) - I See You Daddy.png",
-    "title": "Z (Humanoid Form) - I See You Daddy.png",
-    "artist": "ZcraftElite",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "I See You Daddy",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form) - Siepa Face.png",
-    "title": "Z (Humanoid Form) - Siepa Face.png",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Siepa Face",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Humanoid Form) - Put it in.jpeg",
-    "title": "Z (Humanoid Form) - Put it in.jpeg",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Put it in~",
-    "isAI": true,
-    "isNSFW": true
-  },
-  {
-    "filename": "Z x Ecchi (Humanoid Form).png",
-    "title": "Z x Ecchi (Humanoid Form).png",
-    "artist": "ElexiaBrigitte",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Z x Ecchi",
-    "isAI": false,
-    "isNSFW": true
-  },
-  {
-    "filename": "Z x Miku (Humanoid Form).png",
-    "title": "Z x Miku (Humanoid Form).png",
-    "artist": "OnceWasGreat1998 (Prompt)",
-    "artist_pic": "default.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Z x Miku",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z x Zorine (Humanoid Form).png",
-    "title": "Z x Zorine (Humanoid Form).png",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Z x Zorine",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z x Zorine (Humanoid Form) - Star-filled Kiss.png",
-    "title": "Z x Zorine (Humanoid Form) - Star-filled Kiss.png",
-    "artist": "ZcraftElite (Prompt)",
-    "artist_pic": "zcraftelite.png",
-    "shapeshiftForm": "Humanoid Form",
-    "artName": "Z x Zorine: Star-filled Kiss",
-    "isAI": true,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Chibi Form) - Hug Emote.png",
-    "title": "Z (Chibi Form) - Hug Emote.png",
-    "artist": "MittensMiyuki",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Chibi Form",
-    "artName": "Hug Emote",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Chibi Form) - Happy Chibi.png",
-    "title": "Z (Chibi Form) - Happy Chibi.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Chibi Form",
-    "artName": "Happy Chibi",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Chibi Form) - WOAHHH.png",
-    "title": "Z (Chibi Form) - WOAHHH.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Chibi Form",
-    "artName": "WOAHHH",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Chibi Form) - Smug as a Bug.png",
-    "title": "Z (Chibi Form) - Smug as a Bug.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Chibi Form",
-    "artName": "Smug as a Bug",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Chibi Form) - PWEASE.png",
-    "title": "Z (Chibi Form) - PWEASE.png",
-    "artist": "ProtoPawzz",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Chibi Form",
-    "artName": "PWEASE",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Gremlin Form).png",
-    "title": "Z (Gremlin Form).png",
-    "artist": "ElexiaBrigitte",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Gremlin Form",
-    "artName": "",
-    "isAI": false,
-    "isNSFW": false
-  },
-  {
-    "filename": "Z (Protogen Form).jpg",
-    "title": "Z (Protogen Form).jpg",
-    "artist": "NoahXD",
-    "artist_pic": "default.jpg",
-    "shapeshiftForm": "Protogen Form",
-    "artName": "",
-    "isAI": false,
-    "isNSFW": false
-  }
+    {
+        "filename": "Z (True Form).png",
+        "title": "Z (True Form).png",
+        "strippedFilename": "Z (True Form)",
+        "artist": "ZcraftElite",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "True Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (True Form) - Waving Sticker.png",
+        "title": "Z (True Form) - Waving Sticker.png",
+        "strippedFilename": "Z (True Form) - Waving Sticker",
+        "artist": "ZcraftElite",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "True Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Waving Sticker",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (True Form) - Starry Background.png",
+        "title": "Z (True Form) - Starry Background.png",
+        "strippedFilename": "Z (True Form) - Starry Background",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "True Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Starry Background",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (True Form) - You Glow Girl.png",
+        "title": "Z (True Form) - You Glow Girl.png",
+        "strippedFilename": "Z (True Form) - You Glow Girl",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "True Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "You Glow Girl",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Feral Form).png",
+        "title": "Z (Feral Form).png",
+        "strippedFilename": "Z (Feral Form)",
+        "artist": "ZcraftElite",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Feral Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Feral Form) - Sleeping in Grass.png",
+        "title": "Z (Feral Form) - Sleeping in Grass.png",
+        "strippedFilename": "Z (Feral Form) - Sleeping in Grass",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Feral Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Sleeping in Grass",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Feral Form) - Wolf in da Box.jpg",
+        "title": "Z (Feral Form) - Wolf in da Box.jpg",
+        "strippedFilename": "Z (Feral Form) - Wolf in da Box",
+        "artist": "mooreweirds",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Feral Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Wolf in da Box",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Humanoid Form).png",
+        "title": "Z (Humanoid Form).png",
+        "strippedFilename": "Z (Humanoid Form)",
+        "artist": "ElexiaBrigitte",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Humanoid Form) - Ahego Face.png",
+        "title": "Z (Humanoid Form) - Ahego Face.png",
+        "strippedFilename": "Z (Humanoid Form) - Ahego Face",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Ahego Face",
+        "isAI": false,
+        "isNSFW": true
+    },
+    {
+        "filename": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
+        "title": "Z (Humanoid Form) - Director of Metal Pipes Fanart.png",
+        "strippedFilename": "Z (Humanoid Form) - Director of Metal Pipes Fanart",
+        "artist": "ElexiaBrigitte",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Director of Metal Pipes Fanart",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Humanoid Form) - I See You Daddy.png",
+        "title": "Z (Humanoid Form) - I See You Daddy.png",
+        "strippedFilename": "Z (Humanoid Form) - I See You Daddy",
+        "artist": "ZcraftElite",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "I See You Daddy",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Humanoid Form) - Siepa Face.png",
+        "title": "Z (Humanoid Form) - Siepa Face.png",
+        "strippedFilename": "Z (Humanoid Form) - Siepa Face",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Siepa Face",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Humanoid Form) - Put it in.jpeg",
+        "title": "Z (Humanoid Form) - Put it in.jpeg",
+        "strippedFilename": "Z (Humanoid Form) - Put it in",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Put it in~",
+        "isAI": true,
+        "isNSFW": true
+    },
+    {
+        "filename": "Z x Ecchi (Humanoid Form).png",
+        "title": "Z x Ecchi (Humanoid Form).png",
+        "strippedFilename": "Z x Ecchi (Humanoid Form)",
+        "artist": "ElexiaBrigitte",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Ecchi"
+        ],
+        "artName": "Kiss for the bestie",
+        "isAI": false,
+        "isNSFW": true
+    },
+    {
+        "filename": "Z x Miku (Humanoid Form).png",
+        "title": "Z x Miku (Humanoid Form).png",
+        "strippedFilename": "Z x Miku (Humanoid Form)",
+        "artist": "OnceWasGreat1998 (Prompt)",
+        "artist_pic": "default.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Miku"
+        ],
+        "artName": "Vocaloid Aftershow",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z x Zorine (Humanoid Form).png",
+        "title": "Z x Zorine (Humanoid Form).png",
+        "strippedFilename": "Z x Zorine (Humanoid Form)",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Zorine"
+        ],
+        "artName": "Lunch Date",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z x Zorine (Humanoid Form) - Star-filled Kiss.png",
+        "title": "Z x Zorine (Humanoid Form) - Star-filled Kiss.png",
+        "strippedFilename": "Z x Zorine (Humanoid Form) - Star-filled Kiss",
+        "artist": "ZcraftElite (Prompt)",
+        "artist_pic": "zcraftelite.png",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Zorine"
+        ],
+        "artName": "Star-filled Kiss",
+        "isAI": true,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Chibi Form) - Hug Emote.png",
+        "title": "Z (Chibi Form) - Hug Emote.png",
+        "strippedFilename": "Z (Chibi Form) - Hug Emote",
+        "artist": "MittensMiyuki",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Hug Emote",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Chibi Form) - Happy Chibi.png",
+        "title": "Z (Chibi Form) - Happy Chibi.png",
+        "strippedFilename": "Z (Chibi Form) - Happy Chibi",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Happy Chibi",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Chibi Form) - WOAHHH.png",
+        "title": "Z (Chibi Form) - WOAHHH.png",
+        "strippedFilename": "Z (Chibi Form) - WOAHHH",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "WOAHHH",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Chibi Form) - Smug as a Bug.png",
+        "title": "Z (Chibi Form) - Smug as a Bug.png",
+        "strippedFilename": "Z (Chibi Form) - Smug as a Bug",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Smug as a Bug",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Chibi Form) - PWEASE.png",
+        "title": "Z (Chibi Form) - PWEASE.png",
+        "strippedFilename": "Z (Chibi Form) - PWEASE",
+        "artist": "ProtoPawzz",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "PWEASE",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Gremlin Form).png",
+        "title": "Z (Gremlin Form).png",
+        "strippedFilename": "Z (Gremlin Form)",
+        "artist": "ElexiaBrigitte",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Gremlin Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "",
+        "isAI": false,
+        "isNSFW": false
+    },
+    {
+        "filename": "Z (Protogen Form).jpg",
+        "title": "Z (Protogen Form).jpg",
+        "strippedFilename": "Z (Protogen Form)",
+        "artist": "NoahXD",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Protogen Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "",
+        "isAI": false,
+        "isNSFW": false
+    }
 ]

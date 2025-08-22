@@ -1,38 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Gallery - Z's World</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+{% extends "base.html" %}
+
+<!--
+█████████████████████████████████████████████████████████████████████
+█▄─▄███▄─▄█▄─▄─▀█▄─▄▄▀██▀▄─██▄─▄▄▀█▄─█─▄█████─█─█─▄─▄─█▄─▀█▀─▄█▄─▄███
+██─██▀██─███─▄─▀██─▄─▄██─▀─███─▄─▄██▄─▄██░░██─▄─███─████─█▄█─███─██▀█
+▀▄▄▄▄▄▀▄▄▄▀▄▄▄▄▀▀▄▄▀▄▄▀▄▄▀▄▄▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▀▄▀▄▀▀▄▄▄▀▀▄▄▄▀▄▄▄▀▄▄▄▄▄▀
+-->
+
+{% block title %}Gallery{% endblock %}
+
+{% block main %}
 <body>
     {% include 'nav.html' %}
-    <div class="container" style="margin-top: 50px;">
-        <h1>Z's Full Art Gallery</h1>
-        <div class="gallery">
-            {% for img in images %}
-            <div class="thumb" onclick="openViewer('{{ img.filename }}', '{{ img.title }}', '{{ img.artist }}', '{{ img.artist_pic }}', '{{ img.shapeshiftForm }}', '{{ img.artName }}', '{{ img.isAI | string }}', '{{ img.isNSFW | string }}')">
-                <img src="{{ url_for('static', filename='images/' + img.filename) }}" alt="{{ img.title }}">
-                <div class="thumb-text">
-                    <span class="form-name">{{ img.shapeshiftForm }}</span>
-                    <span class="art-title">{{ img.artName or '' }}</span>
-                    <span class="artist-name">{{ img.artist }}</span>
-                </div>
-                <div class="badge-container">
-                    {% if img.isNSFW %}
-                    <div class="nsfw-badge-thumb">NSFW</div>
-                    {% endif %}
-                    {% if img.isAI %}
-                    <div class="ai-badge-thumb">AI</div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="page-container" style="margin-top: 50px;">
+
+        <header class="gallery-page-header">
+            <h1 class="gallery-page-title">My Full Art Gallery</h1>
+            <p class="gallery-page-subtitle">Art of me!</p>
+        </header>
+
+        <div class="gallery" id="gallery" style="margin-top: 30px"></div>
     </div>
 
     {% include 'viewer.html' %}
 
     <script src="{{ url_for('static', filename='js/viewer.js') }}"></script>
 </body>
-</html>
+<script>
+document.addEventListener("DOMContentLoaded", loadGallery("gallery"));
+</script>
+{% endblock %}
