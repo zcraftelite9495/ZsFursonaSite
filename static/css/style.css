@@ -461,6 +461,44 @@ input:checked + .slider::before {
     transform: translateX(22px);
 }
 
+/* ---- CONTAINER BADGES ---- */
+.container-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 50%;
+    user-select: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.container-badge svg {
+    width: 60%;
+    height: 60%;
+    fill: currentColor;
+}
+
+.container-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.4);
+}
+
+.container-badge.ai-badge {
+    background: var(--badge-ai-gradient);
+}
+
+.container-badge.nsfw-badge {
+    background: var(--badge-nsfw-gradient);
+}
+
 /* ---- HOMEPAGE STYLES ---- */
 
 /* -- Homepage Header -- */
