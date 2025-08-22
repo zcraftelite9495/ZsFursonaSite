@@ -67,26 +67,30 @@ If you are seeing this, you most likely accidentally hit Ctrl + Shift + I on you
             if (country === 'GB') {
 
                 const showNsfw = getCookie('showNSFW');
+                const readUKmessage = getCookie('readUKmessage');
 
                 if (showNsfw === 'True') {
-                    showPopup({
-                        title: 'Attention UK Users',
-                        message: `<b><u>Heyo UK users.</u></b> <i>I am sorry to remind you, but your government has sadly taken away your rights to a free internet.</i> This happened in the form of the <b>Online Safety Act</b>. At this time, Ofcom is not enforcing these policies on smaller websites, especially ones not operated from the UK. However, it seems likely this will start happening in the future, in that scenario, you may be unable to access any NSFW-marked artwork on my site someday.<br><br>While the stated goal of the Online Safety Act is to protect users, I argue that it is overreaching and ultimately unhelpful because it gives the government unprecedented power to censor legal content, undermining free speech and open expression online. The legislation is so broad that it could be used to remove content that is not explicitly illegal, based on arbitrary definitions of "harmful."<br><br><u><i>If you are a UK user, please consider taking action.</i></u> Contact your MP, make your voice heard. Support organizations like the <b>Open Rights Group</b> who are fighting against these laws. The internet's freedom depends on people like you speaking up.`,
-                        buttons: [
-                            {
-                                text: 'I Understand',
-                                onClick: () => {
-                                    
+                    if (readUKmessage !== 'True') {
+                        showPopup({
+                            title: 'Attention UK Users',
+                            message: `<b><u>Heyo UK users.</u></b> <i>I am sorry to remind you, but your government has sadly taken away your rights to a free internet.</i> This happened in the form of the <b>Online Safety Act</b>. At this time, Ofcom is not enforcing these policies on smaller websites, especially ones not operated from the UK. However, it seems likely this will start happening in the future, in that scenario, you may be unable to access any NSFW-marked artwork on my site someday.<br><br>While the stated goal of the Online Safety Act is to protect users, I argue that it is overreaching and ultimately unhelpful because it gives the government unprecedented power to censor legal content, undermining free speech and open expression online. The legislation is so broad that it could be used to remove content that is not explicitly illegal, based on arbitrary definitions of "harmful."<br><br><u><i>If you are a UK user, please consider taking action.</i></u> Contact your MP, make your voice heard. Support organizations like the <b>Open Rights Group</b> who are fighting against these laws. The internet's freedom depends on people like you speaking up.`,
+                            buttons: [
+                                {
+                                    text: 'I Understand',
+                                    onClick: () => {
+                                        setCookie('readUKmessage', 'True', 14);
+                                    }
+                                },
+                                {
+                                    text: 'View Petition',
+                                    onClick: () => {
+                                        setCookie('readUKmessage', 'True', 14);
+                                        window.open('https://petition.parliament.uk/petitions/722903', '_blank');
+                                    }
                                 }
-                            },
-                            {
-                                text: 'View Petition',
-                                onClick: () => {
-                                    window.open('https://petition.parliament.uk/petitions/722903', '_blank');
-                                }
-                            }
-                        ]
-                    });
+                            ]
+                        });
+                    }
                 }
             }
         } catch (error) {

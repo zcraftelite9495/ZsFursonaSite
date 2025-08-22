@@ -858,7 +858,7 @@ input:checked + .slider::before {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: rgba(120,115,245,0.08); /* subtle tint of #7873f5 */
+    background: var(--background-secondary);
     padding: 0.5rem;
     border-radius: 12px;
     border: 2px solid rgba(120,115,245,0.16); /* slightly thick border */
@@ -916,7 +916,7 @@ input:checked + .slider::before {
     transform: translateX(-50%);   /* true centering */
     min-width: 260px;
     max-width: 520px;
-    background: rgba(8,8,16,0.95);
+    background: var(--background-secondary);
     border: 2px solid rgba(120,115,245,0.20);
     border-radius: 10px;
     padding: 0.75rem;
@@ -954,7 +954,7 @@ input:checked + .slider::before {
     transform: translateX(-50%) rotate(45deg);
     width: 12px;
     height: 12px;
-    background: rgba(8,8,16,0.95);
+    background: var(--background-secondary);
     border-left: 2px solid rgba(120,115,245,0.20);
     border-top: 2px solid rgba(120,115,245,0.20);
     z-index: 50;
