@@ -1,0 +1,49 @@
+name: "✨ Feature Request"
+description: Suggest a new idea or improvement
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Description
+      description: A clear and concise description of the feature you’d like.
+      placeholder: What do you want to see added?
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 💡 Motivation
+      description: Why do you need this feature? What problem does it solve?
+      placeholder: This feature will help because...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 🔧 Proposed Solution (Optional)
+      description: How would you like this to work?
+      placeholder: Describe the implementation or workflow you imagine.
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 📌 Alternatives (Optional)
+      description: Any alternative solutions you’ve considered?
+      placeholder: Another way to do this would be...
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 🎨 Additional Context (Optional)
+      description: Add screenshots, mockups, or examples if available.
+      placeholder: Add any extra info here.
+    validations:
+      required: false
