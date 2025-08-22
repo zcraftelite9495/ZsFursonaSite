@@ -982,10 +982,14 @@ input:checked + .slider::before {
 
 .gallery-select, .gallery-select-compact {
     background: rgba(255,255,255,0.02);
-    color: #656565;
+    color: #ffffff;
     border: 2px solid rgba(120,115,245,0.12);
     border-radius: 8px;
     padding: 0.45rem 0.6rem;
+}
+
+.gallery-select:hover, .gallery-select-compact:hover {
+    color: #000000;
 }
 
 /* compact select */
