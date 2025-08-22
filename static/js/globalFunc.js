@@ -15,13 +15,55 @@ Made with love by ZcraftElite :3
 */
 
 // ---- COOKIE FUNCTIONS ----
+// --- COOKIE DEFAULTS ---
+const cookieDefaults = {
+    showAI: "False",
+    showNSFW: "False",
+    blurNSFW: "True"
+};
+
+
+// --- ENSURE NULL COOKIES ARE DEFAULTED ---
+/**
+ * Ensures all default cookies are set to their default values if they do not
+ * already exist or are empty.
+ *
+ * @function ensureDefaultCookies
+ * @return {void}
+ */
+function ensureDefaultCookies() {
+    Object.entries(cookieDefaults).forEach(([name, defaultValue]) => {
+        let value = getCookie(name);
+        if (value === null || value === "") {
+            setCookie(name, defaultValue, 365);
+        }
+    });
+}
+
+
 // --- SET COOKIE ---
+/**
+ * Sets a cookie value.
+ *
+ * @function setCookie
+ * @param {string} name The id/name of the cookie to set.
+ * @param {string} value The value to set the cookie to.
+ * @param {number} [days=7] The number of days to set the cookie for.
+ * @return {void}
+ */
 function setCookie(name, value, days = 7) {
     const expires = new Date(Date.now() + days*864e5).toUTCString();
     document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
 }
 
 // --- FETCH COOKIE ---
+/**
+ * Fetches a cookie value.
+ *
+ * @function getCookie
+ * @param {string} name The id/name of the cookie to fetch.
+ * @return {?string} The value of the cookie if it exists, otherwise null.
+ */
 function getCookie(name) {
     return document.cookie.split('; ').reduce((r, v) => {
         const [k, val] = v.split('=');
@@ -30,6 +72,11 @@ function getCookie(name) {
 }
 
 // ---- POPUP FUNCTION ----
+/**
+ * Shows a popup with a title, message, and buttons.
+ * @param {{ title: string, message: string, buttons: { text: string, onClick: () => void }[] }} options
+ * @returns {void}
+ */
 function showPopup({ 
     title = 'Notice', 
     message = '', 
