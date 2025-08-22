@@ -41,6 +41,16 @@
                 <span class="slider"></span>
             </label>
         </div>
+        <div class="settings-sidebar-row">
+            <div class="setting-label">
+                <label for="toggleNSFW">Blur NSFW Thumbnails</label>
+                <div class="setting-description">Blurs thumbnails of NSFW content, click or hover to unblur.<br>Enabled by default.</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggleBlurNSFW" cookieName="blurNSFW">
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
 </div>
 
@@ -67,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function defaultToggleHandler(input, cookieName) {
         setCookie(cookieName, input.checked ? 'True' : 'False', 365);
-        if (cookieName === 'showAI' || cookieName === 'showNSFW') {
+        if (cookieName === 'showAI' || cookieName === 'showNSFW' || cookieName === 'blurNSFW') {
             window.location.reload();
         }
     }

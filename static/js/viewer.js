@@ -17,12 +17,15 @@ Made with love by ZcraftElite :3
 /* ---- GALLERY LOAD FUNCTION ---- */
 async function loadGallery(elementId, count = 0, randomize = false) {
     try {
+        ensureDefaultCookies();
+
         const res = await fetch("/art.json");
         let images = await res.json();
 
         // read cookie settings
         const showAI = getCookie("showAI") === "True";
         const showNSFW = getCookie("showNSFW") === "True";
+        const blurNSFW = getCookie("blurNSFW") === "True";
 
         // filter based on cookie preferences
         images = images.filter(img => {
@@ -71,6 +74,11 @@ async function loadGallery(elementId, count = 0, randomize = false) {
             imgEl.loading = "lazy";
             imgEl.decoding = "async";
             imgEl.className = "thumb-img";
+
+            // apply NSFW blur if cookie is set
+            if (img.isNSFW && blurNSFW) {
+                imgEl.classList.add("blurred-nsfw");
+            }
 
             // build thumb-text and badges
             const thumbText = document.createElement("div");

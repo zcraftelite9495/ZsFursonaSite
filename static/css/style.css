@@ -915,6 +915,17 @@ input:checked + .slider::before {
     display: block;
 }
 
+.blurred-nsfw {
+    filter: blur(12px);
+    transition: filter 0.3s ease;
+    pointer-events: none;
+}
+
+.thumb:hover .blurred-nsfw {
+    filter: none;
+    pointer-events: auto;
+}
+
 .badge-container {
     position: absolute;
     top: 5px;
