@@ -11,6 +11,7 @@
         ],
         "artName": "",
         "creationDate": "2025-01-14",
+        "recievalMethod": "Self Made",
         "isAI": false,
         "isNSFW": false
     },
@@ -26,6 +27,7 @@
         ],
         "artName": "Waving Sticker",
         "creationDate": "2025-06-14",
+        "recievalMethod": "Self Made",
         "isAI": false,
         "isNSFW": false
     },
@@ -42,6 +44,7 @@
         ],
         "artName": "Starry Background",
         "creationDate": "2025-06-14",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": false
     },
@@ -58,6 +61,7 @@
         ],
         "artName": "You Glow Girl",
         "creationDate": "2025-06-15",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": false
     },
@@ -73,6 +77,7 @@
         ],
         "artName": "",
         "creationDate": "2025-05-01",
+        "recievalMethod": "Self Made",
         "isAI": false,
         "isNSFW": false
     },
@@ -88,6 +93,7 @@
         ],
         "artName": "Sleeping in Grass",
         "creationDate": "2025-06-14",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -103,6 +109,7 @@
         ],
         "artName": "Wolf in da Box",
         "creationDate": "2025-07-09",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -118,6 +125,8 @@
         ],
         "artName": "",
         "creationDate": "2024-08-09",
+        "recievalMethod": "Commission",
+        "recievalPrice": "FREE",
         "isAI": false,
         "isNSFW": false
     },
@@ -133,6 +142,7 @@
         ],
         "artName": "Ahego Face",
         "creationDate": "2025-06-07",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": true
     },
@@ -148,6 +158,7 @@
         ],
         "artName": "Director of Metal Pipes Fanart",
         "creationDate": "2024-10-30",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -163,6 +174,7 @@
         ],
         "artName": "I See You Daddy",
         "creationDate": "2025-05-01",
+        "recievalMethod": "Self Made",
         "isAI": false,
         "isNSFW": false
     },
@@ -179,6 +191,7 @@
         ],
         "artName": "Siepa Face",
         "creationDate": "2025-04-28",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": false
     },
@@ -196,6 +209,7 @@
         ],
         "artName": "Put it in~",
         "creationDate": "2025-06-28",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": true
     },
@@ -212,6 +226,8 @@
         ],
         "artName": "Kiss for the bestie",
         "creationDate": "2025-02-14",
+        "recievalMethod": "Commission",
+        "recievalPrice": "Gifted",
         "isAI": false,
         "isNSFW": true
     },
@@ -228,6 +244,7 @@
         ],
         "artName": "Vocaloid Aftershow",
         "creationDate": "2025-04-28",
+        "recievalMethod": "Gift",
         "isAI": true,
         "isNSFW": false
     },
@@ -245,6 +262,7 @@
         ],
         "artName": "Lunch Date",
         "creationDate": "2025-06-15",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": false
     },
@@ -262,6 +280,7 @@
         ],
         "artName": "Star-filled Kiss",
         "creationDate": "2025-06-15",
+        "recievalMethod": "Self Made",
         "isAI": true,
         "isNSFW": false
     },
@@ -269,10 +288,10 @@
         "filename": "Z x Zorine (Humanoid Form) - Soft Pegging.png",
         "title": "Z x Zorine (Humanoid Form) - Soft Pegging.png",
         "strippedFilename": "Z x Zorine (Humanoid Form) - Soft Pegging",
-        "webLink": "https://github.com/zcraftelite9495/ZsFursonaSite/blob/main/static/images/Z%20(Humanoid%20Form)%20-%20Soft%20Pegging.png?raw=true",
+        "webLink": "https://github.com/zcraftelite9495/ZsFursonaSite/blob/main/static/images/Z%20x%20Zorine%20(Humanoid%20Form)%20-%20Soft%20Pegging.png?raw=true",
         "aiModel": "Sora 1.0 Turbo",
-        "artist": "ZcraftElite (Prompt)",
-        "artist_pic": "zcraftelite.png",
+        "artist": "ZorineN3 (Prompt)",
+        "artist_pic": "default.png",
         "shapeshiftForm": "Humanoid Form",
         "characters": [
             "Z",
@@ -280,8 +299,9 @@
         ],
         "artName": "Star-filled Kiss",
         "creationDate": "2025-06-15",
+        "recievalMethod": "Fanart",
         "isAI": true,
-        "isNSFW": false
+        "isNSFW": true
     },
     {
         "filename": "Z (Chibi Form) - Hug Emote.png",
@@ -295,6 +315,8 @@
         ],
         "artName": "Hug Emote",
         "creationDate": "2025-08-05",
+        "recievalMethod": "Commission",
+        "recievalPrice": "Gifted",
         "isAI": false,
         "isNSFW": false
     },
@@ -310,6 +332,7 @@
         ],
         "artName": "Happy Chibi",
         "creationDate": "2025-08-20",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -325,6 +348,7 @@
         ],
         "artName": "WOAHHH",
         "creationDate": "2025-08-20",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -340,6 +364,7 @@
         ],
         "artName": "Smug as a Bug",
         "creationDate": "2025-08-20",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -355,6 +380,7 @@
         ],
         "artName": "PWEASE",
         "creationDate": "2025-08-21",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -370,6 +396,7 @@
         ],
         "artName": "",
         "creationDate": "2024-10-13",
+        "recievalMethod": "Gift",
         "isAI": false,
         "isNSFW": false
     },
@@ -385,6 +412,7 @@
         ],
         "artName": "",
         "creationDate": "2025-04-28",
+        "recievalMethod": "Fanart",
         "isAI": false,
         "isNSFW": false
     }

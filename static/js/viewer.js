@@ -236,20 +236,20 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
                 <span class="artist-name">${img.artist || ""}</span>
             `;
 
-            const badgeContainer = document.createElement("div");
-            badgeContainer.className = "badge-container";
-            if (img.isNSFW) {
-                const b = document.createElement("div");
-                b.className = "nsfw-badge-thumb";
-                b.textContent = "NSFW";
-                badgeContainer.appendChild(b);
-            }
-            if (img.isAI) {
-                const b = document.createElement("div");
-                b.className = "ai-badge-thumb";
-                b.textContent = "AI";
-                badgeContainer.appendChild(b);
-            }
+        const badgeContainer = document.createElement("div");
+        badgeContainer.className = "badge-container";
+        if (img.isAI) {
+            const aiBadge = document.createElement("div");
+            aiBadge.className = "thumb-viewer-badge ai-badge"; // Use a new class name
+            aiBadge.innerHTML = `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg>`;
+            badgeContainer.appendChild(aiBadge);
+        }
+        if (img.isNSFW) {
+            const nsfwBadge = document.createElement("div");
+            nsfwBadge.className = "thumb-viewer-badge nsfw-badge"; // Use a new class name
+            nsfwBadge.innerHTML = `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 1C20 0.447715 20.4477 0 21 0C21.5523 0 22 0.447715 22 1V2H23C23.5523 2 24 2.44772 24 3C24 3.55228 23.5523 4 23 4H22V5C22 5.55228 21.5523 6 21 6C20.4477 6 20 5.55228 20 5V4H19C18.4477 4 18 3.55228 18 3C18 2.44772 18.4477 2 19 2H20V1Z"/><path d="M21.1936 8.07463C21.7016 7.85776 22.297 8.09138 22.4668 8.6169C23.145 10.7148 23.1792 12.9766 22.5523 15.1064C21.8308 17.5572 20.2788 19.6804 18.1626 21.1117C16.0464 22.5429 13.498 23.193 10.9548 22.9502C8.41165 22.7075 6.03225 21.5871 4.22503 19.7814C2.4178 17.9757 1.29545 15.5972 1.05062 13.0542C0.805783 10.5112 1.45373 7.96227 2.88325 5.84491C4.31277 3.72755 6.43471 2.17379 8.88488 1.4503C11.0142 0.821568 13.2759 0.853957 15.3744 1.53036C15.9001 1.69979 16.1342 2.29501 15.9178 2.80311C15.7013 3.31122 15.1136 3.54496 14.5846 3.38623C12.9184 2.88626 11.1353 2.8783 9.4532 3.37498C7.45003 3.96647 5.71522 5.23677 4.5465 6.96784C3.37778 8.69891 2.84804 10.7828 3.04821 12.8619C3.24838 14.9409 4.16596 16.8855 5.64348 18.3618C7.121 19.8381 9.06631 20.754 11.1455 20.9525C13.2247 21.1509 15.3082 20.6195 17.0383 19.4493C18.7684 18.2792 20.0373 16.5433 20.6271 14.5397C21.1224 12.8572 21.113 11.074 20.6116 9.40826C20.4525 8.87941 20.6857 8.29149 21.1936 8.07463Z"/><path d="M7.71054 9.14472L7.29441 9.35279C6.69971 9.65014 5.99999 9.21769 5.99999 8.55279C5.99999 8.214 6.1914 7.9043 6.49441 7.75279L7.78884 7.10557C7.9277 7.03615 8.08081 7 8.23605 7H8.99999C9.55227 7 9.99999 7.44772 9.99999 8V16C9.99999 16.5523 9.55227 17 8.99999 17C8.4477 17 7.99999 16.5523 7.99999 16V9.32361C7.99999 9.17493 7.84352 9.07823 7.71054 9.14472Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M18 9C18 7.89543 17.1046 7 16 7H14C12.8954 7 12 7.89543 12 9V10.5C12 11.3284 12.6716 12 13.5 12C12.6716 12 12 12.6716 12 13.5V15C12 16.1046 12.8954 17 14 17H16C17.1046 17 18 16.1046 18 15V13.5C18 12.6716 17.3284 12 16.5 12C17.3284 12 18 11.3284 18 10.5V9ZM16 10C16 9.44771 15.5523 9 15 9C14.4477 9 14 9.44771 14 10C14 10.5523 14.4477 11 15 11C15.5523 11 16 10.5523 16 10ZM16 14C16 14.5523 15.5523 15 15 15C14.4477 15 14 14.5523 14 14C14 13.4477 14.4477 13 15 13C15.5523 13 16 13.4477 16 14Z"/></svg>`;
+            badgeContainer.appendChild(nsfwBadge);
+        }
 
             // assemble thumb
             thumb.appendChild(imgEl);
@@ -346,12 +346,16 @@ function openViewer(img) {
     const formDiv = document.querySelector('.viewer-data.artForm span');
     const artNameDiv = document.querySelector('.viewer-data.artName span');
     const artCreationDateDiv = document.querySelector('.viewer-data.artCreationDate span');
+    const artRecievalMethodDiv = document.querySelector('.viewer-data.artRecievalMethod span');
+    const artRecievalMethodIcon = document.querySelector('.viewer-data.artRecievalMethod i');
 
     aiModelDiv.textContent = img.aiModel || "Unknown Model";
     charactersDiv.textContent = img.characters?.length > 0 ? img.characters.join(', ') : '';
     formDiv.textContent = img.shapeshiftForm || '';
     artNameDiv.textContent = img.artName || '';
     artCreationDateDiv.textContent = img.creationDate || '';
+    artRecievalMethodDiv.textContent = `${img.recievalMethod || ''}${img.recievalPrice ? ` (${img.recievalPrice})` : ''}`;
+    artRecievalMethodIcon.className = ({ "Gift": "nf nf-fa-gift", "Fanart": "nf nf-fa-paint_brush", "Commission": "nf nf-fa-money", "Self Made": "nf nf-fa-hammer" })[img.recievalMethod] || '';
 
     const aiBadge = document.getElementById('viewer-ai-badge');
     const nsfwBadge = document.getElementById('viewer-nsfw-badge');

@@ -1298,30 +1298,33 @@ input:checked + .slider::before {
     pointer-events: none;
 }
 
-.ai-badge-thumb, .nsfw-badge-thumb {
-    color: white;
-    height: 28px;
-    font-size: 14px;
-    font-weight: bold;
-    display: flex;
+.thumb-viewer-badge {
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    user-select: none;
-}
-
-.ai-badge-thumb {
-    width: 28px;
-    background-color: var(--badge-ai);
+    color: white;
     border-radius: 50%;
+    user-select: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    width: 32px;
+    height: 32px;
+    transition: none;
 }
 
-.nsfw-badge-thumb {
-    width: 50px;
-    background-color: var(--badge-nsfw);
-    border-radius: 14px;
-    padding: 0 10px;
-    white-space: nowrap;
+.thumb-viewer-badge svg {
+    width: 70%;
+    height: 70%;
+    fill: #FFFFFF;
+}
+
+.thumb-viewer-badge.ai-badge {
+    background: var(--badge-ai-gradient); /* Use the solid color variable */
+}
+.thumb-viewer-badge.nsfw-badge {
+    background: var(--badge-nsfw-gradient); /* Use the solid color variable */
 }
 
 /* ---- IMAGE VIEWER STYLES ---- */
@@ -1508,12 +1511,10 @@ input:checked + .slider::before {
 
 .viewer-badge.ai-badge {
     background: var(--badge-ai-gradient);
-    --tooltip-bg: var(--badge-ai-gradient);
 }
 
 .viewer-badge.nsfw-badge {
     background: var(--badge-nsfw-gradient);
-    --tooltip-bg: var(--badge-nsfw-gradient);
 }
 
 .viewer-badge.hidden {
