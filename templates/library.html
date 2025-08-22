@@ -19,14 +19,83 @@
             <p class="gallery-page-subtitle">Art of me!</p>
         </header>
 
+        <div class="gallery-menubar-wrapper">
+            <div class="gallery-menubar">
+                <!-- Search -->
+                <div class="gallery-item gallery-search">
+                    <input id="gallery-search-input" class="gallery-search-input" type="search" placeholder="Search art name..." aria-label="Search art name">
+                </div>
+
+                <!-- Filter button / popup toggle -->
+                <div class="gallery-item gallery-filter">
+                    <button id="gallery-filter-toggle" class="gallery-filter-toggle" aria-haspopup="true" aria-expanded="false">Filters ▾</button>
+
+                    <div id="gallery-filter-popup" class="gallery-filter-popup" role="dialog" aria-modal="false" aria-hidden="true">
+                        <div class="gallery-filter-row">
+                            <label class="gallery-label">Characters</label>
+                            <div id="gallery-characters-list" class="gallery-multiselect"></div>
+                        </div>
+
+                        <div class="gallery-filter-row">
+                            <label for="gallery-artist-select" class="gallery-label">Artist</label>
+                            <select id="gallery-artist-select" class="gallery-select">
+                                <option value="">— Any —</option>
+                            </select>
+                        </div>
+
+                        <div class="gallery-filter-row">
+                            <label for="gallery-form-select" class="gallery-label">Form</label>
+                            <select id="gallery-form-select" class="gallery-select">
+                                <option value="">— Any —</option>
+                            </select>
+                        </div>
+
+                        <div class="gallery-filter-row gallery-filter-row-inline">
+                            <div class="gallery-tristate">
+                                <label class="gallery-label">NSFW</label>
+                                <button id="gallery-nsfw-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle NSFW filter (neutral → include → exclude)">─</button>
+                            </div>
+
+                            <div class="gallery-tristate">
+                                <label class="gallery-label">AI</label>
+                                <button id="gallery-ai-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle AI filter (neutral → include → exclude)">─</button>
+                            </div>
+                        </div>
+
+                        <div class="gallery-filter-actions">
+                            <button id="gallery-reset-btn" class="gallery-action-btn">Reset</button>
+                            <button id="gallery-apply-btn" class="gallery-action-btn gallery-primary">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- quick character dropdown (also usable separately) -->
+                <div class="gallery-item gallery-characters-dropdown">
+                    <button id="gallery-characters-toggle" class="gallery-dropdown-toggle">Characters ▾</button>
+                    <div id="gallery-characters-popup" class="gallery-popup" aria-hidden="true"></div>
+                </div>
+
+                <!-- Artist quick dropdown -->
+                <div class="gallery-item gallery-artist-dropdown">
+                    <select id="gallery-artist-quick" class="gallery-select-compact">
+                        <option value="">Artist — Any</option>
+                    </select>
+                </div>
+
+                <!-- Form quick dropdown -->
+                <div class="gallery-item gallery-form-dropdown">
+                    <select id="gallery-form-quick" class="gallery-select-compact">
+                        <option value="">Form — Any</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="gallery" id="gallery" style="margin-top: 30px"></div>
     </div>
 
     {% include 'viewer.html' %}
 
     <script src="{{ url_for('static', filename='js/viewer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/galleryControls.js') }}"></script>
 </body>
-<script>
-document.addEventListener("DOMContentLoaded", loadGallery("gallery"));
-</script>
 {% endblock %}

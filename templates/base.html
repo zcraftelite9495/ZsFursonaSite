@@ -43,6 +43,19 @@ If you are seeing this, you most likely accidentally hit Ctrl + Shift + I on you
 {% block main %}
 
 {% endblock %}
+<!-- Mobile Device Zoom -->
+<script>
+    function isMobileDevice() {
+        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('Mobi') !== -1);
+    }
+
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+
+    if (isMobileDevice() && viewportMeta) {
+        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=0.9');
+    }
+</script>
+
 <!-- Tooltip Text -->
 <script>
 function setClassTooltip(className, tooltipText) {
