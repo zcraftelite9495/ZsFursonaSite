@@ -917,12 +917,13 @@ input:checked + .slider::before {
 
 .blurred-nsfw {
     filter: blur(12px);
-    transition: filter 0.3s ease;
+    transition: filter 1s ease;
     pointer-events: none;
 }
 
 .thumb:hover .blurred-nsfw {
-    filter: none;
+    filter: blur(0);
+    transition: filter 1s ease-in;
     pointer-events: auto;
 }
 
