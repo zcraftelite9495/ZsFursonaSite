@@ -141,6 +141,7 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
         const fCharacters = Array.isArray(filters.characters) ? filters.characters.filter(Boolean) : [];
         const fIsNSFW = (typeof filters.isNSFW === "boolean") ? filters.isNSFW : null;
         const fIsAI = (typeof filters.isAI === "boolean") ? filters.isAI : null;
+        const fisDiscEmoji = (typeof filters.isDiscEmoji === "boolean") ? filters.isDiscEmoji : null;
         const fArtName = filters.artNameQuery ? String(filters.artNameQuery).trim().toLowerCase() : null;
 
         // apply additional filters (artist/form/characters/NSFW/AI/artName)
@@ -172,6 +173,12 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
             if (fIsAI !== null) {
                 const imgAI = Boolean(img.isAI);
                 if (imgAI !== fIsAI) return false;
+            }
+
+            // Discord filter (three-state)
+            if (fisDiscEmoji !== null) {
+                const imgDiscord = Boolean(img.isDiscEmoji);
+                if (imgDiscord !== fisDiscEmoji) return false;
             }
 
             // artNameQuery: substring, case-insensitive

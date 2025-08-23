@@ -42,9 +42,11 @@ function readFiltersFromUI() {
 
     const nsfwState = document.getElementById("gallery-nsfw-toggle").getAttribute("data-state");
     const aiState = document.getElementById("gallery-ai-toggle").getAttribute("data-state");
+    const discordState = document.getElementById("gallery-discord-toggle").getAttribute("data-state");
 
     const isNSFW = triStateToFilter(nsfwState);
     const isAI = triStateToFilter(aiState);
+    const isDiscEmoji = triStateToFilter(discordState);
 
     const artNameQuery = (document.getElementById("gallery-search-input").value || "").trim();
 
@@ -54,6 +56,7 @@ function readFiltersFromUI() {
         characters: characters.length ? characters : [],
         isNSFW: isNSFW,
         isAI: isAI,
+        isDiscEmoji: isDiscEmoji,
         artNameQuery: artNameQuery || null
     };
 }
@@ -122,6 +125,7 @@ function initGalleryControls() {
     const charactersPopup = document.getElementById("gallery-characters-popup");
     const nsfwBtn = document.getElementById("gallery-nsfw-toggle");
     const aiBtn = document.getElementById("gallery-ai-toggle");
+    const discordBtn = document.getElementById("gallery-discord-toggle");
     const artistQuick = document.getElementById("gallery-artist-quick");
     const formQuick = document.getElementById("gallery-form-quick");
 
@@ -184,7 +188,7 @@ function initGalleryControls() {
     });
 
     // tri-state toggles
-    [nsfwBtn, aiBtn].forEach(btn => {
+    [nsfwBtn, aiBtn, discordBtn].forEach(btn => {
         if (!btn) return;
         // render initial glyph for neutral
         btn.textContent = "─";
@@ -213,7 +217,7 @@ function initGalleryControls() {
         document.querySelectorAll("#gallery-characters-popup input[type='checkbox']").forEach(cb => cb.checked = false);
 
         // reset tri-state to neutral
-        [nsfwBtn, aiBtn].forEach(btn => {
+        [nsfwBtn, aiBtn, discordBtn].forEach(btn => {
             if (!btn) return;
             btn.setAttribute("data-state", "neutral");
             btn.textContent = "─";
