@@ -1311,6 +1311,10 @@ input:checked + .slider::before {
     .library > .thumb { width: 45%;}
 }
 
+@media (max-width: 400px) {
+    .library > .thumb { width: 100%;}
+}
+
 .thumb::after {
     content: "";
     position: absolute;
