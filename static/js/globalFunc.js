@@ -14,11 +14,29 @@
 Made with love by ZcraftElite :3
 */
 
+// ---- COOKIE FUNCTIONS ----
+// --- COOKIE DEFAULTS ---
+const cookieDefaults = {
+    showAI: "False",
+    showNSFW: "False",
+    blurNSFW: "True"
+};
+
+
 // ---- CONTAINER BADGE FUNCTIONS ----
-(function() {
+/**
+ * Initializes the container badge functionality.
+ * 
+ * @return {void}
+ * 
+ * @function initContainerBadge
+ * @since v47
+ */
+function initContainerBadge() {
     document.addEventListener('DOMContentLoaded', () => {
         const containers = document.querySelectorAll('div.container.has-badge');
-        const showNSFW = getCookie("showNSFW");
+        const showNSFW = getCookie("showNSFW")
+        const showAI = getCookie("showAI")
 
         containers.forEach(container => {
             if (showNSFW === 'False') {
@@ -58,7 +76,8 @@ Made with love by ZcraftElite :3
             badgeDiv.style.position = 'absolute';
             badgeDiv.style.top = '10px';
             badgeDiv.style.right = '10px';
-            
+            badgeDiv.style.cursor = 'pointer';
+
             container.appendChild(badgeDiv);
             
             const unblurPrompt = document.createElement('div');
@@ -72,7 +91,7 @@ Made with love by ZcraftElite :3
             unblurPrompt.style.padding = '8px 16px';
             unblurPrompt.style.borderRadius = '50px';
             unblurPrompt.style.fontFamily = 'sans-serif';
-            unblurPrompt.style.fontSize = '12px';
+            unblurPrompt.style.fontSize = '16px';
             unblurPrompt.style.whiteSpace = 'nowrap';
             unblurPrompt.style.zIndex = '10';
 
@@ -81,20 +100,11 @@ Made with love by ZcraftElite :3
             badgeDiv.addEventListener('click', () => {
                 contentWrapper.style.filter = 'blur(0px)';
                 unblurPrompt.style.display = 'none';
+                badgeDiv.style.cursor = 'default';
             });
         });
     });
-})();
-
-
-
-// ---- COOKIE FUNCTIONS ----
-// --- COOKIE DEFAULTS ---
-const cookieDefaults = {
-    showAI: "False",
-    showNSFW: "False",
-    blurNSFW: "True"
-};
+}
 
 
 // --- ENSURE NULL COOKIES ARE DEFAULTED ---
@@ -102,8 +112,10 @@ const cookieDefaults = {
  * Ensures all default cookies are set to their default values if they do not
  * already exist or are empty.
  *
- * @function ensureDefaultCookies
  * @return {void}
+ * 
+ * @function ensureDefaultCookies
+ * @since v27
  */
 function ensureDefaultCookies() {
     Object.entries(cookieDefaults).forEach(([name, defaultValue]) => {
@@ -119,11 +131,13 @@ function ensureDefaultCookies() {
 /**
  * Sets a cookie value.
  *
- * @function setCookie
  * @param {string} name The id/name of the cookie to set.
  * @param {string} value The value to set the cookie to.
  * @param {number} [days=7] The number of days to set the cookie for.
  * @return {void}
+ * 
+ * @function ensureDefaultCookies
+ * @since v8
  */
 function setCookie(name, value, days = 7) {
     const expires = new Date(Date.now() + days*864e5).toUTCString();
@@ -134,9 +148,11 @@ function setCookie(name, value, days = 7) {
 /**
  * Fetches a cookie value.
  *
- * @function getCookie
  * @param {string} name The id/name of the cookie to fetch.
  * @return {?string} The value of the cookie if it exists, otherwise null.
+ * 
+ * @function ensureDefaultCookies
+ * @since v8
  */
 function getCookie(name) {
     return document.cookie.split('; ').reduce((r, v) => {
@@ -150,6 +166,9 @@ function getCookie(name) {
  * Shows a popup with a title, message, and buttons.
  * @param {{ title: string, message: string, buttons: { text: string, onClick: () => void }[] }} options
  * @returns {void}
+ * 
+ * @function showPopup
+ * @since v11
  */
 function showPopup({ 
     title = 'Notice', 
