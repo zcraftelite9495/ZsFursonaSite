@@ -21,12 +21,10 @@
 
         <div class="gallery-menubar-wrapper" style="margin-bottom: 20px; margin-top: 20px;">
             <div class="gallery-menubar">
-                <!-- Search -->
                 <div class="gallery-item gallery-search">
                     <input id="gallery-search-input" class="gallery-search-input" type="search" placeholder="Search art name..." aria-label="Search art name">
                 </div>
 
-                <!-- Filter button / popup toggle -->
                 <div class="gallery-item gallery-filter">
                     <button id="gallery-filter-toggle" class="gallery-filter-toggle" aria-haspopup="true" aria-expanded="false">Filters ▾</button>
 
@@ -38,32 +36,49 @@
 
                         <div class="gallery-filter-row">
                             <label for="gallery-artist-select" class="gallery-label">Artist</label>
-                            <select id="gallery-artist-select" class="gallery-select">
-                                <option value="">— Any —</option>
-                            </select>
+                            <div class="gallery-dropdown-custom" data-select-id="gallery-artist-select">
+                                <div class="gallery-dropdown-selected">
+                                    <span class="gallery-dropdown-option-label">— Any —</span>
+                                    <span class="gallery-dropdown-arrow">▾</span>
+                                </div>
+                                <ul class="gallery-dropdown-options"></ul>
+                                <select id="gallery-artist-select" class="gallery-dropdown-select-hidden">
+                                    <option value="">— Any —</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="gallery-filter-row">
                             <label for="gallery-form-select" class="gallery-label">Form</label>
-                            <select id="gallery-form-select" class="gallery-select">
-                                <option value="">— Any —</option>
-                            </select>
+                            <div class="gallery-dropdown-custom" data-select-id="gallery-form-select">
+                                <div class="gallery-dropdown-selected">
+                                    <span class="gallery-dropdown-option-label">— Any —</span>
+                                    <span class="gallery-dropdown-arrow">▾</span>
+                                </div>
+                                <ul class="gallery-dropdown-options"></ul>
+                                <select id="gallery-form-select" class="gallery-dropdown-select-hidden">
+                                    <option value="">— Any —</option>
+                                </select>
+                            </div>
                         </div>
+                        
+                        <div class="gallery-filter-row">
+                            <label class="gallery-label">Toggles</label>
+                            <div class="gallery-filter-row gallery-filter-row-inline">
+                                <div class="gallery-tristate">
+                                    <label class="gallery-label">NSFW</label>
+                                    <button id="gallery-nsfw-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle NSFW filter (neutral → include → exclude)">─</button>
+                                </div>
 
-                        <div class="gallery-filter-row gallery-filter-row-inline">
-                            <div class="gallery-tristate">
-                                <label class="gallery-label">NSFW</label>
-                                <button id="gallery-nsfw-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle NSFW filter (neutral → include → exclude)">─</button>
-                            </div>
+                                <div class="gallery-tristate">
+                                    <label class="gallery-label">AI</label>
+                                    <button id="gallery-ai-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle AI filter (neutral → include → exclude)">─</button>
+                                </div>
 
-                            <div class="gallery-tristate">
-                                <label class="gallery-label">AI</label>
-                                <button id="gallery-ai-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle AI filter (neutral → include → exclude)">─</button>
-                            </div>
-
-                            <div class="gallery-tristate">
-                                <label class="gallery-label">Discord</label>
-                                <button id="gallery-discord-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle Discord filter (neutral → include → exclude)">─</button>
+                                <div class="gallery-tristate">
+                                    <label class="gallery-label">Discord</label>
+                                    <button id="gallery-discord-toggle" class="gallery-tri-btn" data-state="neutral" aria-pressed="false" title="Toggle Discord filter (neutral → include → exclude)">─</button>
+                                </div>
                             </div>
                         </div>
 
@@ -82,16 +97,30 @@
 
                 <!-- Artist quick dropdown -->
                 <div class="gallery-item gallery-artist-dropdown">
-                    <select id="gallery-artist-quick" class="gallery-select-compact">
-                        <option value="">Artist — Any</option>
-                    </select>
+                    <div class="gallery-dropdown-custom" data-select-id="gallery-artist-quick">
+                        <div class="gallery-dropdown-selected">
+                            <span class="gallery-dropdown-option-label">Artist — Any</span>
+                            <span class="gallery-dropdown-arrow">▾</span>
+                        </div>
+                        <ul class="gallery-dropdown-options"></ul>
+                        <select id="gallery-artist-quick" class="gallery-dropdown-select-hidden">
+                            <option value="">Artist — Any</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Form quick dropdown -->
                 <div class="gallery-item gallery-form-dropdown">
-                    <select id="gallery-form-quick" class="gallery-select-compact">
-                        <option value="">Form — Any</option>
-                    </select>
+                    <div class="gallery-dropdown-custom" data-select-id="gallery-form-quick">
+                        <div class="gallery-dropdown-selected">
+                            <span class="gallery-dropdown-option-label">Form — Any</span>
+                            <span class="gallery-dropdown-arrow">▾</span>
+                        </div>
+                        <ul class="gallery-dropdown-options"></ul>
+                        <select id="gallery-form-quick" class="gallery-dropdown-select-hidden">
+                            <option value="">Form — Any</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -102,5 +131,6 @@
 
     <script src="{{ url_for('static', filename='js/viewer.js') }}"></script>
     <script src="{{ url_for('static', filename='js/galleryControls.js') }}"></script>
+    <script>initGalleryDropdowns()</script>
 </body>
 {% endblock %}

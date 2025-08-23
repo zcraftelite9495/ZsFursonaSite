@@ -1,4 +1,3 @@
-/* Debounce helper */
 function debounce(fn, wait = 250) {
     let t;
     return (...args) => {
@@ -7,25 +6,22 @@ function debounce(fn, wait = 250) {
     };
 }
 
-/* Convert tri-state string to filter value */
 function triStateToFilter(stateStr) {
     if (stateStr === "include") return true;
-    if (stateStr === "exclude") return false;
-    return null; // neutral
+    if (stateStr === "exclude") return false; 
+    return null; 
 }
 
-/* Toggle tri-state: neutral -> include -> exclude -> neutral */
 function cycleTriState(btn) {
     const current = btn.getAttribute("data-state") || "neutral";
     const order = ["neutral", "include", "exclude"];
     const next = order[(order.indexOf(current) + 1) % order.length];
     btn.setAttribute("data-state", next);
     btn.setAttribute("aria-pressed", next === "include");
-    // set visible text: ✓ for include, − for exclude, — for neutral
-    btn.textContent = next === "include" ? "✓" : (next === "exclude" ? "−" : "─");
+    
+    btn.textContent = next === "include" ? "✓" : (next === "exclude" ? "X" : "─");
 }
 
-/* Build filters object from UI */
 function readFiltersFromUI() {
     const artist = document.getElementById("gallery-artist-select").value || null;
     const form = document.getElementById("gallery-form-select").value || null;
@@ -33,7 +29,6 @@ function readFiltersFromUI() {
     const characters = Array.from(document.querySelectorAll("#gallery-characters-list input[type='checkbox']:checked"))
         .map(cb => cb.value);
 
-    // quick dropdown duplicates
     const quickArtist = document.getElementById("gallery-artist-quick").value || null;
     const quickForm = document.getElementById("gallery-form-quick").value || null;
 
@@ -61,61 +56,159 @@ function readFiltersFromUI() {
     };
 }
 
-/* Populate filter option UI using getFilterOptions() */
 async function populateFilterControls() {
     const opts = await getFilterOptions();
-    const artistSelect = document.getElementById("gallery-artist-select");
-    const formSelect = document.getElementById("gallery-form-select");
-    const artistQuick = document.getElementById("gallery-artist-quick");
-    const formQuick = document.getElementById("gallery-form-quick");
+
+    function esc(s) {
+        return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
     const charList = document.getElementById("gallery-characters-list");
     const charPopup = document.getElementById("gallery-characters-popup");
-
-    // clear
-    [artistSelect, formSelect, artistQuick, formQuick].forEach(el => {
-        if (!el) return;
-        // leave first option intact
-        const keep = el.tagName === "SELECT" ? [el.firstElementChild] : [];
-        el.innerHTML = "";
-    });
-
-    // populate artist selects
-    if (artistSelect) {
-        artistSelect.innerHTML = `<option value="">— Any —</option>` +
-            opts.artists.map(a => `<option value="${a}">${a}</option>`).join("");
-    }
-    if (artistQuick) {
-        artistQuick.innerHTML = `<option value="">Artist — Any</option>` +
-            opts.artists.map(a => `<option value="${a}">${a}</option>`).join("");
-    }
-
-    // populate form selects
-    if (formSelect) {
-        formSelect.innerHTML = `<option value="">— Any —</option>` +
-            opts.forms.map(f => `<option value="${f}">${f}</option>`).join("");
-    }
-    if (formQuick) {
-        formQuick.innerHTML = `<option value="">Form — Any</option>` +
-            opts.forms.map(f => `<option value="${f}">${f}</option>`).join("");
-    }
-
-    // populate characters (checkboxes) for filter popup and quick popup
     if (charList) {
         charList.innerHTML = opts.characters.map(c =>
-            `<label><input type="checkbox" value="${c}"> <span>${c}</span></label>`
+            `<label><input type="checkbox" value="${esc(c)}"> <span>${esc(c)}</span></label>`
         ).join("");
     }
-
     if (charPopup) {
-        charPopup.innerHTML = `<div style="padding:0.5rem; max-height:12rem; overflow:auto;">` +
-            opts.characters.map(c => `<label style="display:block; margin:0.15rem 0;"><input type="checkbox" value="${c}"> ${c}</label>`).join("") +
+        charPopup.innerHTML = `<div class="gallery-multiselect" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))">` +
+            opts.characters.map(c => `<label><input type="checkbox" value="${esc(c)}"> ${esc(c)}</label>`).join("") +
             `</div>`;
     }
+
+    const nativeArtistSelect = document.getElementById("gallery-artist-select");
+    const nativeFormSelect = document.getElementById("gallery-form-select");
+    const nativeArtistQuick = document.getElementById("gallery-artist-quick");
+    const nativeFormQuick = document.getElementById("gallery-form-quick");
+
+    if (nativeArtistSelect) {
+        nativeArtistSelect.innerHTML = `<option value="">— Any —</option>` +
+            (opts.artists || []).map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join("");
+    }
+    if (nativeFormSelect) {
+        nativeFormSelect.innerHTML = `<option value="">— Any —</option>` +
+            (opts.forms || []).map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
+    }
+    if (nativeArtistQuick) {
+        nativeArtistQuick.innerHTML = `<option value="">Artist — Any</option>` +
+            (opts.artists || []).map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join("");
+    }
+    if (nativeFormQuick) {
+        nativeFormQuick.innerHTML = `<option value="">Form — Any</option>` +
+            (opts.forms || []).map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
+    }
+
+    document.querySelectorAll(".gallery-dropdown-custom[data-select-id]").forEach(custom => {
+        const selectId = custom.dataset.selectId;
+        const hiddenSelect = document.getElementById(selectId);
+        const ul = custom.querySelector(".gallery-dropdown-options");
+        const selectedLabelEl = custom.querySelector(".gallery-dropdown-selected .gallery-dropdown-option-label");
+
+        
+        const isArtist = /artist/i.test(selectId);
+        const isForm = /form/i.test(selectId);
+        let source = [];
+        let defaultLabel = "— Any —";
+        if (isArtist) {
+            source = opts.artists || [];
+            defaultLabel = selectId.includes("quick") ? "Artist — Any" : "— Any —";
+        } else if (isForm) {
+            source = opts.forms || [];
+            defaultLabel = selectId.includes("quick") ? "Form — Any" : "— Any —";
+        }
+
+        if (hiddenSelect) {
+            hiddenSelect.innerHTML = `<option value="">${esc(defaultLabel)}</option>` +
+                source.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join("");
+        }
+
+        if (ul) {
+            const listHtml =
+                `<li class="gallery-dropdown-option" role="option" data-value=""><span class="gallery-dropdown-option-label">${esc(defaultLabel)}</span></li>` +
+                source.map(v => `<li class="gallery-dropdown-option" role="option" data-value="${esc(v)}"><span class="gallery-dropdown-option-label">${esc(v)}</span></li>`).join("");
+            ul.innerHTML = listHtml;
+        }
+
+        if (selectedLabelEl) {
+            selectedLabelEl.textContent = defaultLabel;
+        }
+    });
+
+    if (typeof initGalleryDropdowns === "function") initGalleryDropdowns();
+    else if (typeof galleryInitDropdowns === "function") galleryInitDropdowns();
 }
 
-/* Hook up UI actions and call loadGallery when filters change */
+function initGalleryDropdowns() {
+    if (!window.__galleryDropdownDocHandler) {
+        window.__galleryDropdownDocHandler = (e) => {
+            document.querySelectorAll('.gallery-dropdown-custom.gallery-dropdown-open').forEach(c => {
+                if (!c.contains(e.target)) c.classList.remove('gallery-dropdown-open');
+            });
+        };
+        document.addEventListener('click', window.__galleryDropdownDocHandler);
+    }
+
+    document.querySelectorAll(".gallery-dropdown-custom").forEach(container => {
+        if (container.dataset.dropdownInit) return;
+        container.dataset.dropdownInit = 'true';
+
+        const hiddenSelect = container.querySelector(".gallery-dropdown-select-hidden");
+        const selected = container.querySelector(".gallery-dropdown-selected");
+        const list = container.querySelector(".gallery-dropdown-options");
+
+        if (!selected || !list) return;
+
+        let timeoutId;
+
+        container.addEventListener('mouseenter', () => {
+            clearTimeout(timeoutId); 
+        });
+
+        container.addEventListener('mouseleave', () => {
+            timeoutId = setTimeout(() => {
+                container.classList.remove("gallery-dropdown-open");
+            }, 500);
+        });
+
+        container.addEventListener('click', (e) => {
+            if (selected.contains(e.target)) {
+                e.stopPropagation();
+                container.classList.toggle("gallery-dropdown-open");
+                return;
+            }
+
+            const opt = e.target.closest('.gallery-dropdown-option');
+            if (opt && list.contains(opt)) {
+                e.stopPropagation();
+                const value = opt.dataset.value ?? "";
+                const label = opt.querySelector(".gallery-dropdown-option-label")?.textContent?.trim() || opt.textContent.trim();
+
+                const visibleLabel = selected.querySelector(".gallery-dropdown-option-label");
+                if (visibleLabel) visibleLabel.textContent = label;
+
+                if (hiddenSelect) {
+                    hiddenSelect.value = value;
+                    hiddenSelect.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+
+                list.querySelectorAll('.gallery-dropdown-option').forEach(o => o.setAttribute("aria-selected", "false"));
+                opt.setAttribute("aria-selected", "true");
+                container.classList.remove("gallery-dropdown-open");
+            }
+        });
+    });
+}
+
+
+
+
 function initGalleryControls() {
-    // references
+    
     const filterToggle = document.getElementById("gallery-filter-toggle");
     const filterPopup = document.getElementById("gallery-filter-popup");
     const applyBtn = document.getElementById("gallery-apply-btn");
@@ -129,19 +222,16 @@ function initGalleryControls() {
     const artistQuick = document.getElementById("gallery-artist-quick");
     const formQuick = document.getElementById("gallery-form-quick");
 
-    // helper to read UI and call loadGallery
     function applyFiltersNow() {
         const filters = readFiltersFromUI();
         loadGallery("gallery", 0, false, filters);
     }
     const debouncedApply = debounce(applyFiltersNow, 300);
 
-    // populate options, then initial load with no filters
     populateFilterControls().then(() => {
         debouncedApply();
     });
 
-    // popup toggle helpers
     function openPopup(popup, toggleBtn) {
         popup.setAttribute("aria-hidden", "false");
         if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "true");
@@ -151,7 +241,6 @@ function initGalleryControls() {
         if (toggleBtn) toggleBtn.setAttribute("aria-expanded", "false");
     }
 
-    // filter popup toggle
     if (filterToggle && filterPopup) {
         filterToggle.addEventListener("click", (e) => {
             const opened = filterPopup.getAttribute("aria-hidden") === "false";
@@ -159,25 +248,21 @@ function initGalleryControls() {
         });
     }
 
-    // characters quick toggle
     if (charactersToggle && charactersPopup) {
         charactersToggle.addEventListener("click", (e) => {
             const opened = charactersPopup.getAttribute("aria-hidden") === "false";
             if (opened) closePopup(charactersPopup, charactersToggle); else openPopup(charactersPopup, charactersToggle);
         });
 
-        // clicking a checkbox in quick popup should sync with main popup checkboxes
         charactersPopup.addEventListener("change", (e) => {
             const val = e.target?.value;
-            if (!val) return;
-            // toggle matching checkbox in main list
+            if (!val) return; 
             const mainCheckbox = document.querySelector(`#gallery-characters-list input[type='checkbox'][value="${CSS.escape(val)}"]`);
             if (mainCheckbox) mainCheckbox.checked = e.target.checked;
             debouncedApply();
         });
     }
 
-    // clicking outside closes popups
     document.addEventListener("click", (e) => {
         if (filterPopup && !filterPopup.contains(e.target) && filterToggle && !filterToggle.contains(e.target)) {
             closePopup(filterPopup, filterToggle);
@@ -187,10 +272,9 @@ function initGalleryControls() {
         }
     });
 
-    // tri-state toggles
+    
     [nsfwBtn, aiBtn, discordBtn].forEach(btn => {
         if (!btn) return;
-        // render initial glyph for neutral
         btn.textContent = "─";
         btn.addEventListener("click", (e) => {
             cycleTriState(btn);
@@ -198,25 +282,21 @@ function initGalleryControls() {
         });
     });
 
-    // apply / reset buttons
     if (applyBtn) applyBtn.addEventListener("click", () => {
         closePopup(filterPopup, filterToggle);
         debouncedApply();
     });
 
     if (resetBtn) resetBtn.addEventListener("click", () => {
-        // reset UI controls
         document.getElementById("gallery-search-input").value = "";
         document.getElementById("gallery-artist-select").value = "";
         document.getElementById("gallery-form-select").value = "";
         document.getElementById("gallery-artist-quick").value = "";
         document.getElementById("gallery-form-quick").value = "";
 
-        // uncheck all character checkboxes
         document.querySelectorAll("#gallery-characters-list input[type='checkbox']").forEach(cb => cb.checked = false);
         document.querySelectorAll("#gallery-characters-popup input[type='checkbox']").forEach(cb => cb.checked = false);
 
-        // reset tri-state to neutral
         [nsfwBtn, aiBtn, discordBtn].forEach(btn => {
             if (!btn) return;
             btn.setAttribute("data-state", "neutral");
@@ -227,34 +307,29 @@ function initGalleryControls() {
         debouncedApply();
     });
 
-    // any change in the main characters list should update quick popup and apply
     const mainCharList = document.getElementById("gallery-characters-list");
     if (mainCharList) {
         mainCharList.addEventListener("change", (e) => {
             const val = e.target?.value;
             if (!val) return;
-            // sync quick popup checkbox if present
             const quickCb = document.querySelector(`#gallery-characters-popup input[type="checkbox"][value="${CSS.escape(val)}"]`);
             if (quickCb) quickCb.checked = e.target.checked;
             debouncedApply();
         });
     }
 
-    // artist/form quick selects apply immediately
     if (artistQuick) artistQuick.addEventListener("change", debouncedApply);
     if (formQuick) formQuick.addEventListener("change", debouncedApply);
 
-    // artist/form main selects apply immediately
     const artistMain = document.getElementById("gallery-artist-select");
     const formMain = document.getElementById("gallery-form-select");
     if (artistMain) artistMain.addEventListener("change", debouncedApply);
     if (formMain) formMain.addEventListener("change", debouncedApply);
 
-    // search input debounce
     if (searchInput) searchInput.addEventListener("input", debouncedApply);
 }
 
-/* Initialize on DOMContentLoaded */
+
 document.addEventListener("DOMContentLoaded", () => {
     initGalleryControls();
 });
