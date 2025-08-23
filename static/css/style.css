@@ -28,9 +28,12 @@ Made with love by ZcraftElite :3
     --text-default: #f0eaff;
 
     --badge-ai: #f39c12;
-    --badge-ai-gradient: linear-gradient(135deg, #f39c12, #f1c40f);
     --badge-nsfw: #e74c3c;
+    --badge-discord: #5865F2;
+
+    --badge-ai-gradient: linear-gradient(135deg, #f39c12, #f1c40f);
     --badge-nsfw-gradient: linear-gradient(135deg, #e74c3c, #c0392b);
+    --badge-discord-gradient: linear-gradient(135deg, #5865F2, #4e5b8c);
 
     --title-font: "Special Gothic Expanded One", sans-serif;
 }
@@ -1374,10 +1377,13 @@ input:checked + .slider::before {
 }
 
 .thumb-viewer-badge.ai-badge {
-    background: var(--badge-ai-gradient); /* Use the solid color variable */
+    background: var(--badge-ai-gradient);
 }
 .thumb-viewer-badge.nsfw-badge {
-    background: var(--badge-nsfw-gradient); /* Use the solid color variable */
+    background: var(--badge-nsfw-gradient);
+}
+.thumb-viewer-badge.discord-badge {
+    background: var(--badge-discord-gradient); /* Use the solid color variable */
 }
 
 /* ---- IMAGE VIEWER STYLES ---- */
@@ -1568,6 +1574,10 @@ input:checked + .slider::before {
 
 .viewer-badge.nsfw-badge {
     background: var(--badge-nsfw-gradient);
+}
+
+.viewer-badge.discord-badge {
+    background: var(--badge-discord-gradient);
 }
 
 .viewer-badge.hidden {

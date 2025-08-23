@@ -112,6 +112,9 @@ async function getFilterOptions() {
  *     - `isAI`: boolean - The AI filter (three-state: true, false, null)
  *     - `artNameQuery`: string - The substring to search for in the art name (case-insensitive)
  * @returns {Promise<void>} - A promise that resolves when the gallery has finished loading.
+ * 
+ * @function loadGallery
+ * @since v30
  */
 async function loadGallery(elementId, count = 0, randomize = false, filters = {}) {
     try {
@@ -250,6 +253,12 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
             nsfwBadge.innerHTML = `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 1C20 0.447715 20.4477 0 21 0C21.5523 0 22 0.447715 22 1V2H23C23.5523 2 24 2.44772 24 3C24 3.55228 23.5523 4 23 4H22V5C22 5.55228 21.5523 6 21 6C20.4477 6 20 5.55228 20 5V4H19C18.4477 4 18 3.55228 18 3C18 2.44772 18.4477 2 19 2H20V1Z"/><path d="M21.1936 8.07463C21.7016 7.85776 22.297 8.09138 22.4668 8.6169C23.145 10.7148 23.1792 12.9766 22.5523 15.1064C21.8308 17.5572 20.2788 19.6804 18.1626 21.1117C16.0464 22.5429 13.498 23.193 10.9548 22.9502C8.41165 22.7075 6.03225 21.5871 4.22503 19.7814C2.4178 17.9757 1.29545 15.5972 1.05062 13.0542C0.805783 10.5112 1.45373 7.96227 2.88325 5.84491C4.31277 3.72755 6.43471 2.17379 8.88488 1.4503C11.0142 0.821568 13.2759 0.853957 15.3744 1.53036C15.9001 1.69979 16.1342 2.29501 15.9178 2.80311C15.7013 3.31122 15.1136 3.54496 14.5846 3.38623C12.9184 2.88626 11.1353 2.8783 9.4532 3.37498C7.45003 3.96647 5.71522 5.23677 4.5465 6.96784C3.37778 8.69891 2.84804 10.7828 3.04821 12.8619C3.24838 14.9409 4.16596 16.8855 5.64348 18.3618C7.121 19.8381 9.06631 20.754 11.1455 20.9525C13.2247 21.1509 15.3082 20.6195 17.0383 19.4493C18.7684 18.2792 20.0373 16.5433 20.6271 14.5397C21.1224 12.8572 21.113 11.074 20.6116 9.40826C20.4525 8.87941 20.6857 8.29149 21.1936 8.07463Z"/><path d="M7.71054 9.14472L7.29441 9.35279C6.69971 9.65014 5.99999 9.21769 5.99999 8.55279C5.99999 8.214 6.1914 7.9043 6.49441 7.75279L7.78884 7.10557C7.9277 7.03615 8.08081 7 8.23605 7H8.99999C9.55227 7 9.99999 7.44772 9.99999 8V16C9.99999 16.5523 9.55227 17 8.99999 17C8.4477 17 7.99999 16.5523 7.99999 16V9.32361C7.99999 9.17493 7.84352 9.07823 7.71054 9.14472Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M18 9C18 7.89543 17.1046 7 16 7H14C12.8954 7 12 7.89543 12 9V10.5C12 11.3284 12.6716 12 13.5 12C12.6716 12 12 12.6716 12 13.5V15C12 16.1046 12.8954 17 14 17H16C17.1046 17 18 16.1046 18 15V13.5C18 12.6716 17.3284 12 16.5 12C17.3284 12 18 11.3284 18 10.5V9ZM16 10C16 9.44771 15.5523 9 15 9C14.4477 9 14 9.44771 14 10C14 10.5523 14.4477 11 15 11C15.5523 11 16 10.5523 16 10ZM16 14C16 14.5523 15.5523 15 15 15C14.4477 15 14 14.5523 14 14C14 13.4477 14.4477 13 15 13C15.5523 13 16 13.4477 16 14Z"/></svg>`;
             badgeContainer.appendChild(nsfwBadge);
         }
+        if (img.isDiscEmoji) {
+            const nsfwBadge = document.createElement("div");
+            nsfwBadge.className = "thumb-viewer-badge discord-badge"; // Use a new class name
+            nsfwBadge.innerHTML = `<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>`;
+            badgeContainer.appendChild(nsfwBadge);
+        }
 
             // assemble thumb
             thumb.appendChild(imgEl);
@@ -282,6 +291,9 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
  *   that should display the result. If not provided, the result will be logged to
  *   the console.
  * @returns {number} Predicted number of thumbnails that will fit in a row.
+ * 
+ * @function predictThumbsPerRow
+ * @since v23
  */
 function predictThumbsPerRow(gallerySelector, options = {}) {
     const gallery = typeof gallerySelector === "string" ? document.querySelector(gallerySelector) : gallerySelector;
@@ -332,6 +344,9 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
  * @property {string} [img.creationDate] - Creation date of the art.
  * @property {boolean} [img.isAI] - Whether the image is AI-generated.
  * @property {boolean} [img.isNSFW] - Whether the image is NSFW.
+ * 
+ * @function openViewer
+ * @since v23
  */
 function openViewer(img) {
     document.getElementById('viewer-image').src = img.webLink
@@ -359,6 +374,7 @@ function openViewer(img) {
 
     const aiBadge = document.getElementById('viewer-ai-badge');
     const nsfwBadge = document.getElementById('viewer-nsfw-badge');
+    const discordBadge = document.getElementById('viewer-discord-badge');
 
     if (Boolean(img.isAI)) {
         aiBadge.classList.remove('hidden');
@@ -374,9 +390,21 @@ function openViewer(img) {
         nsfwBadge.classList.add('hidden');
     }
 
+    if (Boolean(img.isDiscEmoji)) {
+        discordBadge.classList.remove('hidden');
+    } else {
+        discordBadge.classList.add('hidden');
+    }
+
     document.getElementById('viewer').classList.remove('hidden');
 }
 
+/**
+ * Close the image viewer and hide it.
+ * 
+ * @function closeViewer
+ * @since v23
+ */
 function closeViewer() {
     document.getElementById('viewer').classList.add('hidden');
 }
