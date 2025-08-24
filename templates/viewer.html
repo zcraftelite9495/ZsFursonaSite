@@ -1,9 +1,13 @@
 <div id="viewer" class="viewer hidden">
     <div class="viewer-close" onclick="closeViewer()">✕</div>
     <div class="viewer-content">
-        <img id="viewer-image">
+        <div id="viewer-loader" class="viewer-content-loader"></div>
+        <div class="viewer-image-container">
+            <img id="viewer-image" oncontextmenu="return false;">
+            <button id="download-button" class="download-button" onclick="downloadImage()">Download Image</button>
+        </div>
         <div class="viewer-sidebar">
-            <div class="viewer-artist-info">
+            <div class="viewer-artist-info" oncontextmenu="return false;">
                 <img id="viewer-artist-pic">
                 <p id="viewer-artist"></p>
             </div>

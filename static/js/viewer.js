@@ -358,12 +358,48 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
  * @since v23
  */
 function openViewer(img) {
-    document.getElementById('viewer-image').src = img.webLink
-        ? img.webLink
-        : `/static/images/${img.filename}`;
+    const viewerContent = document.querySelector('.viewer-content');
+    const viewerImage = document.getElementById('viewer-image');
+    const viewerArtistPic = document.getElementById('viewer-artist-pic');
+    const viewerLoader = document.getElementById('viewer-loader');
+    
+    viewerImage.src = '';
+    viewerImage.onload = null;
+    viewerArtistPic.src = '';
+    viewerContent.style.width = "200px";
+    viewerContent.style.height = "200px";
+
+    viewerLoader.classList.remove('hidden');
+
+    const imagePromises = [];
+
+    const loadImage = (element, src) => {
+        return new Promise((resolve, reject) => {
+            if (!src) {
+                resolve();
+                return;
+            }
+            element.onload = resolve;
+            element.onerror = reject;
+            element.src = src;
+        });
+    };
+
+    imagePromises.push(loadImage(viewerImage, img.webLink ? img.webLink : `/static/images/${img.filename}`));
+    imagePromises.push(loadImage(viewerArtistPic, `/static/images/artists/${img.artist_pic}`));
+
+    Promise.all(imagePromises)
+        .then(() => {
+            viewerContent.style.width = "auto";
+            viewerContent.style.height = "auto";
+            viewerLoader.classList.add('hidden');
+        })
+        .catch(error => {
+            viewerLoader.classList.add('hidden');
+            console.error("Error loading images:", error);
+        });
 
     document.getElementById('viewer-artist').textContent = img.artist || "";
-    document.getElementById('viewer-artist-pic').src = `/static/images/artists/${img.artist_pic}`;
 
     const aiModelDiv = document.querySelector('.viewer-data.artAIModel span');
     const charactersDiv = document.querySelector('.viewer-data.artCharacters span');
@@ -384,6 +420,50 @@ function openViewer(img) {
     const aiBadge = document.getElementById('viewer-ai-badge');
     const nsfwBadge = document.getElementById('viewer-nsfw-badge');
     const discordBadge = document.getElementById('viewer-discord-badge');
+    const downloadButton = document.getElementById('download-button');
+
+    if (Boolean(userIsUK) && Boolean(img.isNSFW)) {
+        downloadButton.onclick = () => {
+            userFailedUKDownload = true;
+            downloadButton.textContent = "NSFW Downloads Unavailable in the UK";
+            downloadButton.style.color = "#888";
+            downloadButton.style.cursor = "not-allowed"
+            showPopup({
+                title: `Dammit, why can't I goon to you offline?`,
+                message: `<b><u>Heyo UK user.</u></b><br><br>Due to the regulations of your country, in order to protect myself, I cannot allow downloads from an UK-based device.<br><br>However, you can still view the image online, and if you really want a copy, you can always take a screenshot.<br><br>Sorry for the inconvenience!`,
+                buttons: [
+                    {
+                        text: 'I Understand',
+                        onClick: () => {
+                            setCookie('readUKmessage', 'True', 14);
+                        }
+                    },
+                    {
+                        text: 'View Petition',
+                        onClick: () => {
+                            setCookie('readUKmessage', 'True', 14);
+                            window.open('https://petition.parliament.uk/petitions/722903', '_blank');
+                        }
+                    }
+                ]
+            });
+        };
+    } else if ((userFailedUKDownload) && Boolean(img.isNSFW)) {
+        downloadButton.textContent = "NSFW Downloads Unavailable in the UK";
+        downloadButton.style.color = "#888";
+        downloadButton.style.cursor = "not-allowed"
+    } else if (Boolean(img.disableDownload)) {
+        const downloadButton = document.getElementById('download-button');
+        downloadButton.textContent = "Downloads Disabled for this Image";
+        downloadButton.style.color = "#888";
+        downloadButton.style.cursor = "not-allowed"
+        downloadButton.onclick = null;
+    } else {
+        downloadButton.textContent = "Download Image";
+        downloadButton.style.color = "#FFF";
+        downloadButton.style.cursor = "pointer";
+        downloadButton.onclick = downloadImage;
+    }
 
     if (Boolean(img.isAI)) {
         aiBadge.classList.remove('hidden');
@@ -406,6 +486,18 @@ function openViewer(img) {
     }
 
     document.getElementById('viewer').classList.remove('hidden');
+}
+
+function downloadImage() {
+    const imageUrl = document.getElementById('viewer-image').src;
+    if (imageUrl) {
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = 'artwork_download.jpg'; // You can customize the filename here
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 }
 
 /**

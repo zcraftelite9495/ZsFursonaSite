@@ -56,7 +56,7 @@ function initNSFWContainers() {
             contentWrapper.style.transition = 'filter 0.3s ease-in-out';
 
             const badgeDiv = document.createElement('div');
-            badgeDiv.classList.add('container-badge');
+            badgeDiv.classList.add('badge');
             badgeDiv.setAttribute('tooltip-text', 'NSFW');
             badgeDiv.setAttribute('badge', 'nsfw');
             badgeDiv.setAttribute('badge-style', 'gradient');

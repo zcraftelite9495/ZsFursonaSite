@@ -901,6 +901,9 @@ input:checked + .slider::before {
     position: relative;
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 15px;
     justify-content: center;
     justify-self: center;
     padding: 0.6rem 0.75rem;
@@ -1184,7 +1187,7 @@ input:checked + .slider::before {
     color: var(--text-default, #f0eaff);
     font-size: 0.8rem;
     font-weight: 600;
-    height: 100%;
+    cursor: pointer;
     min-height: 40px;
 }
 
@@ -1285,15 +1288,54 @@ input:checked + .slider::before {
     left: -9999px;
 }
 
+.gallery-aspect-ratio-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.gallery-aspect-ratio-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--item-height);
+    height: var(--item-height);
+    padding: 0;
+    border: 2px solid rgba(120, 115, 245, 0.18);
+    background: rgba(120, 115, 245, 0.06);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.gallery-aspect-ratio-btn:hover {
+    background: rgba(120, 115, 245, 0.1);
+    border-color: rgba(120, 115, 245, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(120, 115, 245, 0.08);
+}
+
+.gallery-aspect-ratio-btn.selected {
+    background: rgba(120, 115, 245, 0.2);
+    border-color: rgba(120, 115, 245, 0.4);
+    box-shadow: 0 4px 12px rgba(120, 115, 245, 0.08);
+}
+
+.gallery-aspect-ratio-preview {
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    width: 60%;
+    /* Aspect ratio is set inline in HTML for correct visual representation */
+}
+
 @media (max-width: 900px) {
     .gallery-select-wrapper { min-width: 100%; }
     .gallery-select-compact-wrapper { min-width: 100%; }
     .gallery-item { width: 100%; }
-    .gallery-search-input { width: 100%; }
+    .gallery-search-input { max-width: none; width: 100%; }
     .gallery-filter-toggle { width: 100%; }
     .gallery-dropdown-toggle { width: 100%; }
     .gallery-item > .gallery-dropdown-custom { width: 100%; }
-    .gallery-menubar { flex-direction: column; gap: 0.6rem; align-items: flex-start; width: 80vw; }
+    .gallery-menubar { flex-direction: column; gap: 0.6rem; align-items: center; width: 80vw; }
     .gallery-menubar-wrapper { width: 90vw; }
 }
 
@@ -1305,10 +1347,12 @@ input:checked + .slider::before {
     cursor: pointer;
     overflow: hidden;
     position: relative;
+    transition: aspect-ratio 0.5s ease;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 750px) {
     .library > .thumb { width: 45%;}
+    .container .thumb { width: 80vw; }
 }
 
 @media (max-width: 400px) {
@@ -1407,6 +1451,38 @@ input:checked + .slider::before {
 
 
 /* ---- IMAGE VIEWER STYLES ---- */
+.viewer-content-loader {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: grid;
+    place-items: center;
+    z-index: 15;
+    border-radius: 24px;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.viewer-content-loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.viewer-content-loader::after {
+    content: "";
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+to {
+    transform: rotate(360deg);
+}}
+
 .viewer {
     position: fixed;
     inset: 0;
@@ -1418,7 +1494,7 @@ input:checked + .slider::before {
     z-index: 1000;
     padding: 20px;
     opacity: 1;
-    transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+    transition: opacity 1s ease, backdrop-filter 0.3s ease-in-out;
 }
 
 .viewer.hidden {
@@ -1493,6 +1569,9 @@ input:checked + .slider::before {
 }
 
 .viewer-description {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     margin: 0;
     font-size: 1.2rem;
     color: var(--accent-light);
@@ -1500,9 +1579,10 @@ input:checked + .slider::before {
     font-weight: 600;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     text-align: left;
-    max-height: 70vh;
-    overflow-y: auto;
+    height: calc(100% + 10px);
+    overflow-y: scroll;
     overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .viewer-description div {
@@ -1559,6 +1639,54 @@ input:checked + .slider::before {
     padding: 0;
 }
 
+.viewer-image-container {
+    position: relative;
+    display: inline-block;
+    max-height: 70vh;
+    max-width: 60vw;
+}
+
+#viewer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.download-button {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: calc(100% - 32px);
+    padding: 10px 24px;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    font-family: "Rubik Gemstones", system-ui;
+    font-size: 1rem;
+}
+
+.download-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.download-button:active {
+    transform: scale(0.95);
+}
+
 @media (max-width: 768px) {
     .viewer {
         padding: 16px;
@@ -1575,9 +1703,10 @@ input:checked + .slider::before {
         border-radius: 20px;
     }
 
-    #viewer-image {
+    #viewer-image,
+    .viewer-image-container {
         max-width: 100%;
-        max-height: 50vh;
+        max-height: 40vh;
         margin: 0;
     }
 
@@ -1627,6 +1756,10 @@ input:checked + .slider::before {
         font-size: 1.2rem;
         text-align: center;
     }
+
+    .download-button {
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1674,7 +1807,8 @@ input:checked + .slider::before {
         max-height: 85vh;
     }
 
-    #viewer-image {
+    #viewer-image,
+    .viewer-image-container {
         max-height: 60vh;
         max-width: 50vw;
     }
