@@ -17,10 +17,35 @@ If you are seeing this, you most likely accidentally hit Ctrl + Shift + I on you
 -->
 <html lang="en">
 <head>
-    <!-- Manifest Info -->
+    <!-- Primary Metadata -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <meta name="apple-mobile-web-app-title" content="Z's World"/>
+
+    <!-- Favicon Metadata -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}" />
+
+    <!-- WebManifest Metadata -->
     <meta name="apple-mobile-web-app-title" content="Z's World" />
+    <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}" />
+
+    <!-- OpenGraph Metadata -->
+    <meta property="og:title" content="Z's World">
+    <meta property="og:description" content="Learn more about your favorite wolfgirl here. My art, my favorite things, and more!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zcraftelite.net/">
+    <meta property="og:image" content="{{ url_for('static', filename='favicon/favicon-96x96.png') }}"/>
+
+    <!-- Twitter Metadata -->
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:domain" content="zcraftelite.net">
+    <meta property="twitter:url" content="https://world.zcraftelite.net">
+    <meta name="twitter:title" content="Z's World">
+    <meta name="twitter:description" content="Learn more about your favorite wolfgirl here. My art, my favorite things, and more!">
+    <meta name="twitter:image" content="{{ url_for('static', filename='favicon/favicon-96x96.png') }}">
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">    
