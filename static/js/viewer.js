@@ -462,7 +462,7 @@ function openViewer(img) {
         downloadButton.textContent = "Download Image";
         downloadButton.style.color = "#FFF";
         downloadButton.style.cursor = "pointer";
-        downloadButton.onclick = downloadImage;
+        downloadButton.onclick = () => downloadImage(img);
     }
 
     if (Boolean(img.isAI)) {
@@ -488,12 +488,19 @@ function openViewer(img) {
     document.getElementById('viewer').classList.remove('hidden');
 }
 
-function downloadImage() {
+/**
+ * Downloads the image displayed in the viewer with the filename provided.
+ * @param {Object} img - The image object containing the filename to use.
+ * 
+ * @function downloadImage
+ * @since v55
+ */
+function downloadImage(img) {
     const imageUrl = document.getElementById('viewer-image').src;
     if (imageUrl) {
         const link = document.createElement('a');
         link.href = imageUrl;
-        link.download = `${img.filename}`;
+        link.download = img.filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
