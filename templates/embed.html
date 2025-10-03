@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Embedded Artwork Viewer</title>
+    <style>
+        :root{
+            --accent-light:#f0eaff;
+            --bg:rgba(255,255,255,0.03);
+            --stage-radius:20px;
+        }
+
+        html,body{
+            height:100%;
+            margin:0;
+            background:transparent;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        *{box-sizing:border-box}
+
+        .embed-viewer{
+            display:block;
+            width:100%;
+            margin:0 auto;
+            padding:16px;
+        }
+
+        .embed-content{
+            display:flex;
+            flex-direction:column;
+            gap:16px;
+            background:rgba(0,0,0,0.45);
+            backdrop-filter:blur(20px);
+            -webkit-backdrop-filter:blur(20px);
+            border:1px solid rgba(255,255,255,0.06);
+            border-radius:24px;
+            padding:32px;
+            box-shadow:0 12px 30px -12px rgba(0,0,0,0.6);
+            overflow:hidden;
+            color:#fff;
+            font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            width:fit-content;
+            max-width:calc(100vw - 40px);
+            margin:0 auto;
+        }
+
+        .embed-image-stage{
+            position:relative;
+            display:inline-block;
+            max-height:70vh;
+            vertical-align:middle;
+            border-radius:var(--stage-radius);
+            overflow:hidden;
+            background:transparent;
+            border:1px solid rgba(255,255,255,0.03);
+            padding:0;
+        }
+
+        .embed-content-loader{
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,0.45);
+            display:grid;
+            place-items:center;
+            z-index:5;
+            transition:opacity .4s ease, visibility .3s;
+            border-radius:var(--stage-radius);
+        }
+
+        .embed-content-loader.hidden{
+            opacity:0;
+            pointer-events:none;
+            visibility:hidden;
+        }
+
+        .embed-content-loader::after{
+            content:"";
+            width:40px;
+            height:40px;
+            border:4px solid rgba(255,255,255,0.18);
+            border-top-color:#fff;
+            border-radius:50%;
+            animation:spin 1s linear infinite;
+        }
+
+        @keyframes spin{
+            to{transform:rotate(360deg)}
+        }
+
+        #embed-image{
+            display:block;
+            width:100%;
+            height:100%;
+            max-width:60vw;
+            max-height:68vh;
+            object-fit:cover;
+            border-radius:var(--stage-radius);
+            transition:transform .18s ease;
+            background:transparent;
+            user-select:none;
+            -webkit-user-drag:none;
+        }
+
+        #embed-image:hover{
+            transform:scale(1.01);
+        }
+
+        .embed-author-row{
+            display:flex;
+            gap:12px;
+            align-items:center;
+            padding:10px;
+            border-radius:12px;
+            background:var(--bg);
+            border:1px solid rgba(255,255,255,0.04);
+            min-height:64px;
+        }
+
+        .embed-author-row img{
+            width:56px;
+            height:56px;
+            border-radius:50%;
+            object-fit:cover;
+            border:2px solid rgba(255,255,255,0.08);
+            box-shadow:0 8px 18px rgba(0,0,0,0.35);
+            flex:0 0 56px;
+        }
+
+        .embed-author-row p{
+            margin:0;
+            font-size:1rem;
+            font-weight:600;
+            color:var(--accent-light);
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+
+        .embed-badges{
+            display:flex;
+            gap:12px;
+            align-items:center;
+            padding:10px;
+            border-radius:12px;
+            background:rgba(255,255,255,0.02);
+            border:1px solid rgba(255,255,255,0.03);
+            flex-wrap:wrap;
+            min-height:56px;
+        }
+
+        .badge-row{
+            display:flex;
+            gap:12px;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+
+        @media (max-width:768px){
+            .embed-viewer{padding:12px}
+            .embed-content{padding:20px}
+            .embed-author-row{justify-content:flex-start}
+            .embed-author-row img{width:48px;height:48px}
+            .embed-author-row p{font-size:.95rem}
+            #embed-image{max-width:95vw}
+        }
+    </style>
+</head>
+<script src="{{ url_for('static', filename='js/globalFunc.js') }}"></script>
+<body>
+    <div class="embed-viewer" id="embed-viewer">
+        <div class="embed-content" id="embed-content" role="region" aria-label="Embedded artwork viewer">
+            <div class="embed-image-stage" id="embed-image-stage">
+                <div id="embed-loader" class="embed-content-loader" aria-hidden="true"></div>
+                <img id="embed-image" src="" alt="Artwork" oncontextmenu="return false;">
+            </div>
+            <div class="embed-author-row" oncontextmenu="return false;">
+                <img id="embed-artist-pic" src="" alt="Author">
+                <p id="embed-artist">Unknown Artist</p>
+            </div>
+            <div class="embed-badges">
+                <div class="badge-row">
+                    <div id="embed-ai-badge" class="badge hidden" badge="ai" badge-style="gradient" tooltip-text="AI Generated">
+                        <script>document.querySelector(".embed-badges .badge[badge='ai']").innerHTML = badgeSVG['ai']</script>
+                    </div>
+                    <div id="embed-nsfw-badge" class="badge hidden" badge="nsfw" badge-style="gradient" tooltip-text="NSFW">
+                        <script>document.querySelector(".embed-badges .badge[badge='nsfw']").innerHTML = badgeSVG['nsfw']</script>
+                    </div>
+                    <div id="embed-discord-badge" class="badge hidden" badge="discord" badge-style="gradient" tooltip-text="Available as Discord Emoji">
+                        <script>document.querySelector(".embed-badges .badge[badge='discord']").innerHTML = badgeSVG['discord']</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const imageId = {{ ID|default(None)|tojson }};
+    if (!imageId) return;
+
+    const embedContent = document.getElementById('embed-content');
+    const embedViewer = document.getElementById('embed-viewer');
+    const embedImage = document.getElementById('embed-image');
+    const artistPic = document.getElementById('embed-artist-pic');
+    const artistName = document.getElementById('embed-artist');
+    const loader = document.getElementById('embed-loader');
+    const stage = document.getElementById('embed-image-stage');
+
+    const aiBadge = document.getElementById('embed-ai-badge');
+    const nsfwBadge = document.getElementById('embed-nsfw-badge');
+    const discordBadge = document.getElementById('embed-discord-badge');
+
+    const loadImage = (element, src) => {
+        return new Promise((resolve) => {
+            if (!src) {
+                resolve();
+                return;
+            }
+            element.onload = () => resolve();
+            element.onerror = () => resolve();
+            element.src = src;
+        });
+    };
+
+    const postSizeToParent = (w, h) => {
+        const payload = { type: 'embed-size', width: Math.round(w), height: Math.round(h) };
+        try { parent.postMessage(payload, '*'); } catch (e) {}
+    };
+
+    const measureAndPost = () => {
+        const rect = embedContent.getBoundingClientRect();
+        postSizeToParent(rect.width, rect.height);
+    };
+
+    const scaleToFitNatural = (imageEl, stageEl) => {
+        const naturalW = imageEl.naturalWidth || imageEl.width;
+        const naturalH = imageEl.naturalHeight || imageEl.height;
+        if (!naturalW || !naturalH) return;
+
+        const viewportMaxW = Math.min(window.innerWidth * 0.6, document.querySelector('.embed-viewer').clientWidth || window.innerWidth);
+        const viewportMaxH = window.innerHeight * 0.7;
+
+        const scale = Math.min(1, viewportMaxW / naturalW, viewportMaxH / naturalH);
+
+        const finalW = Math.round(naturalW * scale);
+        const finalH = Math.round(naturalH * scale);
+
+        stageEl.style.width = finalW + 'px';
+        stageEl.style.height = finalH + 'px';
+
+        imageEl.style.width = '100%';
+        imageEl.style.height = '100%';
+
+        const c = window.getComputedStyle(embedContent);
+        const cPadLeft = parseFloat(c.paddingLeft || 0);
+        const cPadRight = parseFloat(c.paddingRight || 0);
+        const cBorderLeft = parseFloat(c.borderLeftWidth || 0);
+        const cBorderRight = parseFloat(c.borderRightWidth || 0);
+
+        const contentDesiredWidth = finalW + cPadLeft + cPadRight + cBorderLeft + cBorderRight;
+        const maxAllowed = Math.max(100, window.innerWidth - 40);
+        embedContent.style.width = Math.min(contentDesiredWidth, maxAllowed) + 'px';
+
+        measureAndPost();
+    };
+
+    loader.classList.remove('hidden');
+
+    try {
+        const res = await fetch('/art.json');
+        const images = await res.json();
+        const img = images.find(x => String(x.id) === String(imageId));
+        if (!img) {
+            loader.classList.add('hidden');
+            return;
+        }
+
+        await Promise.all([
+            loadImage(embedImage, img.webLink ? img.webLink : `/static/images/${img.filename}`),
+            loadImage(artistPic, img.artist_pic ? `/static/images/artists/${img.artist_pic}` : '')
+        ]);
+
+        artistName.textContent = img.artist || 'Unknown Artist';
+
+        if (Boolean(img.isAI)) aiBadge.classList.remove('hidden'); else aiBadge.classList.add('hidden');
+        if (Boolean(img.isNSFW)) nsfwBadge.classList.remove('hidden'); else nsfwBadge.classList.add('hidden');
+        if (Boolean(img.isDiscEmoji)) discordBadge.classList.remove('hidden'); else discordBadge.classList.add('hidden');
+
+        scaleToFitNatural(embedImage, stage);
+
+        loader.classList.add('hidden');
+
+        let resizeTimer = null;
+        window.addEventListener('resize', () => {
+            if (resizeTimer) clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                embedImage.style.width = '';
+                embedImage.style.height = '';
+                stage.style.width = '';
+                stage.style.height = '';
+                embedContent.style.width = '';
+                scaleToFitNatural(embedImage, stage);
+            }, 120);
+        });
+
+        window.addEventListener('message', (ev) => {
+            if (!ev || !ev.data) return;
+            const d = ev.data;
+            if (d && d.type === 'request-embed-size') measureAndPost();
+        });
+
+        setTimeout(measureAndPost, 120);
+    } catch (err) {
+        console.error('Error loading image for embed viewer:', err);
+        loader.classList.add('hidden');
+        setTimeout(measureAndPost, 120);
+    }
+});
+</script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</body>
+</html>

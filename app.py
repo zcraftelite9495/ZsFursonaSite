@@ -141,6 +141,14 @@ def view_image(image_id):
 
     return render_template("share.html", meta=meta, image=img)
 
+@app.route('/embed/<image_id>')
+def embed_image(image_id):
+    images = load_images()
+    img = next((i for i in images if str(i.get("id")) == str(image_id)), None)
+    if not img:
+        return render_template("404.html"), 404
+    return render_template("embed.html", ID=image_id, image=img)
+
 # ---- API ENDPOINTS ----
 # --- ART DATABASE ---
 @app.route('/art.json')
