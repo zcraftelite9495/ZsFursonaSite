@@ -378,6 +378,28 @@ function shareImage() {
 }
 
 
+/* ---- MIME TYPE FORMATTER ---- */
+/**
+ * Format a MIME type like "image/png" into "Image (PNG)".
+ * Falls back to empty string when falsy and returns the original value
+ * when it can't be parsed.
+ * 
+ * @param {string} mime
+ * @returns {string}
+ * 
+ * @function formatMimeType
+ * @since v76
+ */
+function formatMimeType(mime) {
+    if (!mime) return '';
+    const cleaned = String(mime).split(';')[0].trim(); // drop parameters
+    const parts = cleaned.split('/');
+    if (parts.length !== 2) return String(mime);
+    const [type, subtypeRaw] = parts;
+    const subtype = (subtypeRaw || '').split('+')[0].split('.').pop(); // handle "svg+xml" etc
+    const typeCap = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    return subtype ? `${typeCap} (${subtype.toUpperCase()})` : typeCap;
+}
 
 
 /* ---- OPEN FUNCTION ---- */
@@ -448,6 +470,7 @@ function openViewer(img) {
     const charactersDiv = document.querySelector('.viewer-data.artCharacters span');
     const formDiv = document.querySelector('.viewer-data.artForm span');
     const artNameDiv = document.querySelector('.viewer-data.artName span');
+    const artFileTypeDiv = document.querySelector('.viewer-data.artFileType span');
     const artCreationDateDiv = document.querySelector('.viewer-data.artCreationDate span');
     const artRecievalMethodDiv = document.querySelector('.viewer-data.artRecievalMethod span');
     const artRecievalMethodIcon = document.querySelector('.viewer-data.artRecievalMethod i');
@@ -456,6 +479,7 @@ function openViewer(img) {
     charactersDiv.textContent = img.characters?.length > 0 ? img.characters.join(', ') : '';
     formDiv.textContent = img.shapeshiftForm || '';
     artNameDiv.textContent = img.artName || '';
+    artFileTypeDiv.textContent = formatMimeType(img.filetype);
     artCreationDateDiv.textContent = img.creationDate || '';
     artRecievalMethodDiv.textContent = `${img.recievalMethod || ''}${img.recievalPrice ? ` (${img.recievalPrice})` : ''}`;
     artRecievalMethodIcon.className = ({ "Gift": "nf nf-fa-gift", "Fanart": "nf nf-fa-paint_brush", "Commission": "nf nf-fa-money", "Self Made": "nf nf-fa-hammer" })[img.recievalMethod] || '';
