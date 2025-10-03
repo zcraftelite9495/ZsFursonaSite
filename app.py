@@ -127,7 +127,7 @@ def view_image(image_id):
         return render_template("404.html"), 404
 
     meta = {
-        "title": img.get("artName") or img.get("strippedFilename"),
+        "title": f"Z's World - {img.get('artName', img.get('strippedFilename'))} - {img.get('artist', 'Unknown')}",
         "description": f"Artwork by {img.get('artist', 'Unknown')}",
         "url": f"https://zcraftelite.net/view/{image_id}",
         "image": url_for("static", filename=f"images/{img['filename']}", _external=True),
