@@ -347,16 +347,36 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
  * @function copyImageLink
  * @since v24
  */
-function copyImageLink() {
+function shareImage() {
     if (!currentImage || !currentImage.id) return;
 
     const url = `${window.location.origin}/view/${currentImage.id}`;
-    navigator.clipboard.writeText(url).then(() => {
-        alert("Image link copied to clipboard!");
-    }).catch(err => {
-        console.error("Failed to copy link:", err);
-    });
+    if (navigator.share) {
+        navigator.share({
+            title: document.title,
+            text: "Check out this artwork",
+            url: url
+        }).catch(err => console.error("Share failed:", err));
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            const notification = document.createElement('div');
+            notification.textContent = "Image link copied!";
+            notification.style.position = "fixed";
+            notification.style.bottom = "20px";
+            notification.style.left = "50%";
+            notification.style.transform = "translateX(-50%)";
+            notification.style.background = "rgba(0,0,0,0.8)";
+            notification.style.color = "#fff";
+            notification.style.padding = "10px 20px";
+            notification.style.borderRadius = "8px";
+            notification.style.zIndex = "10000";
+            notification.style.fontFamily = "sans-serif";
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }).catch(err => console.error("Failed to copy link:", err));
+    }
 }
+
 
 
 
