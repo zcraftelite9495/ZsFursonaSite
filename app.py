@@ -18,7 +18,7 @@ import os
 import logging
 from pathlib import Path
 from PIL import Image, ImageOps
-from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory
+from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory, url_for, redirect
 import json, random
 
 app = Flask(__name__)
@@ -117,6 +117,24 @@ def library():
 def favs():
     return render_template('favs.html')
 
+# --- SPECIFIC IMAGE VIEW PAGE ---
+@app.route('/view/<image_id>')
+def view_image(image_id):
+    images = load_images()
+    img = next((i for i in images if str(i.get("id")) == str(image_id)), None)
+
+    if not img:
+        return render_template("404.html"), 404
+
+    meta = {
+        "title": img.get("artName") or img.get("strippedFilename"),
+        "description": f"Artwork by {img.get('artist', 'Unknown')}",
+        "url": f"https://zcraftelite.net/view/{image_id}",
+        "image": url_for("static", filename=f"images/{img['filename']}", _external=True),
+        "redirect": url_for("library", id=image_id, _external=True)
+    }
+
+    return render_template("share.html", meta=meta, image=img)
 
 # ---- API ENDPOINTS ----
 # --- ART DATABASE ---

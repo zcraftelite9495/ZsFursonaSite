@@ -350,7 +350,7 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
 function copyImageLink() {
     if (!currentImage || !currentImage.id) return;
 
-    const url = `${window.location.origin}${window.location.pathname}?id=${currentImage.id}`;
+    const url = `${window.location.origin}/view/${currentImage.id}`;
     navigator.clipboard.writeText(url).then(() => {
         alert("Image link copied to clipboard!");
     }).catch(err => {
