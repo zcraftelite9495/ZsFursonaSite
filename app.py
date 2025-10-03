@@ -130,7 +130,7 @@ def view_image(image_id):
         "title": f"Z's World - Art - {img.get('artName', img.get('strippedFilename'))}",
         "description": "",
         "url": f"https://zcraftelite.net/view/{image_id}",
-        "image": url_for("static", filename=f"images/{img['filename']}", _external=True),
+        "image": url_for("static", filename=f"images/thumbs/{img['strippedFilename']}.webp", _external=True),
         "redirect": url_for("library", id=image_id, _external=True)
     }
 
