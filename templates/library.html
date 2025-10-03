@@ -175,4 +175,27 @@
         });
     });
 </script>
+<!-- Image Link Scripts -->
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const params = new URLSearchParams(window.location.search);
+    const imageId = params.get("id");
+
+    if (!imageId) return;
+
+    try {
+        const res = await fetch("/art.json");
+        const images = await res.json();
+
+        const img = images.find(x => String(x.id) === String(imageId));
+        if (img) {
+            openViewer(img);
+        } else {
+            console.warn("No image found with ID:", imageId);
+        }
+    } catch (err) {
+        console.error("Error loading image for viewer:", err);
+    }
+});
+</script>
 {% endblock %}

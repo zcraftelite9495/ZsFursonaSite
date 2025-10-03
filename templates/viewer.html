@@ -4,7 +4,10 @@
         <div id="viewer-loader" class="viewer-content-loader"></div>
         <div class="viewer-image-container">
             <img id="viewer-image" oncontextmenu="return false;">
-            <button id="download-button" class="download-button" onclick="downloadImage()">Download Image</button>
+            <div class="viewer-button-row">
+                <button id="download-button" class="viewer-button" onclick="downloadImage()">Download Image</button>
+                <button id="copylink-button" class="viewer-button" onclick="copyImageLink()">Copy Link</button>
+            </div>
         </div>
         <div class="viewer-sidebar">
             <div class="viewer-artist-info" oncontextmenu="return false;">

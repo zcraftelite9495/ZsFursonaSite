@@ -14,6 +14,8 @@
 Made with love by ZcraftElite :3
 */
 
+let currentImage = null;
+
 /* ---- VALUE CLEANING FUNCTIONS ---- */
 /**
  * Clean an artist name by removing any trailing "(Prompt)" and trimming.
@@ -339,6 +341,25 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
 }
 
 
+/**
+ * Copies the current image link to the clipboard.
+ * 
+ * @function copyImageLink
+ * @since v24
+ */
+function copyImageLink() {
+    if (!currentImage || !currentImage.id) return;
+
+    const url = `${window.location.origin}${window.location.pathname}?id=${currentImage.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Image link copied to clipboard!");
+    }).catch(err => {
+        console.error("Failed to copy link:", err);
+    });
+}
+
+
+
 /* ---- OPEN FUNCTION ---- */
 /**
  * Opens the image viewer and sets the displayed image and metadata.
@@ -358,6 +379,8 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
  * @since v23
  */
 function openViewer(img) {
+    currentImage = img;
+
     const viewerContent = document.querySelector('.viewer-content');
     const viewerImage = document.getElementById('viewer-image');
     const viewerArtistPic = document.getElementById('viewer-artist-pic');
@@ -449,12 +472,12 @@ function openViewer(img) {
             });
         };
     } else if ((userFailedUKDownload) && Boolean(img.isNSFW)) {
-        downloadButton.textContent = "NSFW Downloads Unavailable in the UK";
+        downloadButton.textContent = "Unavailable";
         downloadButton.style.color = "#888";
         downloadButton.style.cursor = "not-allowed"
     } else if (Boolean(img.disableDownload)) {
         const downloadButton = document.getElementById('download-button');
-        downloadButton.textContent = "Downloads Disabled for this Image";
+        downloadButton.textContent = "Unavailable";
         downloadButton.style.color = "#888";
         downloadButton.style.cursor = "not-allowed"
         downloadButton.onclick = null;
