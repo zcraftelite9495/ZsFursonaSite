@@ -487,7 +487,13 @@ function openViewer(img) {
     const aiBadge = document.getElementById('viewer-ai-badge');
     const nsfwBadge = document.getElementById('viewer-nsfw-badge');
     const discordBadge = document.getElementById('viewer-discord-badge');
+
     const downloadButton = document.getElementById('download-button');
+    const shareButton = document.getElementById('share-button');
+
+    if (!navigator.share) {
+        shareButton.textContent = "Copy Link";
+    }
 
     if (Boolean(userIsUK) && Boolean(img.isNSFW)) {
         downloadButton.onclick = () => {
@@ -526,7 +532,7 @@ function openViewer(img) {
         downloadButton.style.cursor = "not-allowed"
         downloadButton.onclick = null;
     } else {
-        downloadButton.textContent = "Download Image";
+        downloadButton.textContent = "Download";
         downloadButton.style.color = "#FFF";
         downloadButton.style.cursor = "pointer";
         downloadButton.onclick = () => downloadImage(img);
