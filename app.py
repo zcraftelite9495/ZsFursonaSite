@@ -150,7 +150,6 @@ def view_image(image_id):
         meta["description"] = f"Created by {img.get('artist', 'Unknown')}"
 
     meta = adapt_meta_desc(meta, f"Created on {img.get('creationDate', 'Unknown Date')}")
-    meta = adapt_meta_desc(meta, f"Created on {img.get('creationDate', 'Unknown Date')}")
 
     return render_template("share.html", meta=meta, image=img)
 
