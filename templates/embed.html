@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const naturalH = imageEl.naturalHeight || imageEl.height;
         if (!naturalW || !naturalH) return;
 
-        const viewportMaxW = Math.min(window.innerWidth * 0.6, document.querySelector('.embed-viewer').clientWidth || window.innerWidth);
+        const viewportMaxW = window.innerWidth * 0.6;
         const viewportMaxH = window.innerHeight * 0.7;
 
         const scale = Math.min(1, viewportMaxW / naturalW, viewportMaxH / naturalH);
