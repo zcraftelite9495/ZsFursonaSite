@@ -25,6 +25,8 @@
 </head>
 <body>
     <p>Redirecting...</p>
-    <p>If not redirected, <a href="{{ meta.redirect }}">click here</a>.</p>
+    <script>
+        window.location.replace("{{ meta.redirect }}");
+    </script>
 </body>
 </html>
