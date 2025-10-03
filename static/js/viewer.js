@@ -353,8 +353,8 @@ function shareImage() {
     const url = `${window.location.origin}/view/${currentImage.id}`;
     if (navigator.share) {
         navigator.share({
-            title: document.title,
-            text: "Check out this artwork",
+            title: `Z's World - ${currentImage.artName || 'Artwork'}`,
+            text: `Art by ${currentImage.artist}.`,
             url: url
         }).catch(err => console.error("Share failed:", err));
     } else {
