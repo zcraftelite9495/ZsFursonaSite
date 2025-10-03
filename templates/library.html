@@ -189,9 +189,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const img = images.find(x => String(x.id) === String(imageId));
         if (img) {
+            // Open the viewer
             openViewer(img);
-        } else {
-            console.warn("No image found with ID:", imageId);
+
+            // --- Update Metadata ---
+            function setMeta(property, content, attr = "property") {
+                let el = document.querySelector(`meta[${attr}='${property}']`);
+                if (!el) {
+                    el = document.createElement("meta");
+                    el.setAttribute(attr, property);
+                    document.head.appendChild(el);
+                }
+                el.setAttribute("content", content);
+            }
+
+            const pageUrl = window.location.href;
+            const imageUrl = img.webLink 
+                ? img.webLink 
+                : `/static/images/${img.filename}`;
+            const title = img.artName 
+                ? `${img.artName} - ${img.artist}` 
+                : `${img.title || img.filename} - ${img.artist}`;
+
+            setMeta("og:title", title);
+            setMeta("og:description", `Artwork by ${img.artist}${img.shapeshiftForm ? ` (${img.shapeshiftForm})` : ""}`);
+            setMeta("og:image", imageUrl);
+            setMeta("og:url", pageUrl);
+
+            setMeta("twitter:card", "summary_large_image", "name");
+            setMeta("twitter:title", title, "name");
+            setMeta("twitter:description", `Artwork by ${img.artist}`, "name");
+            setMeta("twitter:image", imageUrl, "name");
         }
     } catch (err) {
         console.error("Error loading image for viewer:", err);
