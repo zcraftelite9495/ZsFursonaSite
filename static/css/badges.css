@@ -1,0 +1,61 @@
+/*
+███████╗██╗░██████╗░░███████╗██╗░░░██╗██████╗░░██████╗░█████╗░███╗░░██╗░█████╗░░░░██████╗██╗████████╗███████╗
+╚════██║╚█║██╔════╝░░██╔════╝██║░░░██║██╔══██╗██╔════╝██╔══██╗████╗░██║██╔══██╗░░██╔════╝██║╚══██╔══╝██╔════╝
+░░███╔═╝░╚╝╚█████╗░░░█████╗░░██║░░░██║██████╔╝╚█████╗░██║░░██║██╔██╗██║███████║░░╚█████╗░██║░░░██║░░░█████╗░░
+██╔══╝░░░░░░╚═══██╗░░██╔══╝░░██║░░░██║██╔══██╗░╚═══██╗██║░░██║██║╚████║██╔══██║░░░╚═══██╗██║░░░██║░░░██╔══╝░░
+███████╗░░░██████╔╝░░██║░░░░░╚██████╔╝██║░░██║██████╔╝╚█████╔╝██║░╚███║██║░░██║░░██████╔╝██║░░░██║░░░███████╗
+╚══════╝░░░╚═════╝░░░╚═╝░░░░░░╚═════╝░╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚══╝╚═╝░░╚═╝░░╚═════╝░╚═╝░░░╚═╝░░░╚══════╝
+
+█████████████████████████████████████
+█─▄▄▄▄█─▄─▄─█▄─█─▄█▄─▄███▄─▄▄─█─▄▄▄▄█
+█▄▄▄▄─███─████▄─▄███─██▀██─▄█▀█▄▄▄▄─█
+▀▄▄▄▄▄▀▀▄▄▄▀▀▀▄▄▄▀▀▄▄▄▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀
+
+Made with love by ZcraftElite :3
+*/
+
+:root {
+    --badge-ai: #f39c12;
+    --badge-nsfw: #e74c3c;
+    --badge-discord: #5865F2;
+
+    --badge-ai-gradient: linear-gradient(135deg, #f39c12, #f1c40f);
+    --badge-nsfw-gradient: linear-gradient(135deg, #e74c3c, #c0392b);
+    --badge-discord-gradient: linear-gradient(135deg, #5865F2, #4e5b8c);
+}
+
+/* ---- GLOBAL BADGE DEFINITIONS ---- */
+.badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 50%;
+    user-select: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.badge svg {
+    width: 60%;
+    height: 60%;
+    fill: #FFFFFF;
+}
+
+.badge[badge-size="small"] { width: 32px; height: 32px; }
+.badge[badge-size="small"] svg { width: 65%; height: 65%; }
+
+.badge[badge-style="gradient"][badge="nsfw"] { background: var(--badge-nsfw-gradient); }
+.badge[badge-style="gradient"][badge="ai"] { background: var(--badge-ai-gradient); }
+.badge[badge-style="gradient"][badge="discord"] { background: var(--badge-discord-gradient); }
+
+.badge[badge-style="solid"][badge="nsfw"] { background: var(--badge-nsfw); }
+.badge[badge-style="solid"][badge="ai"] { background: var(--badge-ai); }
+.badge[badge-style="solid"][badge="discord"] { background: var(--badge-discord); }
