@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).parent
 STATIC_IMAGES_DIR = BASE_DIR / "static" / "images"
 THUMBS_DIR = STATIC_IMAGES_DIR / "thumbs"
 THUMBS_DIR.mkdir(parents=True, exist_ok=True)
-DISCORD_API_KEY = "MTQyNTg2NjkxMzY3Nzk3MTU5Ng.G1A-Vn.XTDHhbbt4bXQYieOCzK6P82AtC4902QxgG-PSc"
+DISCORD_API_KEY = os.getenv('DISCORD_API_KEY')
 
 # ---- FUNCTIONS ----
 # --- IMAGE LOADER ---
