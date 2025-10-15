@@ -312,7 +312,7 @@
         "title": "Z x Caitlyn (Humanoid Form) - Surprise kiss.png",
         "strippedFilename": "Z x Caitlyn (Humanoid Form) - Surprise kiss",
         "filetype": "image/png",
-        "artist": "CaitlynSkyravin",
+        "artist": "SilverSkyravin",
         "artist_pic": "default.jpg",
         "shapeshiftForm": "Humanoid Form",
         "characters": [
@@ -333,7 +333,7 @@
         "title": "Z x Caitlyn (Humanoid Form) - Late Night Park Schenanigans.jpg",
         "strippedFilename": "Z x Caitlyn (Humanoid Form) - Late Night Park Schenanigans",
         "filetype": "image/jpeg",
-        "artist": "CaitlynSkyravin",
+        "artist": "SilverSkyravin",
         "artist_pic": "default.jpg",
         "shapeshiftForm": "Humanoid Form",
         "characters": [
@@ -348,6 +348,27 @@
         "isDiscEmoji": false,
         "disableDownload": true,
         "id": 15327698
+    },
+    {
+        "filename": "Z x Caitlyn (Humanoid Form) - Booba Touchies.jpg",
+        "title": "Z x Caitlyn (Humanoid Form) - Booba Touchies.jpg",
+        "strippedFilename": "Z x Caitlyn (Humanoid Form) - Booba Touchies",
+        "filetype": "image/jpeg",
+        "artist": "SilverSkyravin",
+        "artist_pic": "default.jpg",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Caitlyn"
+        ],
+        "artName": "Booba Touchies",
+        "creationDate": "2025-10-10",
+        "recievalMethod": "Fanart",
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 75191774
     },
     {
         "filename": "Z x Zorine (Humanoid Form).png",
