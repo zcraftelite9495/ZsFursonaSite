@@ -365,7 +365,7 @@
         "creationDate": "2025-10-10",
         "recievalMethod": "Fanart",
         "isAI": false,
-        "isNSFW": false,
+        "isNSFW": true,
         "isDiscEmoji": false,
         "disableDownload": false,
         "id": 75191774
