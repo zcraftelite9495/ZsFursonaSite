@@ -411,7 +411,7 @@ function formatMimeType(mime) {
  * @property {string} [img.shapeshiftForm] - Shapeshift form of the character.
  * @property {string} [img.artName] - Name of the art.
  * @property {string} [img.artist] - Name of the artist.
- * @property {string} [img.artist_pic] - Name of the artist's profile picture.
+ * @property {string} [img.artistPic] - Name of the artist's profile picture.
  * @property {string[]} [img.characters] - Array of characters in the art.
  * @property {string} [img.creationDate] - Creation date of the art.
  * @property {boolean} [img.isAI] - Whether the image is AI-generated.
@@ -451,7 +451,7 @@ function openViewer(img) {
     };
 
     imagePromises.push(loadImage(viewerImage, img.webLink ? img.webLink : `/static/images/${img.filename}`));
-    imagePromises.push(loadImage(viewerArtistPic, `/static/images/artists/${img.artist_pic}`));
+    imagePromises.push(loadImage(viewerArtistPic, `/static/images/artists/${img.artistPic}`));
 
     Promise.all(imagePromises)
         .then(() => {
