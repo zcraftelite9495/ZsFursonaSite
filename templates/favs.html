@@ -74,43 +74,6 @@
             </div>
         </div>
 
-        <div class="container" containerid="favs-music" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <h1 class="favs-container-title" style="margin-bottom: 30px">Music On Repeat</h1>
-
-            <div class="favs-music-root">
-                <div class="player-card">
-                    <div id="youtube-player" class="player-iframe-placeholder"></div>
-
-                    <div class="player-info">
-                        <img class="album-cover" src="" alt="thumb">
-                        <div class="meta">
-                            <div class="track-title">Loading…</div>
-                            <div class="track-artist">Artist</div>
-                            <div class="track-sub">Z's On Repeat</div>
-                        </div>
-                    </div>
-
-                    <div class="controls-row">
-                        <button class="ctrl prev" title="Previous"><i class="nf nf-fa-step_backward"></i></button>
-                        <button class="ctrl playpause" title="Play / Pause"><i class="nf nf-fa-play"></i></button>
-                        <button class="ctrl next" title="Next"><i class="nf nf-fa-step_forward"></i></button>
-
-                        <div class="spacer"></div>
-
-                        <button class="ctrl shuffle" title="Shuffle"><i class="nf nf-fa-random"></i></button>
-                        <button class="ctrl loop" title="Loop"><i class="nf nf-fa-repeat"></i></button>
-                    </div>
-
-                    <div class="progress-row">
-                        <span class="time current">0:00</span>
-                        <input class="progress" type="range" min="0" max="100" value="0" step="0.1">
-                        <span class="time total">0:00</span>
-                    </div>
-                </div>
-            </div>
-            <script src="{{ url_for('static', filename='js/musicPlayer.js') }}"></script>
-        </div>
-
         <div class="container has-badge" badge="nsfw" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
             <h1 class="favs-container-title" style="margin-bottom: 30px">Kinks</h1>
             <br>
