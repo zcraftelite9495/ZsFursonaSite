@@ -451,7 +451,30 @@ function openViewer(img) {
     };
 
     imagePromises.push(loadImage(viewerImage, img.webLink ? img.webLink : `/static/images/${img.filename}`));
-    imagePromises.push(loadImage(viewerArtistPic, `/static/images/artists/${img.artistPic}`));
+    
+    let artistPicPromise;
+    if (img.artistPic === "discord") {
+        artistPicPromise = fetch(`/api/v1/fetch/discord-avatar?id=${img.id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch Discord avatar');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const avatarSrc = data.avatarURL;
+                return loadImage(viewerArtistPic, avatarSrc);
+            })
+            .catch(error => {
+                console.error("Error fetching Discord avatar:", error);
+                // Fallback or leave blank on API error
+                return Promise.resolve();
+            });
+    } else {
+        artistPicPromise = loadImage(viewerArtistPic, `/static/images/artists/${img.artistPic}`);
+    }
+
+    imagePromises.push(artistPicPromise);
 
     Promise.all(imagePromises)
         .then(() => {
