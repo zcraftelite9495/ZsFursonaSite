@@ -346,7 +346,7 @@
         "isAI": false,
         "isNSFW": false,
         "isDiscEmoji": false,
-        "disableDownload": true,
+        "disableDownload": false,
         "id": 15327698
     },
     {
