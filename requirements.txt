@@ -2,3 +2,4 @@ flask
 gunicorn
 pillow
 requests
+dotenv

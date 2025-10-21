@@ -16,12 +16,17 @@ Made with love by ZcraftElite :3
 
 import os
 import logging
+from dotenv import load_dotenv
 from pathlib import Path
 from PIL import Image, ImageOps
 from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory, url_for, redirect
 import json, random, requests
 
 app = Flask(__name__)
+
+# ---- Load Environment Variables from `.env` if it Exists ----
+if os.path.exists('.env'):
+    load_dotenv()
 
 # ---- Definitions ----
 BASE_DIR = Path(__file__).parent
@@ -170,6 +175,28 @@ def art_database():
 # --- GET DISCORD PROFILE PICTURE ----
 @app.route('/api/v1/fetch/discord-avatar')
 def fetch_discord_avatar():
+    """
+    Fetch a Discord user's avatar information.
+
+    Parameters:
+    id (str): Image ID
+
+    Returns:
+    dict: {
+        "discordID": str,
+        "avatarURL": str,
+        "avatarHash": str or None,
+        "isAnimated": bool,
+        "note": str or None
+    }
+
+    Raises:
+        400: Missing image 'id' parameter
+        401: Discord API key not found or missing
+        404: Image with ID '{image_id}' not found
+        429: Rate limit hit on Discord API
+        500: Internal server error during API request to Discord
+    """
     image_id = request.args.get('id')
     if not image_id:
         return jsonify({"error": "Missing image 'id' parameter"}), 400
@@ -193,6 +220,9 @@ def fetch_discord_avatar():
         "Authorization": f"Bot {DISCORD_API_KEY}",
         "User-Agent": "DiscordAvatarFetcher (https://world.zcraftelite.net, v1)"
     }
+
+    if not DISCORD_API_KEY:
+        return jsonify({"error": "Discord API key not found or missing."}), 401
 
     try:
         response = requests.get(DISCORD_API_URL, headers=headers)
