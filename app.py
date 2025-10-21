@@ -19,8 +19,8 @@ import logging
 from dotenv import load_dotenv
 from pathlib import Path
 from PIL import Image, ImageOps
-from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory, url_for, redirect
-import json, random, requests
+from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory, url_for, redirect, session
+import json, random, requests, secrets
 
 app = Flask(__name__)
 
@@ -29,11 +29,22 @@ if os.path.exists('.env'):
     load_dotenv()
 
 # ---- Definitions ----
+app.secret_key = os.getenv('APP_SECRET_KEY')
+
 BASE_DIR = Path(__file__).parent
 STATIC_IMAGES_DIR = BASE_DIR / "static" / "images"
 THUMBS_DIR = STATIC_IMAGES_DIR / "thumbs"
 THUMBS_DIR.mkdir(parents=True, exist_ok=True)
+
 DISCORD_API_KEY = os.getenv('DISCORD_API_KEY')
+
+OIDC_AUTHORIZATION_ENDPOINT = os.getenv('OIDC_AUTHORIZATION_ENDPOINT')
+OIDC_TOKEN_ENDPOINT = os.getenv('OIDC_TOKEN_ENDPOINT')
+OIDC_USERINFO_ENDPOINT = os.getenv('OIDC_USERINFO_ENDPOINT')
+OIDC_REDIRECT_URI = os.getenv('OIDC_REDIRECT_URI')
+OIDC_CLIENT_ID = os.getenv('OIDC_CLIENT_ID')
+OIDC_CLIENT_SECRET = os.getenv('OIDC_CLIENT_SECRET')
+VERIFY_SSL = False
 
 # ---- FUNCTIONS ----
 # --- IMAGE LOADER ---
@@ -171,6 +182,97 @@ def embed_image(image_id):
 @app.route('/art.json')
 def art_database():
     return send_file('./data/art.json', mimetype='application/json')
+
+# --- OAUTH LOGIN ENDPOINT ---
+@app.route('/api/v1/oauth/login')
+def oauth_login():
+    state = secrets.token_urlsafe(16)
+    session['oauth_state'] = state
+
+    auth_url = (
+        f"{OIDC_AUTHORIZATION_ENDPOINT}?"
+        f"response_type=code&"
+        f"client_id={OIDC_CLIENT_ID}&"
+        f"scope=openid%20profile%20email%20offline_access&"
+        f"redirect_uri={OIDC_REDIRECT_URI}&"
+        f"state={state}"
+    )
+
+    logging.info(f"Redirecting to Authentik for OAuth login: {auth_url}")
+    return redirect(auth_url)
+
+# --- OAUTH CALLBACK ENDPOINT ---
+@app.route('/api/v1/oauth/callback')
+def oauth_callback():
+    code = request.args.get('code')
+    state = request.args.get('state')
+    error = request.args.get('error')
+    error_description = request.args.get('error_description', 'No description provided.')
+
+    if error:
+        logging.error(f"OAuth error: {error} - {error_description}")
+        return render_template("index.html", error=f"OAuth login failed: {error_description}")
+
+    stored_state = session.pop('oauth_state', None)
+    if state != stored_state:
+        logging.error(f"OAuth state mismatch. Received: {state}, Expected: {stored_state}")
+        return render_template("index.html", error="OAuth state mismatch. Please try again.")
+
+    if not code:
+        logging.error("Missing authorization code in OAuth callback.")
+        return render_template("index.html", error="OAuth callback missing authorization code.")
+
+    try:
+        token_response = requests.post(
+            OIDC_TOKEN_ENDPOINT,
+            verify=VERIFY_SSL,
+            data={
+                'grant_type': 'authorization_code',
+                'code': code,
+                'redirect_uri': OIDC_REDIRECT_URI,
+                'client_id': OIDC_CLIENT_ID,
+                'client_secret': OIDC_CLIENT_SECRET
+            }
+        )
+        token_response.raise_for_status()
+        tokens = token_response.json()
+        logging.debug(f"OAuth token response: {tokens}")
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error exchanging OAuth code for tokens: {e}")
+        return redirect(url_for('index'))
+
+    access_token = tokens.get('access_token')
+    if not access_token:
+        logging.error("No access token received from Authentik.")
+        return redirect(url_for('index'))
+
+    try:
+        userinfo_response = requests.get(
+            OIDC_USERINFO_ENDPOINT,
+            verify=VERIFY_SSL,
+            headers={'Authorization': f'Bearer {access_token}'}
+        )
+        userinfo_response.raise_for_status()
+        user_info = userinfo_response.json()
+        logging.debug(f"Userinfo: {user_info}")
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Error fetching user info: {e}")
+        return redirect(url_for('index'))
+
+    username = (
+        user_info.get('preferred_username')
+        or user_info.get('email')
+        or user_info.get('sub')
+    )
+
+    if not username:
+        logging.error("Could not retrieve username from Authentik userinfo.")
+        return redirect(url_for('index'))
+
+    session['username'] = username
+
+    logging.info(f"User {username} successfully logged in via Authentik.")
+    return redirect(url_for('index'))
 
 # --- GET DISCORD PROFILE PICTURE ----
 @app.route('/api/v1/fetch/discord-avatar')
