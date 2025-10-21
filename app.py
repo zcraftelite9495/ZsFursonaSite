@@ -186,6 +186,14 @@ def art_database():
 # --- OAUTH LOGIN ENDPOINT ---
 @app.route('/api/v1/oauth/login')
 def oauth_login():
+    """
+    Redirects the user to the Authentik OAuth login page.
+
+    This endpoint is used to start the OAuth login flow. It generates a random state string, stores it in the session, and redirects the user to the Authentik OAuth login page.
+
+    :return: A redirect response to the Authentik OAuth login page.
+    :rtype: flask.Response
+    """
     state = secrets.token_urlsafe(16)
     session['oauth_state'] = state
 
@@ -204,6 +212,21 @@ def oauth_login():
 # --- OAUTH CALLBACK ENDPOINT ---
 @app.route('/api/v1/oauth/callback')
 def oauth_callback():
+    """
+    Handles the OAuth callback from Authentik.
+
+    This endpoint is used to exchange the authorization code for an access token, retrieve the user's information from Authentik, and log the user in.
+
+    :param code: The authorization code provided by Authentik.
+    :param state: The state string provided by Authentik.
+    :param error: An error message provided by Authentik.
+    :param error_description: A description of the error provided by Authentik.
+
+    :return: A redirect response to the index page.
+    :rtype: flask.Response
+
+    :raises requests.exceptions.RequestException: If there is an error exchanging the authorization code for an access token, or retrieving the user's information.
+    """
     code = request.args.get('code')
     state = request.args.get('state')
     error = request.args.get('error')
@@ -281,7 +304,7 @@ def fetch_discord_avatar():
     Fetch a Discord user's avatar information.
 
     Parameters:
-    id (str): Image ID
+        id (str): Image ID
 
     Returns:
     dict: {
