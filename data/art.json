@@ -617,5 +617,28 @@
         "isDiscEmoji": false,
         "disableDownload": false,
         "id": 10000028
+    },
+    {
+        "filename": "Z (Humanoid Form) - Walkies Pwease.jpg",
+        "title": "Z (Humanoid Form) - Walkies Pwease.jpg",
+        "strippedFilename": "Z (Humanoid Form) - Walkies Pwease",
+        "filetype": "image/jpeg",
+        "aiModel": null,
+        "artist": "SilverSkyravin",
+        "artistPic": "discord",
+        "discordID": "191247669128200192",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Walkies Pwease",
+        "creationDate": "2025-10-17",
+        "recievalMethod": "Fanart",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 10000029
     }
 ]
