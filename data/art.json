@@ -640,5 +640,52 @@
         "isDiscEmoji": false,
         "disableDownload": false,
         "id": 10000029
+    },
+    {
+        "filename": "Z (Humanoid Form) - Slayyyy.jpeg",
+        "title": "Z (Humanoid Form) - Slayyyy.jpeg",
+        "strippedFilename": "Z (Humanoid Form) - Slayyyy",
+        "filetype": "image/jpeg",
+        "aiModel": null,
+        "artist": "whoishere",
+        "artistPic": "default.jpg",
+        "discordID": "",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Slayyyy",
+        "creationDate": "2025-11-07",
+        "recievalMethod": "Fanart",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 10000030
+    },
+    {
+        "filename": "Z x Caitlyn (Humanoid Form) - You Look Delicious.jpg",
+        "title": "Z x Caitlyn (Humanoid Form) - You Look Delicious.jpg",
+        "strippedFilename": "Z x Caitlyn (Humanoid Form) - You Look Delicious",
+        "filetype": "image/jpeg",
+        "aiModel": null,
+        "artist": "modanzselabowan",
+        "artistPic": "default.jpg",
+        "discordID": "",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Caitlyn"
+        ],
+        "artName": "You Look Delicious",
+        "creationDate": "2025-10-27",
+        "recievalMethod": "Commission",
+        "recievalPrice": "Gifted",
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 10000031
     }
 ]

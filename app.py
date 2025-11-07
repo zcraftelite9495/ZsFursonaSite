@@ -177,6 +177,12 @@ def embed_image(image_id):
         return render_template("404.html"), 404
     return render_template("embed.html", ID=image_id, image=img)
 
+# --- LOGOUT ---
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()  # or session.pop('user_id', None)
+    return redirect(url_for('index'))
+
 # ---- API ENDPOINTS ----
 # --- ART DATABASE ---
 @app.route('/art.json')

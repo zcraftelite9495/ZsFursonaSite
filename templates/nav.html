@@ -12,6 +12,35 @@
         <a href="{{ url_for('library') }}">Art Gallery</a>
         <a href="{{ url_for('favs') }}">My Favs</a>
         <button id="settings-toggle" class="nav-button">Settings</button>
+
+        <div class="profile mobile-profile">
+            <img src="https://github.com/zcraftelite9495.png" alt="Profile" class="avatar">
+            <span class="username">{{ session['username'] }}</span>
+        </div>
+        {% if session['username'] %}
+        <form method="POST" action="{{ url_for('logout') }}" class="logout-form mobile-logout">
+            <button type="submit" class="nav-button logout-button">Log out</button>
+        </form>
+        {% else %}
+        <form class="logout-form mobile-logout">
+            <a href="{{ url_for('oauth_login') }}" class="nav-button logout-button">Log in</a>
+        </form>
+        {% endif %}
+
+    </div>
+
+    <div class="profile desktop-profile" tabindex="0">
+        {% if session['username'] %}
+        <form method="POST" action="{{ url_for('logout') }}" class="logout-form desktop-logout">
+            <button type="submit" class="logout-link">Log out</button>
+        </form>
+        {% else %}
+        <form class="logout-form desktop-logout">
+            <a href="{{ url_for('oauth_login') }}" class="logout-link">Log in</a>
+        </form>
+        {% endif %}
+        <span class="username">{{ session['username'] }}</span>
+        <img src="https://github.com/zcraftelite9495.png" alt="Profile" class="avatar">
     </div>
 </nav>
 

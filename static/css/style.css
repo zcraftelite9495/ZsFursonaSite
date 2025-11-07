@@ -343,6 +343,125 @@ h1 {
     }
 }
 
+/* ---- PROFILE STYLES ---- */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-primary);
+    background-color: var(--background-tertiary);
+}
+
+.username {
+    color: var(--text-default);
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.logout-form {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+.desktop-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.desktop-profile:hover,
+.desktop-profile:focus {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.desktop-logout .logout-link {
+    background: none;
+    border: none;
+    color: transparent;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    font-family: inherit;
+    transition: color 0.2s ease;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+}
+
+.desktop-profile:hover .desktop-logout .logout-link,
+.desktop-profile:focus .desktop-logout .logout-link {
+    color: var(--text-default);
+    opacity: 1;
+    width: auto;
+    padding: 0.2rem 0.4rem;
+}
+
+.mobile-profile {
+    display: none;
+}
+
+.mobile-logout {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .desktop-profile {
+        display: none !important;
+    }
+
+    .mobile-profile {
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 0.8rem;
+        margin-top: 0.8rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mobile-profile .avatar {
+        width: 28px;
+        height: 28px;
+    }
+
+    .mobile-profile .username {
+        font-size: 0.95rem;
+    }
+
+    .mobile-logout {
+        display: block;
+        margin-top: 0.6rem;
+    }
+
+    .mobile-logout .logout-button {
+        width: 100%;
+        text-align: center;
+        background-color: var(--accent-primary);
+        color: white;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .mobile-logout .logout-button:hover {
+        background-color: var(--accent-secondary);
+    }
+}
 
 /* ---- SETTINGS MENU STYLES ---- */
 .settings-sidebar {
