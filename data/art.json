@@ -725,5 +725,28 @@
         "isDiscEmoji": false,
         "disableDownload": false,
         "id": 10000032
+    },
+    {
+        "filename": "Gooberfied.png",
+        "title": "Gooberfied.png",
+        "strippedFilename": "Gooberfied",
+        "filetype": "image/png",
+        "aiModel": null,
+        "artist": "SilverSkyravin",
+        "artistPic": "discord",
+        "discordID": "191247669128200192",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Gooberfied",
+        "creationDate": "2025-11-07",
+        "recievalMethod": "Gift",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": true,
+        "disableDownload": false,
+        "id": 10000033
     }
 ]
