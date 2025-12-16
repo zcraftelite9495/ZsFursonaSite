@@ -687,5 +687,43 @@
         "isDiscEmoji": false,
         "disableDownload": false,
         "id": 10000031
+    },
+    {
+        "filename": "Christmas 2025 Artwork.jpg",
+        "title": "Christmas 2025 Artwork.jpg",
+        "strippedFilename": "Christmas 2025 Artwork",
+        "filetype": "image/jpeg",
+        "aiModel": null,
+        "artist": "SilverSkyravin",
+        "artistPic": "discord",
+        "discordID": "191247669128200192",
+        "shapeshiftForm": "Humanoid Form",
+        "characters": [
+            "Z",
+            "Caitlyn",
+            "Ecchi",
+            "Wolfie",
+            "Mittens",
+            "Thor",
+            "Lexi",
+            "Lupin",
+            "Maddie",
+            "Lula",
+            "Alexa",
+            "Tekki",
+            "Cypuss",
+            "Miku",
+            "Fischi",
+            "Nahojn"
+        ],
+        "artName": "Merry Christmas 2025",
+        "creationDate": "2025-12-15",
+        "recievalMethod": "Gift",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 10000032
     }
 ]
