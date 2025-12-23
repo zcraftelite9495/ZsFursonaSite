@@ -748,5 +748,29 @@
         "isDiscEmoji": true,
         "disableDownload": false,
         "id": 10000033
+    },
+    {
+        "filename": "Z Art - Such a cute little toy.jpg",
+        "title": "Z Art - Such a cute little toy.jpg",
+        "strippedFilename": "Z Art - Such a cute little toy",
+        "filetype": "image/jpeg",
+        "aiModel": null,
+        "artist": "kateeta",
+        "artistPic": "default.jpg",
+        "discordID": "",
+        "shapeshiftForm": "Stuffie Form",
+        "characters": [
+            "Z",
+            "Caitlyn"
+        ],
+        "artName": "Such a Cute Little Toy",
+        "creationDate": "2025-12-23",
+        "recievalMethod": "Gift",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": false,
+        "disableDownload": false,
+        "id": 10000034
     }
 ]
