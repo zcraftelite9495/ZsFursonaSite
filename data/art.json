@@ -715,6 +715,52 @@
         "id": 10000033
     },
     {
+        "filename": "Z (Chibi Form) - Heart 4 u.png",
+        "title": "Z (Chibi Form) - Heart 4 u.png",
+        "strippedFilename": "Z (Chibi Form) - Heart 4 u",
+        "filetype": "image/png",
+        "aiModel": null,
+        "artist": "SilverSkyravin",
+        "artistPic": "discord",
+        "discordID": "191247669128200192",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Heart 4 U",
+        "creationDate": "2025-12-23",
+        "recievalMethod": "Gift",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": true,
+        "disableDownload": false,
+        "id": 10000035
+    },
+    {
+        "filename": "Z (Chibi Form) - Cute Beg.png",
+        "title": "Z (Chibi Form) - Cute Beg.png",
+        "strippedFilename": "Z (Chibi Form) - Cute Beg",
+        "filetype": "image/png",
+        "aiModel": null,
+        "artist": "SilverSkyravin",
+        "artistPic": "discord",
+        "discordID": "191247669128200192",
+        "shapeshiftForm": "Chibi Form",
+        "characters": [
+            "Z"
+        ],
+        "artName": "Cute Beg",
+        "creationDate": "2025-12-23",
+        "recievalMethod": "Gift",
+        "recievalPrice": null,
+        "isAI": false,
+        "isNSFW": false,
+        "isDiscEmoji": true,
+        "disableDownload": false,
+        "id": 10000036
+    },
+    {
         "filename": "Z (Gremlin Form).png",
         "title": "Z (Gremlin Form).png",
         "strippedFilename": "Z (Gremlin Form)",
