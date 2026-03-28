@@ -118,7 +118,7 @@ async function getFilterOptions() {
  * @function loadGallery
  * @since v30
  */
-async function loadGallery(elementId, count = 0, randomize = false, filters = {}) {
+async function loadGallery(elementId, count = 0, randomize = false, filters = {}, groupByMainCharacter = false) {
     try {
         ensureDefaultCookies();
 
@@ -198,6 +198,19 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
                 const j = Math.floor(Math.random() * (i + 1));
                 [images[i], images[j]] = [images[j], images[i]];
             }
+        } else {
+            // sort by shapeshift form: pinned forms first, then alphabetically
+            const PINNED_FORMS = ["Main Form", "True Form", "Humanoid Form"];
+            images.sort((a, b) => {
+                const fa = cleanFormName(a.shapeshiftForm || "");
+                const fb = cleanFormName(b.shapeshiftForm || "");
+                const ia = PINNED_FORMS.findIndex(p => cleanFormName(p) === fa);
+                const ib = PINNED_FORMS.findIndex(p => cleanFormName(p) === fb);
+                if (ia !== -1 && ib !== -1) return ia - ib;
+                if (ia !== -1) return -1;
+                if (ib !== -1) return 1;
+                return fa.localeCompare(fb, undefined, { sensitivity: "base" });
+            });
         }
 
         // slice if count specified (> 0)
@@ -221,7 +234,7 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
 
         gallery.innerHTML = "";
 
-        images.forEach(img => {
+        function buildThumb(img) {
             const thumb = document.createElement("div");
             thumb.className = "thumb";
 
@@ -261,22 +274,54 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
             const badgeContainer = document.createElement("div");
             badgeContainer.className = "badge-container";
 
-            if (img.isAI) {
-                badgeContainer.appendChild(createBadge('ai'));
-            }
-            if (img.isNSFW) {
-                badgeContainer.appendChild(createBadge('nsfw'));
-            }
-            if (img.isDiscEmoji) {
-                badgeContainer.appendChild(createBadge('discord'));
-            }
+            if (img.isAI) badgeContainer.appendChild(createBadge('ai'));
+            if (img.isNSFW) badgeContainer.appendChild(createBadge('nsfw'));
+            if (img.isDiscEmoji) badgeContainer.appendChild(createBadge('discord'));
 
-            // assemble thumb
             thumb.appendChild(imgEl);
             thumb.appendChild(thumbText);
             thumb.appendChild(badgeContainer);
-            gallery.appendChild(thumb);
-        });
+            return thumb;
+        }
+
+        if (groupByMainCharacter) {
+            // Group images by mainCharacter
+            const groups = new Map();
+            images.forEach(img => {
+                const char = (img.mainCharacter || "").trim() || "Other";
+                if (!groups.has(char)) groups.set(char, []);
+                groups.get(char).push(img);
+            });
+
+            // Sort: "Z" first, then alphabetically
+            const sortedKeys = Array.from(groups.keys()).sort((a, b) => {
+                if (a === "Z") return -1;
+                if (b === "Z") return 1;
+                return a.localeCompare(b, undefined, { sensitivity: "base" });
+            });
+
+            sortedKeys.forEach(charName => {
+                const section = document.createElement("div");
+                section.className = "gallery-character-section";
+
+                const title = document.createElement("h2");
+                title.className = "gallery-character-title";
+                title.textContent = charName;
+
+                const innerGallery = document.createElement("div");
+                innerGallery.className = "gallery";
+
+                groups.get(charName).forEach(img => {
+                    innerGallery.appendChild(buildThumb(img));
+                });
+
+                section.appendChild(title);
+                section.appendChild(innerGallery);
+                gallery.appendChild(section);
+            });
+        } else {
+            images.forEach(img => gallery.appendChild(buildThumb(img)));
+        }
     } catch (err) {
         console.error("Error loading gallery:", err);
     }

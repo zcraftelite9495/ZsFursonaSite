@@ -224,7 +224,7 @@ function initGalleryControls() {
 
     function applyFiltersNow() {
         const filters = readFiltersFromUI();
-        loadGallery("gallery", 0, false, filters);
+        loadGallery("gallery", 0, false, filters, true);
     }
     const debouncedApply = debounce(applyFiltersNow, 300);
 

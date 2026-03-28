@@ -149,6 +149,7 @@ def add_artwork(args):
     if artistPic == "discord":
         discordID = prompt_input("Discord ID", required=True)
 
+    mainCharacter = prompt_input("Main Character", default="Z")
     shapeshiftForm = prompt_input("Shapeshift Form", default="") + " Form"
     characters_input = prompt_input("Characters (comma-separated)", default="")
     characters = [c.strip() for c in characters_input.split(",")] if characters_input else []
@@ -173,6 +174,7 @@ def add_artwork(args):
         "discordID": discordID,
         "shapeshiftForm": shapeshiftForm,
         "characters": characters,
+        "mainCharacter": mainCharacter,
         "artName": artName,
         "creationDate": creationDate,
         "recievalMethod": recievalMethod,
@@ -271,6 +273,7 @@ def edit_artwork(args):
             target["discordID"] = ""
 
         target["shapeshiftForm"] = prompt_input("Shapeshift Form", default=target["shapeshiftForm"])
+        target["mainCharacter"] = prompt_input("Main Character", default=target.get("mainCharacter", "Z"))
         chars = prompt_input("Characters (comma-separated)", default=", ".join(target["characters"]))
         target["characters"] = [c.strip() for c in chars.split(",")] if chars else []
         target["artName"] = prompt_input("Art Name", default=target["artName"])

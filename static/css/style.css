@@ -260,7 +260,7 @@ h1 {
     color: #fff;
     cursor: pointer;
 }
-
+ 
 @media (max-width: 768px) {
     .hamburger {
         display: block;
@@ -967,6 +967,35 @@ input:checked + .slider::before {
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
+}
+
+/* ---- CHARACTER SECTION STYLES ---- */
+.gallery-sections-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+}
+
+.gallery-character-section {
+    width: 100%;
+}
+
+.gallery-character-title {
+    font-family: var(--title-font);
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background: linear-gradient(90deg, #ff6ec4, #7873f5, #ff6ec4);
+    background-size: 200% auto;
+    animation: shine 6s ease-in-out infinite;
+    color: #fff;
+    display: inline-block;
+    margin: 0 0 15px 0;
+    padding: 0.25em 1.1em;
+    border-radius: 100px;
+    box-shadow: 0 4px 18px -4px rgba(255, 105, 180, 0.45);
 }
 
 /* Menubar wrapper */
