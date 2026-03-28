@@ -1,3 +1,121 @@
+<!-- Viewer Edit Modal (shown to logged-in users) -->
+<div id="viewer-edit-modal" class="admin-modal-overlay hidden">
+    <div class="admin-modal-box">
+        <div class="admin-modal-header">
+            <span class="admin-modal-title">Edit Artwork</span>
+            <button class="admin-modal-close" onclick="closeViewerEditModal()" aria-label="Close">✕</button>
+        </div>
+
+        <form id="viewer-edit-form" autocomplete="off">
+            <input type="hidden" id="ve-id">
+
+            <div class="admin-form-grid">
+
+                <div class="admin-field">
+                    <label for="ve-artName">Art Name / Title</label>
+                    <input class="admin-input" id="ve-artName" type="text" placeholder="e.g. Waving Sticker">
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-creationDate">Creation Date</label>
+                    <input class="admin-input" id="ve-creationDate" type="date">
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-shapeshiftForm">Shapeshift Form</label>
+                    <input class="admin-input" id="ve-shapeshiftForm" type="text" placeholder="e.g. True Form">
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-mainCharacter">Main Character</label>
+                    <input class="admin-input" id="ve-mainCharacter" type="text" placeholder="e.g. Z">
+                </div>
+
+                <div class="admin-field full-width">
+                    <label>Characters</label>
+                    <div class="admin-tag-input-wrap" id="ve-tag-wrap">
+                        <input class="admin-tag-real-input" id="ve-tag-input" type="text" placeholder="Type a name and press Enter…">
+                    </div>
+                    <input type="hidden" id="ve-characters">
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-artist">Artist</label>
+                    <input class="admin-input" id="ve-artist" type="text">
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-artistPic">Artist Picture Source</label>
+                    <select class="admin-select" id="ve-artistPic">
+                        <option value="discord">Discord Avatar</option>
+                        <option value="file">Local File</option>
+                    </select>
+                </div>
+
+                <div class="admin-field" id="ve-discordID-field">
+                    <label for="ve-discordID">Discord User ID</label>
+                    <input class="admin-input" id="ve-discordID" type="text" placeholder="e.g. 123456789012345678">
+                </div>
+
+                <div class="admin-field" id="ve-artistFile-field" style="display:none;">
+                    <label for="ve-artistFile">Artist Filename</label>
+                    <select class="admin-select" id="ve-artistFile">
+                        <!-- populated dynamically -->
+                    </select>
+                </div>
+
+                <div class="admin-field">
+                    <label for="ve-recievalMethod">Recieval Method</label>
+                    <select class="admin-select" id="ve-recievalMethod">
+                        <option value="Self Made">Self Made</option>
+                        <option value="Commission">Commission</option>
+                        <option value="Gift">Gift</option>
+                        <option value="Fanart">Fanart</option>
+                    </select>
+                </div>
+
+                <div class="admin-field" id="ve-recievalPrice-field" style="display:none;">
+                    <label for="ve-recievalPrice">Commission Price</label>
+                    <input class="admin-input" id="ve-recievalPrice" type="text" placeholder="e.g. $25.00">
+                </div>
+
+                <div class="admin-field" id="ve-aiModel-field" style="display:none;">
+                    <label for="ve-aiModel">AI Model</label>
+                    <input class="admin-input" id="ve-aiModel" type="text" placeholder="e.g. Sora 1.0 Turbo">
+                </div>
+
+            </div>
+
+            <!-- Toggles -->
+            <div class="admin-toggles-row">
+                <label class="admin-toggle-item">
+                    <input type="checkbox" id="ve-isAI">
+                    <span>AI Generated</span>
+                </label>
+                <label class="admin-toggle-item">
+                    <input type="checkbox" id="ve-isNSFW">
+                    <span>NSFW</span>
+                </label>
+                <label class="admin-toggle-item">
+                    <input type="checkbox" id="ve-isDiscEmoji">
+                    <span>Discord Emoji</span>
+                </label>
+                <label class="admin-toggle-item">
+                    <input type="checkbox" id="ve-disableDownload">
+                    <span>Disable Download</span>
+                </label>
+            </div>
+
+            <div class="admin-status" id="viewer-edit-status"></div>
+
+            <div class="admin-form-actions">
+                <button type="button" class="admin-btn admin-btn-secondary" onclick="closeViewerEditModal()">Cancel</button>
+                <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="viewer" class="viewer hidden">
     <div class="viewer-close" onclick="closeViewer()">✕</div>
     <div class="viewer-content">
@@ -7,6 +125,7 @@
             <div class="viewer-button-row">
                 <button id="download-button" class="viewer-button" onclick="downloadImage()">Download</button>
                 <button id="share-button" class="viewer-button" onclick="shareImage()">Share</button>
+                <button id="viewer-edit-button" class="viewer-button edit-btn hidden" onclick="openViewerEditModal()">Edit Info</button>
             </div>
         </div>
         <div class="viewer-sidebar">

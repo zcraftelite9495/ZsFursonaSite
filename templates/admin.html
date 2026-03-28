@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block main %}
+<body>
+    {% include 'nav.html' %}
+    <div class="page-container" style="margin-top: 50px;">
+
+        <header class="gallery-page-header">
+            <h1 class="gallery-page-title">Admin Panel</h1>
+            <p class="gallery-page-subtitle">Manage your art gallery</p>
+        </header>
+
+        <!-- Tab Bar -->
+        <div class="admin-tabs">
+            <button class="admin-tab active" data-tab="upload">Upload Artwork</button>
+            <button class="admin-tab" data-tab="manage">Manage Artwork ({{ images|length }})</button>
+        </div>
+
+        <!-- ============================
+             TAB: UPLOAD
+             ============================ -->
+        <div id="tab-upload" class="admin-tab-panel">
+            <div class="admin-section">
+                <p class="admin-section-title">Upload New Artwork</p>
+
+                <div class="admin-upload-zone" id="upload-zone">
+                    <input type="file" id="file-input" accept="image/*" hidden>
+                    <div id="upload-zone-prompt">
+                        <i class="nf nf-fa-cloud_upload"></i>
+                        <p>Drag &amp; drop an image here, or click to browse</p>
+                        <p class="admin-upload-hint">PNG, JPG, GIF, WebP, BMP</p>
+                    </div>
+                    <div id="upload-zone-preview" class="admin-upload-preview" style="display:none;">
+                        <img id="preview-img" alt="Preview">
+                        <span id="preview-filename" class="admin-upload-preview-name"></span>
+                        <button class="admin-btn admin-btn-secondary" id="clear-file-btn" type="button">Change File</button>
+                    </div>
+                </div>
+
+                <form id="upload-form" autocomplete="off">
+                    <div class="admin-form-grid">
+
+                        <div class="admin-field">
+                            <label for="u-artName">Art Name / Title</label>
+                            <input class="admin-input" id="u-artName" name="artName" type="text" placeholder="e.g. Waving Sticker">
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-creationDate">Creation Date</label>
+                            <input class="admin-input" id="u-creationDate" name="creationDate" type="date">
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-shapeshiftForm">Shapeshift Form</label>
+                            <input class="admin-input" id="u-shapeshiftForm" name="shapeshiftForm" type="text" placeholder="e.g. True Form">
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-mainCharacter">Main Character</label>
+                            <input class="admin-input" id="u-mainCharacter" name="mainCharacter" type="text" value="Z" placeholder="e.g. Z">
+                        </div>
+
+                        <div class="admin-field full-width">
+                            <label>Characters</label>
+                            <div class="admin-tag-input-wrap" id="u-tag-wrap">
+                                <input class="admin-tag-real-input" id="u-tag-input" type="text" placeholder="Type a name and press Enter…">
+                            </div>
+                            <input type="hidden" id="u-characters" name="characters">
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-artist">Artist</label>
+                            <input class="admin-input" id="u-artist" name="artist" type="text" placeholder="e.g. ZcraftElite">
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-artistPic">Artist Picture Source</label>
+                            <select class="admin-select" id="u-artistPic" name="artistPic">
+                                <option value="discord">Discord Avatar</option>
+                                <option value="file">Local File</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-field" id="u-discordID-field">
+                            <label for="u-discordID">Discord User ID</label>
+                            <input class="admin-input" id="u-discordID" name="discordID" type="text" placeholder="e.g. 123456789012345678">
+                        </div>
+
+                        <div class="admin-field" id="u-artistFile-field" style="display:none;">
+                            <label for="u-artistFile">Artist Filename</label>
+                            <select class="admin-select" id="u-artistFile" name="artistFile">
+                                {% for f in artist_files %}
+                                <option value="{{ f }}">{{ f }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="u-recievalMethod">Recieval Method</label>
+                            <select class="admin-select" id="u-recievalMethod" name="recievalMethod">
+                                <option value="Self Made">Self Made</option>
+                                <option value="Commission">Commission</option>
+                                <option value="Gift">Gift</option>
+                                <option value="Fanart">Fanart</option>
+                            </select>
+                        </div>
+
+                        <div class="admin-field" id="u-recievalPrice-field" style="display:none;">
+                            <label for="u-recievalPrice">Commission Price</label>
+                            <input class="admin-input" id="u-recievalPrice" name="recievalPrice" type="text" placeholder="e.g. $25.00">
+                        </div>
+
+                        <div class="admin-field" id="u-aiModel-field" style="display:none;">
+                            <label for="u-aiModel">AI Model</label>
+                            <input class="admin-input" id="u-aiModel" name="aiModel" type="text" placeholder="e.g. Sora 1.0 Turbo">
+                        </div>
+
+                    </div>
+
+                    <!-- Toggles -->
+                    <div class="admin-toggles-row">
+                        <label class="admin-toggle-item">
+                            <input type="checkbox" id="u-isAI" name="isAI">
+                            <span>AI Generated</span>
+                        </label>
+                        <label class="admin-toggle-item">
+                            <input type="checkbox" id="u-isNSFW" name="isNSFW">
+                            <span>NSFW</span>
+                        </label>
+                        <label class="admin-toggle-item">
+                            <input type="checkbox" id="u-isDiscEmoji" name="isDiscEmoji">
+                            <span>Discord Emoji</span>
+                        </label>
+                        <label class="admin-toggle-item">
+                            <input type="checkbox" id="u-disableDownload" name="disableDownload">
+                            <span>Disable Download</span>
+                        </label>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="button" class="admin-btn admin-btn-secondary" id="upload-reset-btn">Reset Form</button>
+                        <button type="submit" class="admin-btn admin-btn-primary" id="upload-submit-btn">
+                            <i class="nf nf-fa-upload"></i>&nbsp; Upload Artwork
+                        </button>
+                    </div>
+
+                    <div class="admin-status" id="upload-status"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ============================
+             TAB: MANAGE
+             ============================ -->
+        <div id="tab-manage" class="admin-tab-panel" style="display:none;">
+            <div class="admin-section">
+                <p class="admin-section-title">Existing Artwork</p>
+                <input class="admin-search-bar" id="manage-search" type="search" placeholder="Search by title, art name, artist, form…">
+                <div class="admin-artwork-grid" id="admin-artwork-grid">
+                    {% for img in images %}
+                    <div class="admin-artwork-card"
+                         data-id="{{ img.id }}"
+                         data-search="{{ (img.artName ~ ' ' ~ img.shapeshiftForm ~ ' ' ~ img.artist ~ ' ' ~ img.title)|lower }}">
+                        <img
+                            src="{{ url_for('static', filename='images/thumbs/' ~ img.strippedFilename ~ '.webp') }}"
+                            alt="{{ img.title }}"
+                            onerror="this.src='{{ url_for('static', filename='images/thumbs/' ~ img.strippedFilename ~ '.webp') }}'; this.onerror=null;">
+                        <div class="admin-artwork-info">
+                            <span class="admin-artwork-title">{{ img.artName or img.shapeshiftForm or img.title }}</span>
+                            <span class="admin-artwork-artist">{{ img.artist }}</span>
+                        </div>
+                        <div class="admin-artwork-actions">
+                            <button class="admin-btn admin-btn-edit"
+                                    onclick='openEditModal({{ img | tojson }})'>Edit</button>
+                            <button class="admin-btn admin-btn-danger"
+                                    onclick="confirmDelete({{ img.id }}, '{{ (img.artName or img.shapeshiftForm or img.title)|e }}')">Delete</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /page-container -->
+
+    <!-- ============================
+         EDIT MODAL
+         ============================ -->
+    <div id="edit-modal" class="admin-modal-overlay hidden">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <span class="admin-modal-title">Edit Artwork</span>
+                <button class="admin-modal-close" onclick="closeEditModal()" aria-label="Close">✕</button>
+            </div>
+
+            <form id="edit-form" autocomplete="off">
+                <input type="hidden" id="e-id">
+
+                <div class="admin-form-grid">
+
+                    <div class="admin-field">
+                        <label for="e-artName">Art Name / Title</label>
+                        <input class="admin-input" id="e-artName" type="text" placeholder="e.g. Waving Sticker">
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-creationDate">Creation Date</label>
+                        <input class="admin-input" id="e-creationDate" type="date">
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-shapeshiftForm">Shapeshift Form</label>
+                        <input class="admin-input" id="e-shapeshiftForm" type="text" placeholder="e.g. True Form">
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-mainCharacter">Main Character</label>
+                        <input class="admin-input" id="e-mainCharacter" type="text" placeholder="e.g. Z">
+                    </div>
+
+                    <div class="admin-field full-width">
+                        <label>Characters</label>
+                        <div class="admin-tag-input-wrap" id="e-tag-wrap">
+                            <input class="admin-tag-real-input" id="e-tag-input" type="text" placeholder="Type a name and press Enter…">
+                        </div>
+                        <input type="hidden" id="e-characters">
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-artist">Artist</label>
+                        <input class="admin-input" id="e-artist" type="text">
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-artistPic">Artist Picture Source</label>
+                        <select class="admin-select" id="e-artistPic">
+                            <option value="discord">Discord Avatar</option>
+                            <option value="file">Local File</option>
+                        </select>
+                    </div>
+
+                    <div class="admin-field" id="e-discordID-field">
+                        <label for="e-discordID">Discord User ID</label>
+                        <input class="admin-input" id="e-discordID" type="text" placeholder="e.g. 123456789012345678">
+                    </div>
+
+                    <div class="admin-field" id="e-artistFile-field" style="display:none;">
+                        <label for="e-artistFile">Artist Filename</label>
+                        <select class="admin-select" id="e-artistFile">
+                            {% for f in artist_files %}
+                            <option value="{{ f }}">{{ f }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="e-recievalMethod">Recieval Method</label>
+                        <select class="admin-select" id="e-recievalMethod">
+                            <option value="Self Made">Self Made</option>
+                            <option value="Commission">Commission</option>
+                            <option value="Gift">Gift</option>
+                            <option value="Fanart">Fanart</option>
+                        </select>
+                    </div>
+
+                    <div class="admin-field" id="e-recievalPrice-field" style="display:none;">
+                        <label for="e-recievalPrice">Commission Price</label>
+                        <input class="admin-input" id="e-recievalPrice" type="text" placeholder="e.g. $25.00">
+                    </div>
+
+                    <div class="admin-field" id="e-aiModel-field" style="display:none;">
+                        <label for="e-aiModel">AI Model</label>
+                        <input class="admin-input" id="e-aiModel" type="text" placeholder="e.g. Sora 1.0 Turbo">
+                    </div>
+
+                </div>
+
+                <!-- Toggles -->
+                <div class="admin-toggles-row">
+                    <label class="admin-toggle-item">
+                        <input type="checkbox" id="e-isAI">
+                        <span>AI Generated</span>
+                    </label>
+                    <label class="admin-toggle-item">
+                        <input type="checkbox" id="e-isNSFW">
+                        <span>NSFW</span>
+                    </label>
+                    <label class="admin-toggle-item">
+                        <input type="checkbox" id="e-isDiscEmoji">
+                        <span>Discord Emoji</span>
+                    </label>
+                    <label class="admin-toggle-item">
+                        <input type="checkbox" id="e-disableDownload">
+                        <span>Disable Download</span>
+                    </label>
+                </div>
+
+                <div class="admin-status" id="edit-status"></div>
+
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+{% endblock %}

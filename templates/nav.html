@@ -11,6 +11,9 @@
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('library') }}">Art Gallery</a>
         <a href="{{ url_for('favs') }}">My Favs</a>
+        {% if session['username'] %}
+        <a href="{{ url_for('admin') }}" class="admin-nav-link">Admin</a>
+        {% endif %}
         <button id="settings-toggle" class="nav-button">Settings</button>
 
         <div class="profile mobile-profile">

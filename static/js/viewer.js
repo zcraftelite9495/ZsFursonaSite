@@ -660,6 +660,240 @@ function closeViewer() {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closeViewer();
+        const editModal = document.getElementById('viewer-edit-modal');
+        if (editModal && !editModal.classList.contains('hidden')) {
+            closeViewerEditModal();
+        } else {
+            closeViewer();
+        }
     }
+});
+
+
+/* ===================================================
+   VIEWER EDIT MODAL (admin users only)
+   =================================================== */
+
+/** Initialise a tag-input widget for the viewer edit modal. */
+function _veInitTagInput() {
+    const wrap  = document.getElementById('ve-tag-wrap');
+    const real  = document.getElementById('ve-tag-input');
+    if (!wrap || real._veInited) return;
+    real._veInited = true;
+
+    let tags = [];
+
+    function render() {
+        wrap.querySelectorAll('.admin-tag').forEach(t => t.remove());
+        tags.forEach((tag, i) => {
+            const el = document.createElement('span');
+            el.className = 'admin-tag';
+            el.textContent = tag;
+            const rm = document.createElement('button');
+            rm.type = 'button';
+            rm.textContent = '×';
+            rm.onclick = () => { tags.splice(i, 1); render(); };
+            el.appendChild(rm);
+            wrap.insertBefore(el, real);
+        });
+    }
+
+    real.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ',') && real.value.trim()) {
+            e.preventDefault();
+            const val = real.value.trim().replace(/,$/, '');
+            if (val && !tags.includes(val)) { tags.push(val); render(); }
+            real.value = '';
+        } else if (e.key === 'Backspace' && !real.value && tags.length) {
+            tags.pop(); render();
+        }
+    });
+
+    wrap._setTags = (arr) => { tags = arr.slice(); render(); };
+    wrap._getTags = () => tags.slice();
+}
+
+/** Bind conditional field visibility for the viewer edit modal. */
+function _veBindConditional() {
+    const artistPic     = document.getElementById('ve-artistPic');
+    const discordField  = document.getElementById('ve-discordID-field');
+    const fileField     = document.getElementById('ve-artistFile-field');
+    const recievalMethod = document.getElementById('ve-recievalMethod');
+    const priceField    = document.getElementById('ve-recievalPrice-field');
+    const isAI          = document.getElementById('ve-isAI');
+    const aiField       = document.getElementById('ve-aiModel-field');
+
+    function updateArtist() {
+        const isDiscord = artistPic.value === 'discord';
+        discordField.style.display = isDiscord ? '' : 'none';
+        fileField.style.display    = isDiscord ? 'none' : '';
+    }
+    function updateRecieval() {
+        priceField.style.display = recievalMethod.value === 'Commission' ? '' : 'none';
+    }
+    function updateAI() {
+        aiField.style.display = isAI.checked ? '' : 'none';
+    }
+
+    artistPic.addEventListener('change', updateArtist);
+    recievalMethod.addEventListener('change', updateRecieval);
+    isAI.addEventListener('change', updateAI);
+
+    updateArtist();
+    updateRecieval();
+    updateAI();
+}
+
+/** Populate artist file dropdown dynamically. */
+async function _veLoadArtistFiles(selectedFile) {
+    const sel = document.getElementById('ve-artistFile');
+    if (sel.dataset.loaded) {
+        if (selectedFile) sel.value = selectedFile;
+        return;
+    }
+    try {
+        const res  = await fetch('/api/v1/admin/artist-files');
+        const data = await res.json();
+        sel.innerHTML = '';
+        (data.files || []).forEach(f => {
+            const opt = document.createElement('option');
+            opt.value = f;
+            opt.textContent = f;
+            sel.appendChild(opt);
+        });
+        sel.dataset.loaded = '1';
+        if (selectedFile) sel.value = selectedFile;
+    } catch (_) {}
+}
+
+/** Open the viewer edit modal and populate it with currentImage data. */
+async function openViewerEditModal() {
+    const img = currentImage;
+    if (!img) return;
+
+    _veInitTagInput();
+
+    document.getElementById('ve-id').value             = img.id;
+    document.getElementById('ve-artName').value        = img.artName        || '';
+    document.getElementById('ve-creationDate').value   = img.creationDate   || '';
+    document.getElementById('ve-shapeshiftForm').value = img.shapeshiftForm || '';
+    document.getElementById('ve-mainCharacter').value  = img.mainCharacter  || 'Z';
+    document.getElementById('ve-artist').value         = img.artist         || '';
+    document.getElementById('ve-discordID').value      = img.discordID      || '';
+    document.getElementById('ve-aiModel').value        = img.aiModel        || '';
+    document.getElementById('ve-recievalPrice').value  = img.recievalPrice  || '';
+    document.getElementById('ve-recievalMethod').value = img.recievalMethod || 'Self Made';
+
+    const isFileArtist = img.artistPic && img.artistPic !== 'discord';
+    document.getElementById('ve-artistPic').value = isFileArtist ? 'file' : 'discord';
+    await _veLoadArtistFiles(isFileArtist ? img.artistPic : null);
+
+    document.getElementById('ve-isAI').checked            = Boolean(img.isAI);
+    document.getElementById('ve-isNSFW').checked           = Boolean(img.isNSFW);
+    document.getElementById('ve-isDiscEmoji').checked      = Boolean(img.isDiscEmoji);
+    document.getElementById('ve-disableDownload').checked  = Boolean(img.disableDownload);
+
+    const chars = Array.isArray(img.characters) ? img.characters : [];
+    document.getElementById('ve-tag-wrap')._setTags(chars);
+
+    _veBindConditional();
+
+    const statusEl = document.getElementById('viewer-edit-status');
+    statusEl.style.display = 'none';
+
+    document.getElementById('viewer-edit-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+/** Close the viewer edit modal. */
+function closeViewerEditModal() {
+    document.getElementById('viewer-edit-modal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Close on overlay click
+document.getElementById('viewer-edit-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('viewer-edit-modal')) closeViewerEditModal();
+});
+
+// Submit handler
+document.getElementById('viewer-edit-form').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const id         = parseInt(document.getElementById('ve-id').value);
+    const statusEl   = document.getElementById('viewer-edit-status');
+    const submitBtn  = e.target.querySelector('[type="submit"]');
+
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Saving…';
+    statusEl.style.display = 'none';
+
+    const artistPicVal = document.getElementById('ve-artistPic').value;
+    const artistPic    = artistPicVal === 'discord'
+        ? 'discord'
+        : (document.getElementById('ve-artistFile')?.value || 'discord');
+
+    const payload = {
+        artName:         document.getElementById('ve-artName').value.trim(),
+        creationDate:    document.getElementById('ve-creationDate').value,
+        shapeshiftForm:  document.getElementById('ve-shapeshiftForm').value.trim(),
+        mainCharacter:   document.getElementById('ve-mainCharacter').value.trim() || 'Z',
+        characters:      document.getElementById('ve-tag-wrap')._getTags(),
+        artist:          document.getElementById('ve-artist').value.trim(),
+        artistPic,
+        discordID:       document.getElementById('ve-discordID').value.trim(),
+        aiModel:         document.getElementById('ve-aiModel').value.trim() || null,
+        recievalMethod:  document.getElementById('ve-recievalMethod').value,
+        recievalPrice:   document.getElementById('ve-recievalPrice').value.trim() || null,
+        isAI:            document.getElementById('ve-isAI').checked,
+        isNSFW:          document.getElementById('ve-isNSFW').checked,
+        isDiscEmoji:     document.getElementById('ve-isDiscEmoji').checked,
+        disableDownload: document.getElementById('ve-disableDownload').checked,
+    };
+
+    function setStatus(type, msg) {
+        statusEl.className  = `admin-status admin-status-${type}`;
+        statusEl.textContent = msg;
+        statusEl.style.display = '';
+    }
+
+    try {
+        const res  = await fetch(`/api/v1/admin/edit/${id}`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            setStatus('success', '✓ Changes saved. Reloading gallery…');
+            // Update currentImage so the viewer reflects changes immediately
+            Object.assign(currentImage, payload);
+            setTimeout(() => {
+                closeViewerEditModal();
+                // Reload the gallery data so filters/sorting are fresh
+                if (typeof applyFilters === 'function') applyFilters();
+            }, 1000);
+        } else {
+            setStatus('error', data.error || 'Save failed.');
+        }
+    } catch (err) {
+        setStatus('error', 'Network error — please try again.');
+        console.error(err);
+    } finally {
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Save Changes';
+    }
+});
+
+// Auth check on load — show edit button only for logged-in users
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res  = await fetch('/api/v1/auth/status');
+        const data = await res.json();
+        if (data.logged_in) {
+            const btn = document.getElementById('viewer-edit-button');
+            if (btn) btn.classList.remove('hidden');
+        }
+    } catch (_) {}
 });

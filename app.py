@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from PIL import Image, ImageOps
 from flask import Flask, render_template, jsonify, request, make_response, send_file, send_from_directory, url_for, redirect, session
+from werkzeug.utils import secure_filename
 import json, random, requests, secrets
 
 app = Flask(__name__)
@@ -35,6 +36,11 @@ BASE_DIR = Path(__file__).parent
 STATIC_IMAGES_DIR = BASE_DIR / "static" / "images"
 THUMBS_DIR = STATIC_IMAGES_DIR / "thumbs"
 THUMBS_DIR.mkdir(parents=True, exist_ok=True)
+
+ARTISTS_DIR = STATIC_IMAGES_DIR / "artists"
+ARTISTS_DIR.mkdir(parents=True, exist_ok=True)
+
+ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'}
 
 DISCORD_API_KEY = os.getenv('DISCORD_API_KEY')
 
@@ -54,6 +60,16 @@ def load_images():
     """
     with open('data/art.json') as f:
         return json.load(f)
+
+# --- IMAGE SAVER ---
+def save_images(images):
+    """Saves the art list back to art.json."""
+    with open('data/art.json', 'w', encoding='utf-8') as f:
+        json.dump(images, f, indent=4, ensure_ascii=False)
+
+# --- ALLOWED FILE CHECK ---
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
 
 # --- SET COOKIE ---
 def set_cookie(response, key, value, days=7):
@@ -180,8 +196,175 @@ def embed_image(image_id):
 # --- LOGOUT ---
 @app.route('/logout', methods=['POST'])
 def logout():
-    session.clear()  # or session.pop('user_id', None)
+    session.clear()
     return redirect(url_for('index'))
+
+# ---- ADMIN ----
+# --- ADMIN PAGE ---
+@app.route('/admin')
+def admin():
+    if not session.get('username'):
+        return redirect(url_for('index'))
+    images = load_images()
+    artist_files = sorted(
+        f.name for f in ARTISTS_DIR.iterdir()
+        if f.is_file() and allowed_file(f.name)
+    )
+    return render_template('admin.html', images=images, artist_files=artist_files)
+
+# --- AUTH STATUS ---
+@app.route('/api/v1/auth/status')
+def auth_status():
+    username = session.get('username')
+    return jsonify({"logged_in": bool(username), "username": username or ""})
+
+# --- UPLOAD ARTWORK ---
+@app.route('/api/v1/admin/upload', methods=['POST'])
+def admin_upload():
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+
+    file = request.files['file']
+    if not file or file.filename == '':
+        return jsonify({"error": "No file selected"}), 400
+    if not allowed_file(file.filename):
+        return jsonify({"error": "File type not allowed. Use PNG, JPG, GIF, WebP, BMP, or SVG."}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = STATIC_IMAGES_DIR / filename
+
+    # Avoid overwriting existing files by appending a counter
+    if filepath.exists():
+        stem = Path(filename).stem
+        ext = Path(filename).suffix
+        counter = 1
+        while filepath.exists():
+            filename = f"{stem}_{counter}{ext}"
+            filepath = STATIC_IMAGES_DIR / filename
+            counter += 1
+
+    file.save(str(filepath))
+
+    stripped = Path(filename).stem
+    filetype = file.content_type or f"image/{Path(filename).suffix.lstrip('.')}"
+
+    art_list = load_images()
+
+    characters_raw = request.form.get('characters', '')
+    characters = [c.strip() for c in characters_raw.split(',') if c.strip()]
+
+    is_ai = request.form.get('isAI') == 'true'
+    is_nsfw = request.form.get('isNSFW') == 'true'
+    is_disc_emoji = request.form.get('isDiscEmoji') == 'true'
+    disable_download = request.form.get('disableDownload') == 'true'
+
+    recieval_method = request.form.get('recievalMethod', 'Self Made')
+    recieval_price = request.form.get('recievalPrice') or None
+    if recieval_method != 'Commission':
+        recieval_price = None
+
+    ai_model = request.form.get('aiModel') or None
+    if not is_ai:
+        ai_model = None
+
+    artist_pic = request.form.get('artistPic', 'discord')
+    discord_id = request.form.get('discordID', '') if artist_pic == 'discord' else ''
+
+    new_id = max((i["id"] for i in art_list), default=999999) + 1
+
+    new_entry = {
+        "filename": filename,
+        "title": request.form.get('title') or filename,
+        "strippedFilename": stripped,
+        "filetype": filetype,
+        "aiModel": ai_model,
+        "artist": request.form.get('artist', ''),
+        "artistPic": artist_pic,
+        "discordID": discord_id,
+        "shapeshiftForm": request.form.get('shapeshiftForm', ''),
+        "mainCharacter": request.form.get('mainCharacter', 'Z'),
+        "characters": characters,
+        "artName": request.form.get('artName', ''),
+        "creationDate": request.form.get('creationDate', ''),
+        "recievalMethod": recieval_method,
+        "recievalPrice": recieval_price,
+        "isAI": is_ai,
+        "isNSFW": is_nsfw,
+        "isDiscEmoji": is_disc_emoji,
+        "disableDownload": disable_download,
+        "id": new_id
+    }
+
+    art_list.append(new_entry)
+    save_images(art_list)
+
+    try:
+        create_thumbnails([new_entry], force=True)
+    except Exception as e:
+        logging.warning(f"Thumbnail generation failed for uploaded file: {e}")
+
+    return jsonify({"success": True, "id": new_entry["id"], "entry": new_entry})
+
+# --- EDIT ARTWORK ---
+@app.route('/api/v1/admin/edit/<int:image_id>', methods=['POST'])
+def admin_edit(image_id):
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    art_list = load_images()
+    target = next((a for a in art_list if a["id"] == image_id), None)
+    if not target:
+        return jsonify({"error": f"Artwork {image_id} not found"}), 404
+
+    editable_fields = [
+        'title', 'artName', 'shapeshiftForm', 'mainCharacter', 'characters',
+        'artist', 'artistPic', 'discordID', 'aiModel',
+        'isAI', 'isNSFW', 'isDiscEmoji', 'disableDownload',
+        'recievalMethod', 'recievalPrice', 'creationDate'
+    ]
+    for field in editable_fields:
+        if field in data:
+            target[field] = data[field]
+
+    if not target.get('isAI'):
+        target['aiModel'] = None
+    if not target.get('artistPic') == 'discord':
+        target['discordID'] = ''
+    if target.get('recievalMethod') != 'Commission':
+        target['recievalPrice'] = None
+
+    save_images(art_list)
+    return jsonify({"success": True, "entry": target})
+
+# --- DELETE ARTWORK ---
+@app.route('/api/v1/admin/artist-files')
+def admin_artist_files():
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+    files = sorted(f.name for f in ARTISTS_DIR.iterdir() if f.is_file())
+    return jsonify({"files": files})
+
+
+@app.route('/api/v1/admin/delete/<int:image_id>', methods=['POST'])
+def admin_delete(image_id):
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    art_list = load_images()
+    target = next((a for a in art_list if a["id"] == image_id), None)
+    if not target:
+        return jsonify({"error": f"Artwork {image_id} not found"}), 404
+
+    art_list = [a for a in art_list if a["id"] != image_id]
+    save_images(art_list)
+    return jsonify({"success": True})
 
 # ---- API ENDPOINTS ----
 # --- ART DATABASE ---
