@@ -860,6 +860,18 @@ input:checked + .slider::before {
     text-shadow: 0 0 25px #ff4b4b9b;
 }
 
+.page-header.lore-page {
+    background-color: #131827;
+}
+
+.page-title.lore-page {
+    background-image: linear-gradient(90deg, #4fc3f7, #81d4fa, #4fc3f7);
+    text-shadow: 0 0 30px #4fc3f755;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /* ---- FAVS PAGE STYLES ---- */
 .favs-box {
     display: flex;
@@ -3078,3 +3090,452 @@ to {
     .char-view-all { align-self: center; }
     .char-form-chips { justify-content: center; }
 }
+
+/* ================================================================
+   LORE GALLERY
+   ================================================================ */
+
+.lore-gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* ---- Lore Thumb Card ---- */
+.lore-thumb {
+    width: 280px;
+    min-height: 320px;
+    background: var(--background-secondary, rgba(255,255,255,0.05));
+    border: 1px solid rgba(79, 195, 247, 0.18);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.lore-thumb:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(79, 195, 247, 0.18);
+    border-color: rgba(79, 195, 247, 0.4);
+}
+
+.lore-thumb-blurred .lore-preview-text {
+    filter: blur(6px);
+    user-select: none;
+}
+
+.lore-thumb-header {
+    padding: 10px 12px 6px;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lore-character-list {
+    font-size: 0.82em;
+    font-weight: 700;
+    color: var(--accent-light, #fca8d2);
+    letter-spacing: 0.01em;
+}
+
+.lore-char-sep {
+    font-weight: 400;
+    opacity: 0.6;
+    font-size: 0.9em;
+}
+
+.lore-badge-container {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.lore-thumb-body {
+    flex: 1;
+    padding: 6px 12px 8px;
+    overflow: hidden;
+}
+
+.lore-preview-text {
+    font-size: 0.82em;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.7);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.lore-thumb-footer {
+    padding: 8px 12px 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.lore-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.lore-tag {
+    font-size: 0.7em;
+    padding: 2px 7px;
+    border-radius: 20px;
+    background: rgba(79, 195, 247, 0.15);
+    color: #4fc3f7;
+    border: 1px solid rgba(79, 195, 247, 0.25);
+    white-space: nowrap;
+}
+
+.lore-tag-more {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5);
+    border-color: rgba(255,255,255,0.12);
+}
+
+.lore-title {
+    font-size: 0.92em;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lore-writer {
+    font-size: 0.78em;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.lore-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.4);
+    font-style: italic;
+    padding: 3rem;
+    width: 100%;
+}
+
+/* ---- Lore Viewer Popup ---- */
+.lore-viewer {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.lore-viewer.hidden {
+    display: none;
+}
+
+.lore-viewer-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    font-size: 1.6rem;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    z-index: 1001;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.lore-viewer-close:hover { color: #fff; }
+
+.lore-viewer-content {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 32px;
+    flex-direction: row;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+    width: min(900px, 95vw);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+    gap: 32px;
+    overflow: hidden;
+}
+
+.lore-viewer-text-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.lore-viewer-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.lore-viewer-title {
+    font-family: var(--title-font, 'Fredoka');
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    flex: 1;
+}
+
+.lore-viewer-badges {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.lore-viewer-body {
+    font-size: 0.95em;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.88);
+}
+.lore-viewer-body h1, .lore-viewer-body h2, .lore-viewer-body h3 { color: #fff; margin-top: 1.5em; }
+.lore-viewer-body p { margin: 0.6em 0; }
+.lore-viewer-body a { color: #4fc3f7; }
+.lore-viewer-body strong { color: #fff; }
+.lore-viewer-body blockquote {
+    border-left: 3px solid rgba(79,195,247,0.5);
+    padding-left: 1em;
+    margin-left: 0;
+    color: rgba(255,255,255,0.65);
+    font-style: italic;
+}
+
+.lore-viewer-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+}
+
+.lore-viewer-writer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+}
+
+.lore-viewer-meta-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lore-viewer-meta-label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.4);
+}
+
+.lore-viewer-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.lore-viewer-meta-value {
+    font-size: 0.88em;
+    color: rgba(255,255,255,0.75);
+}
+
+.lore-chip {
+    font-size: 0.78em;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+.lore-chip-char {
+    background: rgba(252, 168, 210, 0.12);
+    color: #fca8d2;
+    border-color: rgba(252,168,210,0.3);
+}
+
+.lore-chip-place {
+    background: rgba(129, 212, 250, 0.12);
+    color: #81d4fa;
+    border-color: rgba(129,212,250,0.3);
+}
+
+.lore-chip-entity {
+    background: rgba(179, 157, 219, 0.12);
+    color: #ce93d8;
+    border-color: rgba(206,147,216,0.3);
+}
+
+/* Mobile lore */
+@media (max-width: 750px) {
+    .lore-thumb { width: 45%; min-height: 0; }
+}
+@media (max-width: 560px) {
+    .lore-thumb { width: 100%; min-height: 0; }
+    .lore-viewer-content { flex-direction: column; padding: 20px; }
+    .lore-viewer-sidebar { width: 100%; }
+}
+
+/* ---- Admin Lore Card ---- */
+.admin-lore-card {
+    background: var(--background-secondary);
+    border: 1px solid rgba(79,195,247,0.18);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-lore-card:hover {
+    border-color: rgba(79,195,247,0.4);
+    box-shadow: 0 4px 16px rgba(79,195,247,0.1);
+}
+
+.admin-lore-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.admin-lore-title {
+    font-weight: 700;
+    font-size: 0.95em;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+}
+
+.admin-lore-badges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.admin-badge-pill {
+    font-size: 0.65em;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.admin-badge-pill.nsfw { background: rgba(255,80,80,0.2); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.3); }
+.admin-badge-pill.ai   { background: rgba(120,115,245,0.2); color: #9c97f5; border: 1px solid rgba(120,115,245,0.3); }
+
+.admin-lore-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.admin-lore-writer {
+    font-size: 0.82em;
+    font-style: italic;
+    color: rgba(255,255,255,0.5);
+}
+
+.admin-lore-id {
+    font-size: 0.75em;
+    color: rgba(255,255,255,0.3);
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-lore-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* ---- Rich Text Editor ---- */
+.lore-editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.lore-toolbar-btn {
+    padding: 3px 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 5px;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.82em;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background 0.15s;
+}
+
+.lore-toolbar-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.lore-toolbar-sep {
+    width: 1px;
+    background: rgba(255,255,255,0.12);
+    align-self: stretch;
+    margin: 0 2px;
+}
+
+.lore-content-editor {
+    min-height: 220px;
+    max-height: 420px;
+    overflow-y: auto;
+    border-radius: 0 0 8px 8px !important;
+    font-size: 0.9em;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.lore-content-editor:empty::before {
+    content: attr(placeholder);
+    color: rgba(255,255,255,0.3);
+    pointer-events: none;
+}
+
+.lore-content-editor:focus { outline: none; }
