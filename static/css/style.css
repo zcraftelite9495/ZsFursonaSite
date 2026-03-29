@@ -1766,6 +1766,11 @@ to {
     display: flex;
     gap: 12px;
     z-index: 10;
+    /* default hidden — slides up from bottom on reveal */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(14px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .viewer-button {
@@ -1812,6 +1817,39 @@ to {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    /* default hidden — slides down from top on reveal */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-14px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* ---- Controls reveal: desktop hover ---- */
+@media (hover: hover) {
+    .viewer-image-container:hover .viewer-button-row,
+    .viewer-image-container:hover .viewer-version-strip:not(.hidden) {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+}
+
+/* ---- Controls reveal: JS-toggled (mobile tap) ---- */
+.viewer-image-container.controls-visible .viewer-button-row,
+.viewer-image-container.controls-visible .viewer-version-strip:not(.hidden) {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* On touch/mobile devices — always show controls (no hover available) */
+@media (hover: none) {
+    .viewer-button-row,
+    .viewer-version-strip:not(.hidden) {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
 }
 
 .viewer-version-arrow {

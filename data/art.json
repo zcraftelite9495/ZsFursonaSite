@@ -1002,6 +1002,18 @@
                 "isDiscEmoji": false,
                 "disableDownload": false,
                 "aiModel": null
+            },
+            {
+                "id": "002",
+                "filename": "Zenoara_All_Fours_PNG_Sketch.png",
+                "strippedFilename": "Zenoara_All_Fours_PNG_Sketch",
+                "filetype": "image/png",
+                "label": "Sketch",
+                "isAI": false,
+                "isNSFW": false,
+                "isDiscEmoji": false,
+                "disableDownload": false,
+                "aiModel": null
             }
         ]
     }
