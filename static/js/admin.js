@@ -138,6 +138,15 @@ bindConditionalFields('e');
 
 
 /* ===================================================
+   UPLOAD — ALTERNATE VERSION TOGGLE
+   =================================================== */
+document.getElementById('u-isAlternate').addEventListener('change', function () {
+    const section = document.getElementById('u-alt-section');
+    section.style.display = this.checked ? '' : 'none';
+});
+
+
+/* ===================================================
    UPLOAD ZONE (DRAG & DROP + FILE PICKER)
    =================================================== */
 const uploadZone    = document.getElementById('upload-zone');
@@ -245,12 +254,29 @@ uploadForm.addEventListener('submit', async e => {
     fd.append('isDiscEmoji',     document.getElementById('u-isDiscEmoji').checked ? 'true' : 'false');
     fd.append('disableDownload', document.getElementById('u-disableDownload').checked ? 'true' : 'false');
 
+    // Alternate mode
+    const isAlt = document.getElementById('u-isAlternate').checked;
+    if (isAlt) {
+        const parentId = document.getElementById('u-parentId').value.trim();
+        if (!parentId) {
+            setStatus(uploadStatus, 'error', 'Please enter the Parent Artwork ID for alternate upload.');
+            uploadSubmitBtn.disabled = false;
+            uploadSubmitBtn.innerHTML = '<i class="nf nf-fa-upload"></i>&nbsp; Upload Artwork';
+            return;
+        }
+        fd.append('parentId', parentId);
+        fd.append('label',    document.getElementById('u-altLabel').value.trim() || 'Alternate Version');
+    }
+
     try {
         const res  = await fetch('/api/v1/admin/upload', { method: 'POST', body: fd });
         const data = await res.json();
 
         if (res.ok && data.success) {
-            setStatus(uploadStatus, 'success', `✓ Uploaded successfully! ID: ${data.id}`);
+            const msg = data.parentId
+                ? `✓ Alternate added to artwork #${data.parentId}! Alt ID: ${data.id}`
+                : `✓ Uploaded successfully! ID: ${data.id}`;
+            setStatus(uploadStatus, 'success', msg);
             resetUploadForm();
         } else {
             setStatus(uploadStatus, 'error', data.error || 'Upload failed.');
@@ -325,6 +351,10 @@ function openEditModal(img) {
 
     // Update conditional fields
     bindConditionalFields('e');
+
+    // Alternates section
+    renderAltList(img.alternates || [], img.id);
+    _bindAltAddSection(img.id);
 
     document.getElementById('edit-status').style.display = 'none';
     document.getElementById('edit-modal').classList.remove('hidden');
@@ -407,6 +437,215 @@ document.getElementById('edit-form').addEventListener('submit', async e => {
         submitBtn.textContent = 'Save Changes';
     }
 });
+
+
+/* ===================================================
+   ALTERNATE VERSIONS MANAGEMENT
+   =================================================== */
+
+/**
+ * Render the alternate list inside the edit modal.
+ * @param {Array} alts - Array of alternate objects.
+ * @param {number} parentId - ID of the parent artwork.
+ */
+function renderAltList(alts, parentId) {
+    const list = document.getElementById('edit-alt-list');
+    list.innerHTML = '';
+
+    if (!alts.length) {
+        list.innerHTML = '<p style="font-size:0.78rem;color:rgba(255,255,255,0.3);margin:0 0 4px;">No alternate versions yet.</p>';
+        return;
+    }
+
+    alts.forEach(alt => {
+        const row = document.createElement('div');
+        row.className = 'admin-alt-item';
+        row.dataset.altId = `${parentId}-${alt.id}`;
+
+        // Thumbnail
+        const thumb = document.createElement('img');
+        thumb.className = 'alt-thumb';
+        thumb.src = `/static/images/thumbs/${(alt.strippedFilename || alt.filename.replace(/\.[^.]+$/, ''))}.webp`;
+        thumb.onerror = () => { thumb.src = `/static/images/${alt.filename}`; };
+        row.appendChild(thumb);
+
+        // Label input
+        const labelInput = document.createElement('input');
+        labelInput.className = 'admin-alt-label-input admin-input';
+        labelInput.type = 'text';
+        labelInput.value = alt.label || '';
+        labelInput.placeholder = 'Version label';
+        labelInput.style.flex = '1';
+        row.appendChild(labelInput);
+
+        // Flag checkboxes
+        const flags = [
+            { id: 'isAI',            label: 'AI' },
+            { id: 'isNSFW',          label: 'NSFW' },
+            { id: 'isDiscEmoji',     label: 'Discord' },
+            { id: 'disableDownload', label: 'No DL' },
+        ];
+        flags.forEach(f => {
+            const lbl = document.createElement('label');
+            lbl.className = 'alt-flag';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = Boolean(alt[f.id]);
+            cb.dataset.flag = f.id;
+            lbl.appendChild(cb);
+            lbl.appendChild(document.createTextNode(f.label));
+            row.appendChild(lbl);
+        });
+
+        // Save button
+        const saveBtn = document.createElement('button');
+        saveBtn.type = 'button';
+        saveBtn.className = 'admin-alt-upload-btn';
+        saveBtn.style.fontSize = '0.75rem';
+        saveBtn.style.padding = '4px 10px';
+        saveBtn.textContent = 'Save';
+        saveBtn.onclick = async () => {
+            saveBtn.disabled = true;
+            saveBtn.textContent = '…';
+            const payload = { label: labelInput.value.trim() };
+            row.querySelectorAll('input[data-flag]').forEach(cb => {
+                payload[cb.dataset.flag] = cb.checked;
+            });
+            if (!payload.isAI) payload.aiModel = null;
+            try {
+                const res  = await fetch(`/api/v1/admin/edit/${alt.id}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    saveBtn.textContent = '✓';
+                    setTimeout(() => { saveBtn.disabled = false; saveBtn.textContent = 'Save'; }, 1200);
+                } else {
+                    alert(data.error || 'Save failed.');
+                    saveBtn.disabled = false; saveBtn.textContent = 'Save';
+                }
+            } catch (err) {
+                alert('Network error.'); saveBtn.disabled = false; saveBtn.textContent = 'Save';
+            }
+        };
+        row.appendChild(saveBtn);
+
+        // Remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'admin-alt-remove';
+        removeBtn.textContent = 'Remove';
+        removeBtn.onclick = () => {
+            showPopup({
+                title: 'Remove Alternate',
+                message: `Remove <b>${esc(alt.label || 'this alternate')}</b>? The image file will not be deleted.`,
+                buttons: [
+                    { text: 'Remove', onClick: async () => {
+                        const res  = await fetch(`/api/v1/admin/delete/${alt.id}`, { method: 'POST' });
+                        const data = await res.json();
+                        if (res.ok && data.success) {
+                            row.remove();
+                            if (!list.querySelector('.admin-alt-item')) {
+                                list.innerHTML = '<p style="font-size:0.78rem;color:rgba(255,255,255,0.3);margin:0 0 4px;">No alternate versions yet.</p>';
+                            }
+                        } else {
+                            alert(data.error || 'Remove failed.');
+                        }
+                    }},
+                    { text: 'Cancel', onClick: () => {} }
+                ]
+            });
+        };
+        row.appendChild(removeBtn);
+
+        list.appendChild(row);
+    });
+}
+
+/**
+ * Bind the Add Alternate inline upload section for a given parent.
+ * @param {number} parentId
+ */
+function _bindAltAddSection(parentId) {
+    const addBtn   = document.getElementById('alt-add-submit-btn');
+    const isAIChk  = document.getElementById('alt-add-isAI');
+    const aiWrap   = document.getElementById('alt-add-aimodel-wrap');
+    const statusEl = document.getElementById('alt-add-status');
+
+    // Toggle AI model field
+    isAIChk.onchange = () => {
+        aiWrap.style.display = isAIChk.checked ? '' : 'none';
+    };
+
+    // Replace submit handler (clone to remove old listeners)
+    const newBtn = addBtn.cloneNode(true);
+    addBtn.parentNode.replaceChild(newBtn, addBtn);
+    document.getElementById('alt-add-isAI').onchange = isAIChk.onchange; // re-bind after clone
+
+    newBtn.addEventListener('click', async () => {
+        const fileInput = document.getElementById('alt-add-file');
+        const label     = document.getElementById('alt-add-label').value.trim() || 'Alternate Version';
+
+        if (!fileInput.files.length) {
+            setStatus(statusEl, 'error', 'Please select an image file.');
+            return;
+        }
+
+        newBtn.disabled  = true;
+        newBtn.textContent = 'Uploading…';
+        statusEl.style.display = 'none';
+
+        const fd = new FormData();
+        fd.append('file',            fileInput.files[0]);
+        fd.append('parentId',        String(parentId));
+        fd.append('label',           label);
+        fd.append('isAI',            document.getElementById('alt-add-isAI').checked ? 'true' : 'false');
+        fd.append('isNSFW',          document.getElementById('alt-add-isNSFW').checked ? 'true' : 'false');
+        fd.append('isDiscEmoji',     document.getElementById('alt-add-isDiscEmoji').checked ? 'true' : 'false');
+        fd.append('disableDownload', document.getElementById('alt-add-disableDownload').checked ? 'true' : 'false');
+        fd.append('aiModel',         document.getElementById('alt-add-aiModel').value.trim());
+
+        try {
+            const res  = await fetch('/api/v1/admin/upload', { method: 'POST', body: fd });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                setStatus(statusEl, 'success', `✓ Alternate added (ID: ${data.id})`);
+                // Append new row to existing list
+                const list = document.getElementById('edit-alt-list');
+                // Clear "no alternates" placeholder if present
+                list.querySelectorAll('p').forEach(p => p.remove());
+                renderAltList(
+                    [...document.querySelectorAll('#edit-alt-list .admin-alt-item')].map(r => ({
+                        id: r.dataset.altId.split('-').pop(), // 3-digit alt sub-ID
+                        filename: '',
+                        label: r.querySelector('.admin-alt-label-input')?.value || '',
+                        isAI: false, isNSFW: false, isDiscEmoji: false, disableDownload: false
+                    })).concat([data.entry]),
+                    parentId
+                );
+                // Reset add form
+                fileInput.value = '';
+                document.getElementById('alt-add-label').value = '';
+                document.getElementById('alt-add-isAI').checked = false;
+                document.getElementById('alt-add-isNSFW').checked = false;
+                document.getElementById('alt-add-isDiscEmoji').checked = false;
+                document.getElementById('alt-add-disableDownload').checked = false;
+                document.getElementById('alt-add-aiModel').value = '';
+                aiWrap.style.display = 'none';
+            } else {
+                setStatus(statusEl, 'error', data.error || 'Upload failed.');
+            }
+        } catch (err) {
+            setStatus(statusEl, 'error', 'Network error — please try again.');
+            console.error(err);
+        } finally {
+            newBtn.disabled = false;
+            newBtn.innerHTML = '<i class="nf nf-fa-plus"></i>&nbsp; Add Alternate';
+        }
+    });
+}
 
 
 /* ===================================================

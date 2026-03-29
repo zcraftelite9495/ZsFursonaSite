@@ -40,19 +40,57 @@ def save_art(art_list):
 
 def find_next_id(art_list):
     """
-    Finds the next available ID in the given art list.
-
-    If the art list is empty, returns `1000000`. Otherwise, returns the maximum ID in the list plus one.
+    Finds the next available top-level ID (alternates use their own 3-digit counter).
 
     Args:
         art_list (list): A list of art data dictionaries.
 
     Returns:
-        int: The next available ID in the art list.
+        int: The next available ID.
     """
     if not art_list:
         return 1000000
     return max(item["id"] for item in art_list) + 1
+
+
+def find_next_alt_id(parent_entry):
+    """Returns the next 3-digit zero-padded string alt ID unique within a parent."""
+    existing = [a.get("id") for a in parent_entry.get("alternates", [])]
+    max_num  = max((int(x) for x in existing if str(x).isdigit()), default=0)
+    return f"{max_num + 1:03d}"
+
+
+def find_by_id(art_list, target_id):
+    """
+    Find an entry by ID, searching both top-level and nested alternates.
+    Accepts integer IDs for top-level entries and 'NNNNN-001' composite strings
+    for alternates.
+
+    Returns:
+        tuple: (parent_entry, alt_entry_or_None). (None, None) if not found.
+    """
+    target_str = str(target_id)
+    if '-' in target_str:
+        parts = target_str.rsplit('-', 1)
+        try:
+            parent_int = int(parts[0])
+            alt_sub    = parts[1]
+        except ValueError:
+            return None, None
+        for entry in art_list:
+            if entry.get("id") == parent_int:
+                for alt in entry.get("alternates", []):
+                    if str(alt.get("id")) == alt_sub:
+                        return entry, alt
+        return None, None
+    try:
+        target_int = int(target_str)
+    except ValueError:
+        return None, None
+    for entry in art_list:
+        if entry.get("id") == target_int:
+            return entry, None
+    return None, None
 
 def validate_filename(filename):
     """
@@ -296,19 +334,90 @@ def edit_artwork(args):
 
 def remove_artwork(args):
     """
-    Remove an artwork from the list with the given ID.
+    Remove an artwork or alternate from the list with the given ID.
 
     Args:
         args (argparse.Namespace): An object containing the ID of the artwork to remove.
     """
     art_list = load_art()
-    before_len = len(art_list)
-    art_list[:] = [a for a in art_list if a["id"] != args.id]
-    if len(art_list) == before_len:
+    parent, alt = find_by_id(art_list, args.id)
+    if not parent:
         print(f"Artwork with ID {args.id} not found.")
+        return
+
+    if alt is not None:
+        alt_sub = str(alt.get("id"))
+        parent["alternates"] = [a for a in parent.get("alternates", []) if str(a["id"]) != alt_sub]
+        save_art(art_list)
+        print(f"✅ Alternate {args.id} removed from parent #{parent['id']}.")
     else:
+        art_list[:] = [a for a in art_list if a["id"] != parent["id"]]
         save_art(art_list)
         print(f"✅ Artwork ID {args.id} removed.")
+
+
+def add_alternate(args):
+    """Add an alternate version to an existing artwork."""
+    art_list = load_art()
+    parent, _ = find_by_id(art_list, args.parent_id)
+    if not parent:
+        print(f"❌ Parent artwork ID {args.parent_id} not found.")
+        return
+
+    print(f"\nAdding alternate to: [{parent['id']}] {parent.get('artName') or parent.get('shapeshiftForm', '')}")
+
+    filename = prompt_input("  Image filename (must exist in static/images/)")
+    label    = prompt_input("  Version label", default="Alternate Version")
+    is_nsfw  = yes_no("  NSFW?", default=False)
+    is_ai    = yes_no("  AI Generated?", default=False)
+    ai_model = prompt_input("  AI Model name", default=None, required=False) if is_ai else None
+    is_disc  = yes_no("  Available as Discord Emoji?", default=False)
+    no_dl    = yes_no("  Disable download?", default=False)
+
+    alt_id   = find_next_alt_id(parent)
+    stripped = Path(filename).stem
+
+    alt_entry = {
+        "id":              alt_id,
+        "filename":        filename,
+        "strippedFilename": stripped,
+        "filetype":        f"image/{Path(filename).suffix.lstrip('.')}",
+        "label":           label,
+        "isAI":            is_ai,
+        "isNSFW":          is_nsfw,
+        "isDiscEmoji":     is_disc,
+        "disableDownload": no_dl,
+        "aiModel":         ai_model,
+    }
+
+    if "alternates" not in parent:
+        parent["alternates"] = []
+    parent["alternates"].append(alt_entry)
+    save_art(art_list)
+    full_alt_id = f"{parent['id']}-{alt_id}"
+    print(f"✅ Alternate {full_alt_id} added to artwork #{parent['id']}.")
+
+
+def edit_alternate(args):
+    """Edit an existing alternate version by ID."""
+    art_list = load_art()
+    parent, alt = find_by_id(art_list, args.id)
+
+    if not parent or alt is None:
+        print(f"❌ Alternate ID {args.id} not found.")
+        return
+
+    print(f"\nEditing alternate [{alt['id']}] '{alt.get('label', '')}' of artwork #{parent['id']}")
+
+    alt["label"]           = prompt_input("  Label", default=alt.get("label", "Alternate Version"))
+    alt["isNSFW"]          = yes_no("  NSFW?",                    default=alt.get("isNSFW", False))
+    alt["isAI"]            = yes_no("  AI Generated?",             default=alt.get("isAI", False))
+    alt["aiModel"]         = prompt_input("  AI Model", default=alt.get("aiModel", ""), required=False) if alt["isAI"] else None
+    alt["isDiscEmoji"]     = yes_no("  Discord Emoji?",           default=alt.get("isDiscEmoji", False))
+    alt["disableDownload"] = yes_no("  Disable download?",        default=alt.get("disableDownload", False))
+
+    save_art(art_list)
+    print(f"✅ Alternate ID {alt['id']} updated.")
 
 def main():
     parser = argparse.ArgumentParser(description="Manage your art database (art.json)")
@@ -329,8 +438,16 @@ def main():
     edit_parser.add_argument("id", type=int, help="ID of the artwork to edit")
 
     # Remove
-    remove_parser = subparsers.add_parser("remove", help="Remove an artwork")
-    remove_parser.add_argument("id", type=int, help="ID of the artwork to remove")
+    remove_parser = subparsers.add_parser("remove", help="Remove an artwork or alternate")
+    remove_parser.add_argument("id", help="ID of the artwork (integer) or alternate (e.g. 10000041-001)")
+
+    # Add alternate
+    alt_add_parser = subparsers.add_parser("alt-add", help="Add an alternate version to an existing artwork")
+    alt_add_parser.add_argument("parent_id", type=int, help="ID of the parent artwork")
+
+    # Edit alternate
+    alt_edit_parser = subparsers.add_parser("alt-edit", help="Edit an existing alternate version")
+    alt_edit_parser.add_argument("id", help="Composite ID of the alternate (e.g. 10000041-001)")
 
     args = parser.parse_args()
 
@@ -342,6 +459,10 @@ def main():
         edit_artwork(args)
     elif args.command == "remove":
         remove_artwork(args)
+    elif args.command == "alt-add":
+        add_alternate(args)
+    elif args.command == "alt-edit":
+        edit_alternate(args)
 
 if __name__ == "__main__":
     main()

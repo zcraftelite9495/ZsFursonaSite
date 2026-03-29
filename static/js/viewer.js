@@ -15,6 +15,7 @@ Made with love by ZcraftElite :3
 */
 
 let currentImage = null;
+let currentVersionIndex = 0;
 
 /* ---- VALUE CLEANING FUNCTIONS ---- */
 /**
@@ -278,6 +279,19 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
             if (img.isNSFW) badgeContainer.appendChild(createBadge('nsfw'));
             if (img.isDiscEmoji) badgeContainer.appendChild(createBadge('discord'));
 
+            // Version count badge: count main + NSFW-filtered alternates
+            const visibleAltCount = (img.alternates || []).filter(a => !a.isNSFW || showNSFW).length;
+            if (visibleAltCount > 0) {
+                const vcBadge = document.createElement("div");
+                vcBadge.className = "badge";
+                vcBadge.setAttribute('badge-size', 'small');
+                vcBadge.setAttribute('badge-style', 'gradient');
+                vcBadge.setAttribute('badge', 'versions');
+                vcBadge.textContent = visibleAltCount + 1;
+                vcBadge.title = `${visibleAltCount + 1} versions available`;
+                badgeContainer.appendChild(vcBadge);
+            }
+
             thumb.appendChild(imgEl);
             thumb.appendChild(thumbText);
             thumb.appendChild(badgeContainer);
@@ -395,7 +409,16 @@ function predictThumbsPerRow(gallerySelector, options = {}) {
 function shareImage() {
     if (!currentImage || !currentImage.id) return;
 
-    const url = `${window.location.origin}/view/${currentImage.id}`;
+    // Build the correct share ID: composite "parentId-altId" when viewing an alternate
+    let shareId = currentImage.id;
+    if (currentVersionIndex > 0) {
+        const showNSFW = getCookie('showNSFW') === 'True';
+        const visibleAlts = (currentImage.alternates || []).filter(a => !a.isNSFW || showNSFW);
+        const alt = visibleAlts[currentVersionIndex - 1];
+        if (alt) shareId = `${currentImage.id}-${alt.id}`;
+    }
+
+    const url = `${window.location.origin}/view/${shareId}`;
     if (navigator.share) {
         navigator.share({
             title: `Z's World - ${currentImage.artName || 'Artwork'}`,
@@ -447,6 +470,152 @@ function formatMimeType(mime) {
 }
 
 
+/* ---- VERSION DISPLAY HELPERS ---- */
+
+/**
+ * Apply per-version badge and download state.
+ * @param {Object} versionData - The version object (main img or an alternate).
+ */
+function _applyVersionDisplay(versionData) {
+    const aiBadge      = document.getElementById('viewer-ai-badge');
+    const nsfwBadge    = document.getElementById('viewer-nsfw-badge');
+    const discordBadge = document.getElementById('viewer-discord-badge');
+    const downloadBtn  = document.getElementById('download-button');
+    const aiModelDiv   = document.querySelector('.viewer-data.artAIModel span');
+
+    if (Boolean(versionData.isAI)) {
+        aiBadge.classList.remove('hidden');
+        aiModelDiv.textContent = versionData.aiModel || "Unknown Model";
+        aiModelDiv.parentElement.style.display = "flex";
+    } else {
+        aiBadge.classList.add('hidden');
+        aiModelDiv.parentElement.style.display = "none";
+    }
+
+    nsfwBadge.classList.toggle('hidden', !Boolean(versionData.isNSFW));
+    discordBadge.classList.toggle('hidden', !Boolean(versionData.isDiscEmoji));
+
+    if (Boolean(userIsUK) && Boolean(versionData.isNSFW)) {
+        downloadBtn.onclick = () => {
+            userFailedUKDownload = true;
+            downloadBtn.textContent = "NSFW Downloads Unavailable in the UK";
+            downloadBtn.style.color = "#888";
+            downloadBtn.style.cursor = "not-allowed";
+            showPopup({
+                title: `Dammit, why can't I goon to you offline?`,
+                message: `<b><u>Heyo UK user.</u></b><br><br>Due to the regulations of your country, in order to protect myself, I cannot allow downloads from an UK-based device.<br><br>However, you can still view the image online, and if you really want a copy, you can always take a screenshot.<br><br>Sorry for the inconvenience!`,
+                buttons: [
+                    { text: 'I Understand',  onClick: () => setCookie('readUKmessage', 'True', 14) },
+                    { text: 'View Petition', onClick: () => { setCookie('readUKmessage', 'True', 14); window.open('https://petition.parliament.uk/petitions/722903', '_blank'); } }
+                ]
+            });
+        };
+    } else if (userFailedUKDownload && Boolean(versionData.isNSFW)) {
+        downloadBtn.textContent = "Unavailable";
+        downloadBtn.style.color = "#888";
+        downloadBtn.style.cursor = "not-allowed";
+    } else if (Boolean(versionData.disableDownload)) {
+        downloadBtn.textContent = "Unavailable";
+        downloadBtn.style.color = "#888";
+        downloadBtn.style.cursor = "not-allowed";
+        downloadBtn.onclick = null;
+    } else {
+        downloadBtn.textContent = "Download";
+        downloadBtn.style.color = "#FFF";
+        downloadBtn.style.cursor = "pointer";
+        downloadBtn.onclick = () => downloadImage(versionData);
+    }
+}
+
+/**
+ * Build and show the version strip for an artwork with alternates.
+ * Hides the strip when no alternates exist.
+ * @param {Object} img - The main image object.
+ */
+function buildVersionStrip(img) {
+    const strip = document.getElementById('viewer-version-strip');
+    strip.innerHTML = '';
+    const showNSFW = getCookie('showNSFW') === 'True';
+
+    // Build filtered list: main always included; alternates only if not NSFW-gated
+    const visibleAlts = (img.alternates || []).filter(alt => !alt.isNSFW || showNSFW);
+
+    if (visibleAlts.length === 0) {
+        strip.classList.add('hidden');
+        return;
+    }
+
+    const total = visibleAlts.length + 1;
+
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'viewer-version-arrow';
+    prevBtn.innerHTML = '<i class="nf nf-fa-chevron_left"></i>';
+    prevBtn.title = 'Previous version';
+    prevBtn.onclick = () => _switchVisibleVersion((currentVersionIndex - 1 + total) % total, visibleAlts, img);
+    strip.appendChild(prevBtn);
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'viewer-version-label';
+    labelEl.id = 'viewer-version-label';
+    labelEl.textContent = _versionName(img, null);
+    strip.appendChild(labelEl);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'viewer-version-arrow';
+    nextBtn.innerHTML = '<i class="nf nf-fa-chevron_right"></i>';
+    nextBtn.title = 'Next version';
+    nextBtn.onclick = () => _switchVisibleVersion((currentVersionIndex + 1) % total, visibleAlts, img);
+    strip.appendChild(nextBtn);
+
+    strip.classList.remove('hidden');
+}
+
+/** Returns the display name for the current or a specific version. */
+function _versionName(img, altEntry) {
+    if (!altEntry) return 'Main Version';
+    return altEntry.label || 'Alternate Version';
+}
+
+/** Switch using the filtered visible-alts array (NSFW-aware). */
+function _switchVisibleVersion(visibleIndex, visibleAlts, img) {
+    currentVersionIndex = visibleIndex;
+    const versionData = visibleIndex === 0 ? img : visibleAlts[visibleIndex - 1];
+
+    const viewerImage   = document.getElementById('viewer-image');
+    const viewerLoader  = document.getElementById('viewer-loader');
+    const viewerContent = document.querySelector('.viewer-content');
+
+    viewerContent.style.width  = "200px";
+    viewerContent.style.height = "200px";
+    viewerLoader.classList.remove('hidden');
+
+    viewerImage.onload = () => {
+        viewerContent.style.width  = "auto";
+        viewerContent.style.height = "auto";
+        viewerLoader.classList.add('hidden');
+    };
+    viewerImage.onerror = () => viewerLoader.classList.add('hidden');
+    viewerImage.src = `/static/images/${versionData.filename}`;
+
+    _applyVersionDisplay(versionData);
+
+    const labelEl = document.getElementById('viewer-version-label');
+    if (labelEl) labelEl.textContent = _versionName(img, visibleIndex === 0 ? null : visibleAlts[visibleIndex - 1]);
+}
+
+/**
+ * Switch the viewer to a specific version index (used when re-opening viewer).
+ * 0 = main artwork; 1+ = alternates[index-1].
+ * @param {number} index
+ */
+function switchToVersion(index) {
+    if (!currentImage) return;
+    const showNSFW = getCookie('showNSFW') === 'True';
+    const visibleAlts = (currentImage.alternates || []).filter(alt => !alt.isNSFW || showNSFW);
+    _switchVisibleVersion(index, visibleAlts, currentImage);
+}
+
+
 /* ---- OPEN FUNCTION ---- */
 /**
  * Opens the image viewer and sets the displayed image and metadata.
@@ -467,6 +636,7 @@ function formatMimeType(mime) {
  */
 function openViewer(img) {
     currentImage = img;
+    currentVersionIndex = 0;
 
     const viewerContent = document.querySelector('.viewer-content');
     const viewerImage = document.getElementById('viewer-image');
@@ -563,68 +733,8 @@ function openViewer(img) {
         shareButton.textContent = "Copy Link";
     }
 
-    if (Boolean(userIsUK) && Boolean(img.isNSFW)) {
-        downloadButton.onclick = () => {
-            userFailedUKDownload = true;
-            downloadButton.textContent = "NSFW Downloads Unavailable in the UK";
-            downloadButton.style.color = "#888";
-            downloadButton.style.cursor = "not-allowed"
-            showPopup({
-                title: `Dammit, why can't I goon to you offline?`,
-                message: `<b><u>Heyo UK user.</u></b><br><br>Due to the regulations of your country, in order to protect myself, I cannot allow downloads from an UK-based device.<br><br>However, you can still view the image online, and if you really want a copy, you can always take a screenshot.<br><br>Sorry for the inconvenience!`,
-                buttons: [
-                    {
-                        text: 'I Understand',
-                        onClick: () => {
-                            setCookie('readUKmessage', 'True', 14);
-                        }
-                    },
-                    {
-                        text: 'View Petition',
-                        onClick: () => {
-                            setCookie('readUKmessage', 'True', 14);
-                            window.open('https://petition.parliament.uk/petitions/722903', '_blank');
-                        }
-                    }
-                ]
-            });
-        };
-    } else if ((userFailedUKDownload) && Boolean(img.isNSFW)) {
-        downloadButton.textContent = "Unavailable";
-        downloadButton.style.color = "#888";
-        downloadButton.style.cursor = "not-allowed"
-    } else if (Boolean(img.disableDownload)) {
-        const downloadButton = document.getElementById('download-button');
-        downloadButton.textContent = "Unavailable";
-        downloadButton.style.color = "#888";
-        downloadButton.style.cursor = "not-allowed"
-        downloadButton.onclick = null;
-    } else {
-        downloadButton.textContent = "Download";
-        downloadButton.style.color = "#FFF";
-        downloadButton.style.cursor = "pointer";
-        downloadButton.onclick = () => downloadImage(img);
-    }
-
-    if (Boolean(img.isAI)) {
-        aiBadge.classList.remove('hidden');
-        aiModelDiv.parentElement.style.display = "flex";
-    } else {
-        aiBadge.classList.add('hidden');
-        aiModelDiv.parentElement.style.display = "none";
-    }
-
-    if (Boolean(img.isNSFW)) {
-        nsfwBadge.classList.remove('hidden');
-    } else {
-        nsfwBadge.classList.add('hidden');
-    }
-
-    if (Boolean(img.isDiscEmoji)) {
-        discordBadge.classList.remove('hidden');
-    } else {
-        discordBadge.classList.add('hidden');
-    }
+    _applyVersionDisplay(img);
+    buildVersionStrip(img);
 
     document.getElementById('viewer').classList.remove('hidden');
 }

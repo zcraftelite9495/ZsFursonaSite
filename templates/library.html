@@ -187,9 +187,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         const res = await fetch("/art.json");
         const images = await res.json();
 
-        const img = images.find(x => String(x.id) === String(imageId));
-        if (img) {
-            openViewer(img);
+        // Support composite alternate IDs like "10000041-001"
+        if (imageId.includes('-')) {
+            const [parentIdStr, altId] = imageId.split('-');
+            const parent = images.find(x => String(x.id) === parentIdStr);
+            if (parent) {
+                openViewer(parent);
+                // Switch to the specified alternate after the viewer opens
+                const showNSFW = document.cookie.includes('showNSFW=True');
+                const visibleAlts = (parent.alternates || []).filter(a => !a.isNSFW || showNSFW);
+                const altIndex = visibleAlts.findIndex(a => String(a.id) === altId);
+                if (altIndex >= 0) {
+                    // Defer until the strip is built
+                    setTimeout(() => switchToVersion(altIndex + 1), 50);
+                }
+            }
+        } else {
+            const img = images.find(x => String(x.id) === String(imageId));
+            if (img) openViewer(img);
         }
     } catch (err) {
         console.error("Error loading image for viewer:", err);

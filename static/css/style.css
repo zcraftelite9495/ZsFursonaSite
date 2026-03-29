@@ -1550,6 +1550,7 @@ input:checked + .slider::before {
     pointer-events: none;
 }
 
+/* Version count badge — see badges.css for .badge[badge="versions"] */
 
 
 /* ---- IMAGE VIEWER STYLES ---- */
@@ -1792,6 +1793,205 @@ to {
 
 .viewer-button:active {
     transform: scale(0.95);
+}
+
+/* ---- Version Strip (top of image, scroll-style) ---- */
+.viewer-version-strip {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.viewer-version-arrow {
+    flex-shrink: 0;
+    font-family: "Rubik Gemstones", system-ui;
+    font-size: 1rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 10px 14px;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+}
+
+.viewer-version-arrow:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.viewer-version-arrow:active {
+    transform: scale(0.9);
+}
+
+.viewer-version-label {
+    flex: 1;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+    font-family: "Rubik Gemstones", system-ui;
+    font-size: 1rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Admin alternates section */
+.admin-alternates-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-alternates-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+}
+
+.admin-alt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.admin-alt-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto auto;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+}
+
+.admin-alt-item .alt-thumb {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.3);
+}
+
+.admin-alt-label-input {
+    font-family: inherit;
+    font-size: 0.82rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    color: #fff;
+    padding: 4px 8px;
+    min-width: 0;
+}
+
+.admin-alt-item .alt-flag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    user-select: none;
+}
+
+.admin-alt-item .alt-flag input { margin: 0; cursor: pointer; }
+
+.admin-alt-remove {
+    font-size: 0.8rem;
+    color: #ff6b8a;
+    background: none;
+    border: 1px solid rgba(255,107,138,0.35);
+    border-radius: 6px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.admin-alt-remove:hover { background: rgba(255,107,138,0.18); }
+
+.admin-alt-add-section {
+    background: rgba(255,255,255,0.03);
+    border: 1.5px dashed rgba(252,168,210,0.25);
+    border-radius: 12px;
+    padding: 14px;
+    margin-top: 8px;
+}
+
+.admin-alt-add-section .admin-alt-add-title {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+}
+
+.admin-alt-add-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.admin-alt-flags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.admin-alt-flags-row label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer;
+}
+
+.admin-alt-upload-btn {
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(252,168,210,0.4);
+    background: rgba(252,168,210,0.12);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.admin-alt-upload-btn:hover { background: rgba(252,168,210,0.25); }
+
+.admin-alt-status {
+    font-size: 0.78rem;
+    margin-top: 6px;
+    display: none;
+}
+
+/* Upload form - alternate mode */
+.upload-as-alt-section {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(163,148,255,0.07);
+    border: 1px solid rgba(163,148,255,0.2);
+    border-radius: 10px;
 }
 
 

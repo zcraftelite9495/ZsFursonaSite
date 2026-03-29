@@ -18,10 +18,12 @@ Made with love by ZcraftElite :3
     --badge-ai: #f39c12;
     --badge-nsfw: #e74c3c;
     --badge-discord: #5865F2;
+    --badge-versions: #6b7280;
 
     --badge-ai-gradient: linear-gradient(135deg, #f39c12, #f1c40f);
     --badge-nsfw-gradient: linear-gradient(135deg, #e74c3c, #c0392b);
     --badge-discord-gradient: linear-gradient(135deg, #5865F2, #4e5b8c);
+    --badge-versions-gradient: linear-gradient(135deg, #9ca3af, #6b7280);
 }
 
 /* ---- GLOBAL BADGE DEFINITIONS ---- */
@@ -55,7 +57,9 @@ Made with love by ZcraftElite :3
 .badge[badge-style="gradient"][badge="nsfw"] { background: var(--badge-nsfw-gradient); }
 .badge[badge-style="gradient"][badge="ai"] { background: var(--badge-ai-gradient); }
 .badge[badge-style="gradient"][badge="discord"] { background: var(--badge-discord-gradient); }
+.badge[badge-style="gradient"][badge="versions"] { background: var(--badge-versions-gradient); font-size: 0.75rem; font-weight: 700; }
 
 .badge[badge-style="solid"][badge="nsfw"] { background: var(--badge-nsfw); }
 .badge[badge-style="solid"][badge="ai"] { background: var(--badge-ai); }
 .badge[badge-style="solid"][badge="discord"] { background: var(--badge-discord); }
+.badge[badge-style="solid"][badge="versions"] { background: var(--badge-versions); font-size: 0.75rem; font-weight: 700; }

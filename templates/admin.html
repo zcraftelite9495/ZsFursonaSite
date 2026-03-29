@@ -139,6 +139,29 @@
                         </label>
                     </div>
 
+                    <!-- Alternate upload option -->
+                    <div style="margin-top: 16px;">
+                        <label class="admin-toggle-item" style="margin-bottom: 0;">
+                            <input type="checkbox" id="u-isAlternate">
+                            <span>Upload as alternate version of existing artwork</span>
+                        </label>
+                        <div id="u-alt-section" class="upload-as-alt-section" style="display:none;">
+                            <div class="admin-form-grid" style="margin-top:0;">
+                                <div class="admin-field">
+                                    <label for="u-parentId">Parent Artwork ID</label>
+                                    <input class="admin-input" id="u-parentId" type="number" placeholder="e.g. 10000001">
+                                </div>
+                                <div class="admin-field">
+                                    <label for="u-altLabel">Version Label</label>
+                                    <input class="admin-input" id="u-altLabel" type="text" placeholder="e.g. NSFW Version">
+                                </div>
+                            </div>
+                            <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin:6px 0 0;">
+                                When set, the image will be added as an alternate to the specified artwork rather than a standalone entry. The flags above still apply to this alternate version.
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="admin-form-actions">
                         <button type="button" class="admin-btn admin-btn-secondary" id="upload-reset-btn">Reset Form</button>
                         <button type="submit" class="admin-btn admin-btn-primary" id="upload-submit-btn">
@@ -302,6 +325,41 @@
                 <div class="admin-form-actions">
                     <button type="button" class="admin-btn admin-btn-secondary" onclick="closeEditModal()">Cancel</button>
                     <button type="submit" class="admin-btn admin-btn-primary">Save Changes</button>
+                </div>
+
+                <!-- Alternate Versions section -->
+                <div class="admin-alternates-section" id="edit-alternates-section">
+                    <div class="admin-alternates-title">Alternate Versions</div>
+                    <div class="admin-alt-list" id="edit-alt-list">
+                        <!-- populated by JS -->
+                    </div>
+                    <!-- Add Alternate inline form -->
+                    <div class="admin-alt-add-section">
+                        <div class="admin-alt-add-title">Add Alternate Version</div>
+                        <div class="admin-alt-add-row">
+                            <div>
+                                <label style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Version Label</label>
+                                <input class="admin-input" id="alt-add-label" type="text" placeholder="e.g. NSFW Version" style="margin-top:4px;">
+                            </div>
+                            <div>
+                                <label style="font-size:0.78rem;color:rgba(255,255,255,0.5);">Image File</label>
+                                <input class="admin-input" id="alt-add-file" type="file" accept="image/*" style="margin-top:4px;padding:5px 8px;">
+                            </div>
+                        </div>
+                        <div class="admin-alt-flags-row">
+                            <label><input type="checkbox" id="alt-add-isAI"> AI Generated</label>
+                            <label><input type="checkbox" id="alt-add-isNSFW"> NSFW</label>
+                            <label><input type="checkbox" id="alt-add-isDiscEmoji"> Discord Emoji</label>
+                            <label><input type="checkbox" id="alt-add-disableDownload"> Disable Download</label>
+                        </div>
+                        <div id="alt-add-aimodel-wrap" style="display:none;margin-bottom:8px;">
+                            <input class="admin-input" id="alt-add-aiModel" type="text" placeholder="AI Model name">
+                        </div>
+                        <button type="button" class="admin-alt-upload-btn" id="alt-add-submit-btn">
+                            <i class="nf nf-fa-plus"></i>&nbsp; Add Alternate
+                        </button>
+                        <div class="admin-alt-status admin-status" id="alt-add-status"></div>
+                    </div>
                 </div>
             </form>
         </div>
