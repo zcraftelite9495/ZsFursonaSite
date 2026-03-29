@@ -5,6 +5,7 @@
 		}
     ],
     "settings": {
-        "figura.librariesFolderPath": "C:\\Users\\zcome\\AppData\\Roaming\\.minecraft\\figura\\avatars\\libraries\\"
+        "figura.librariesFolderPath": "C:\\Users\\zcome\\AppData\\Roaming\\.minecraft\\figura\\avatars\\libraries\\",
+        "djlint.showInstallError": false
     }
 }

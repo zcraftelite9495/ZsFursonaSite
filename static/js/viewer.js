@@ -642,6 +642,10 @@ function openViewer(img) {
     const viewerImage = document.getElementById('viewer-image');
     const viewerArtistPic = document.getElementById('viewer-artist-pic');
     const viewerLoader = document.getElementById('viewer-loader');
+
+    const showAI = getCookie("showAI") === "True";
+    const showNSFW = getCookie("showNSFW") === "True";
+    const blurNSFW = getCookie("blurNSFW") === "True";
     
     viewerImage.src = '';
     viewerImage.onload = null;
@@ -705,6 +709,7 @@ function openViewer(img) {
     document.getElementById('viewer-artist').textContent = img.artist || "";
 
     const aiModelDiv = document.querySelector('.viewer-data.artAIModel span');
+    const mainCharacterDiv = document.querySelector('.viewer-data.artMainCharacter span');
     const charactersDiv = document.querySelector('.viewer-data.artCharacters span');
     const formDiv = document.querySelector('.viewer-data.artForm span');
     const artNameDiv = document.querySelector('.viewer-data.artName span');
@@ -712,15 +717,35 @@ function openViewer(img) {
     const artCreationDateDiv = document.querySelector('.viewer-data.artCreationDate span');
     const artRecievalMethodDiv = document.querySelector('.viewer-data.artRecievalMethod span');
     const artRecievalMethodIcon = document.querySelector('.viewer-data.artRecievalMethod i');
+    const alternatesDiv = document.querySelector('.viewer-data.artAlternates span');
 
     aiModelDiv.textContent = img.aiModel || "Unknown Model";
+    // ----------------- //
+    mainCharacterDiv.textContent = img.mainCharacter;
+    // ----------------- //
     charactersDiv.textContent = img.characters?.length > 0 ? img.characters.join(', ') : '';
+    if (img.characters.length > 1) { charactersDiv.parentElement.style.display = "block" } else { charactersDiv.parentElement.style.display = "none" }
+    // ----------------- //
     formDiv.textContent = img.shapeshiftForm || '';
+    // ----------------- //
     artNameDiv.textContent = img.artName || '';
+    // ----------------- //
     artFileTypeDiv.textContent = formatMimeType(img.filetype);
+    // ----------------- //
     artCreationDateDiv.textContent = img.creationDate || '';
+    // ----------------- //
     artRecievalMethodDiv.textContent = `${img.recievalMethod || ''}${img.recievalPrice ? ` (${img.recievalPrice})` : ''}`;
     artRecievalMethodIcon.className = ({ "Gift": "nf nf-fa-gift", "Fanart": "nf nf-fa-paint_brush", "Commission": "nf nf-fa-money", "Self Made": "nf nf-fa-hammer" })[img.recievalMethod] || '';
+    // ----------------- //
+    alternatesDiv.textContent = (img.alternates || []).filter(a => !a.isNSFW || showNSFW).length > 0 ? `${(img.alternates || []).filter(a => !a.isNSFW || showNSFW).length} Alternate Versions` : '';
+    alternatesDiv.parentElement.style.display = (img.alternates || []).filter(a => !a.isNSFW || showNSFW).length > 0 ? "block" : "none";
+    
+
+    if (img.characters.length > 1) {
+        charactersDiv.parentElement.style.display = "block";
+    } else {
+        charactersDiv.parentElement.style.display = "none";
+    }
 
     const aiBadge = document.getElementById('viewer-ai-badge');
     const nsfwBadge = document.getElementById('viewer-nsfw-badge');

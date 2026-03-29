@@ -193,6 +193,11 @@ def index():
 def library():
     return render_template('library.html')
 
+# --- CHARACTERS PAGE ---
+@app.route('/characters')
+def characters():
+    return render_template('characters.html')
+
 # --- MY FAVORITE THINGS PAGE ---
 @app.route('/favs')
 def favs():
@@ -478,6 +483,11 @@ def admin_delete(image_id):
 @app.route('/art.json')
 def art_database():
     return send_file('./data/art.json', mimetype='application/json')
+
+# --- CHARACTER DATABASE ---
+@app.route('/characters.json')
+def character_database():
+    return send_file('./data/characters.json', mimetype='application/json')
 
 # --- OAUTH LOGIN ENDPOINT ---
 @app.route('/api/v1/oauth/login')

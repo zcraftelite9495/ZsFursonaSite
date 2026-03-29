@@ -14,9 +14,9 @@
     {% include 'nav.html' %}
     <div class="page-container" style="margin-top: 50px;">
 
-        <header class="gallery-page-header">
-            <h1 class="gallery-page-title">My Full Art Gallery</h1>
-            <p class="gallery-page-subtitle">Art of me!</p>
+        <header class="page-header gallery-page">
+            <h1 class="page-title gallery-page">My Full Art Gallery</h1>
+            <p class="page-subtitle">Art of me!</p>
         </header>
 
         <div class="gallery-menubar-wrapper" style="margin-bottom: 20px; margin-top: 20px;">
@@ -208,6 +208,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (err) {
         console.error("Error loading image for viewer:", err);
     }
+});
+</script>
+<!-- Character pre-filter from URL param (?character=Name) -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const charParam = new URLSearchParams(window.location.search).get("character");
+    if (!charParam) return;
+
+    // Wait for populateFilterControls() to add the checkboxes, then check + trigger
+    const charList = document.getElementById("gallery-characters-list");
+    if (!charList) return;
+
+    const observer = new MutationObserver(() => {
+        const popupCb = document.querySelector(
+            `#gallery-characters-popup input[type='checkbox'][value="${CSS.escape(charParam)}"]`
+        );
+        if (!popupCb) return;
+        observer.disconnect();
+        popupCb.checked = true;
+        popupCb.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    observer.observe(charList, { childList: true, subtree: true });
 });
 </script>
 {% endblock %}

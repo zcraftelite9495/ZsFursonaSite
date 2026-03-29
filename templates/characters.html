@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+<!--
+███████████████████████████████████████████████████████████████████████████████
+█─▄▄▄─█─█─██▀▄─██▄─▄▄▀██▀▄─██─▄▄▄─█─▄─▄─█▄─▄▄─█▄─▄▄▀█▄─▄▄─███─▄▄─█▄─▀─▄─▄█
+██─███▀█─▄─██─▀─███─▄─▄██─▀─██─███▀███─████─▄█▀██─▄─▄██─▄█▀███─██─██▀─▀███─█
+█▄▄▄▄▄█▄▄▄▄█▄▄▀▄▄█▄▄▀▄▄█▄▄▀▄▄█▄▄▄▄▄██▄▄▄██▄▄▄▄▄█▄▄▀▄▄█▄▄▄▄▄███▄▄▄▄█▄▄█▄▄▄▄▄█
+-->
+
+{% block title %}Characters{% endblock %}
+
+{% block main %}
+<body>
+    {% include 'nav.html' %}
+    <div class="page-container" style="margin-top: 50px;">
+
+        <header class="page-header characters-page">
+            <h1 class="page-title characters-page">Characters</h1>
+            <p class="page-subtitle">Meet the cast of Z's World.</p>
+        </header>
+
+        <div id="characters-list" style="margin-top: 1rem; margin-bottom: 2rem;">
+            <div id="chars-loading" class="container" style="text-align:center; padding: 2rem; opacity: 0.5;">
+                Loading characters...
+            </div>
+        </div>
+
+    </div>
+
+    {% include 'viewer.html' %}
+
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const showNSFW = getCookie('showNSFW') === 'True';
+    const blurNSFW = getCookie('blurNSFW') === 'True';
+
+    const [charsRes, artRes] = await Promise.all([
+        fetch('/characters.json'),
+        fetch('/art.json')
+    ]);
+    const characters = await charsRes.json();
+    const allArt = await artRes.json();
+
+    const container = document.getElementById('characters-list');
+    container.innerHTML = '';
+
+    const pageCharIds = new Map(characters.map(c => [c.name, c.id]));
+    const galleryLoadQueue = [];
+    const thumbCounts = new Map(); // store initial count per gallery so chip re-filters don't drift
+
+    for (const char of characters) {
+        const charArt = allArt.filter(a =>
+            (!a.isNSFW || showNSFW) && (a.characters || []).includes(char.name)
+        );
+
+        const totalArt = charArt.length;
+        const forms = [...new Set(charArt.map(a => a.shapeshiftForm).filter(Boolean))];
+        const firstArt = charArt
+            .filter(a => a.creationDate)
+            .sort((a, b) => new Date(a.creationDate) - new Date(b.creationDate))[0];
+
+        const coStars = new Set();
+        charArt.forEach(a => (a.characters || []).forEach(c => { if (c !== char.name) coStars.add(c); }));
+
+        let featuredArt = null;
+        if (char.featuredArtId != null) {
+            const cand = allArt.find(a => a.id === char.featuredArtId);
+            if (cand && (!cand.isNSFW || showNSFW)) featuredArt = cand;
+        }
+        if (!featuredArt && charArt.length > 0) featuredArt = charArt[0];
+
+        const card = document.createElement('div');
+        card.className = 'char-card char-reveal-hidden';
+        card.id = 'char-card-' + char.id;
+        card.style.setProperty('--char-accent', char.accentColor || '#ff69b4');
+
+        if (featuredArt) {
+            const backdrop = document.createElement('div');
+            backdrop.className = 'char-backdrop';
+            const thumbSrc = featuredArt.webLink
+                ? featuredArt.webLink
+                : '/static/images/thumbs/' + featuredArt.strippedFilename + '.webp';
+            backdrop.style.backgroundImage = "url('" + thumbSrc + "')";
+            card.appendChild(backdrop);
+        }
+
+        const body = document.createElement('div');
+        body.className = 'char-card-body';
+
+        // Header
+        const header = document.createElement('div');
+        header.className = 'char-header';
+
+        if (featuredArt) {
+            const featuredWrap = document.createElement('div');
+            featuredWrap.className = 'char-featured-wrap';
+
+            const spotlight = document.createElement('div');
+            spotlight.className = 'char-spotlight';
+            featuredWrap.appendChild(spotlight);
+
+            const featuredDiv = document.createElement('div');
+            featuredDiv.className = 'char-featured';
+            featuredDiv.addEventListener('click', () => openViewer(featuredArt));
+
+            const imgEl = document.createElement('img');
+            imgEl.src = featuredArt.webLink
+                ? featuredArt.webLink
+                : '/static/images/thumbs/' + featuredArt.strippedFilename + '.webp';
+            imgEl.alt = char.name;
+            imgEl.loading = 'lazy';
+            if (featuredArt.isNSFW && blurNSFW) imgEl.classList.add('blurred-nsfw');
+
+            featuredDiv.appendChild(imgEl);
+            featuredWrap.appendChild(featuredDiv);
+            header.appendChild(featuredWrap);
+        }
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'char-info';
+
+        const nameEl = document.createElement('h2');
+        nameEl.className = 'gallery-character-title';
+        nameEl.textContent = char.name;
+        infoDiv.appendChild(nameEl);
+
+        const descEl = document.createElement('p');
+        descEl.className = 'char-desc' + (char.description ? '' : ' char-desc-empty');
+        descEl.innerHTML = (char.description || 'No description yet.')
+            .replace(/\n/g, '<br>');
+        infoDiv.appendChild(descEl);
+
+        // Stats
+        if (totalArt > 0) {
+            const stats = document.createElement('div');
+            stats.className = 'char-stats';
+            const addStat = (icon, text) => {
+                const s = document.createElement('span');
+                s.className = 'char-stat';
+                s.textContent = icon + ' ' + text;
+                stats.appendChild(s);
+            };
+            addStat('\uD83C\uDFA8', totalArt + ' artwork' + (totalArt !== 1 ? 's' : ''));
+            if (forms.length > 0) addStat('\uD83C\uDFAD', forms.length + ' form' + (forms.length !== 1 ? 's' : ''));
+            if (firstArt) {
+                const d = new Date(firstArt.creationDate);
+                addStat('\uD83D\uDCC5', 'Since ' + d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
+            }
+            infoDiv.appendChild(stats);
+        }
+
+        // Appears with chips
+        if (coStars.size > 0) {
+            const section = document.createElement('div');
+            section.className = 'char-chips-section';
+
+            const label = document.createElement('span');
+            label.className = 'char-chips-label';
+            label.textContent = 'Appears with';
+            section.appendChild(label);
+
+            const chips = document.createElement('div');
+            chips.className = 'char-chips';
+        
+            const coStarList = [...coStars].sort();
+            const randomCoStarList = coStarList.sort(() => Math.random() - 0.5);
+            const visibleStars = randomCoStarList.slice(0, 5);
+            const hiddenCount = coStarList.length - visibleStars.length;
+
+            visibleStars.forEach(name => {
+                const btn = document.createElement('button');
+                btn.className = 'char-chip';
+                btn.textContent = name;
+                const targetId = pageCharIds.get(name);
+                if (targetId) {
+                    btn.addEventListener('click', () => {
+                        document.getElementById('char-card-' + targetId)
+                            ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    });
+                } else {
+                    btn.style.cursor = 'default';
+                    btn.disabled = true;
+                }
+                chips.appendChild(btn);
+            });
+            section.appendChild(chips);
+            if (hiddenCount > 0) {
+                const more = document.createElement('span');
+                more.className = "char-chip";
+                more.textContent = '+' + hiddenCount + ' more';
+                more.style.opacity = '0.6';
+                more.style.cursor = 'default';
+                chips.appendChild(more);
+            }
+            infoDiv.appendChild(section);
+        }
+
+        // View all link — passes ?character= so library pre-filters
+        const viewAll = document.createElement('a');
+        viewAll.className = 'char-view-all';
+        viewAll.href = '/library?character=' + encodeURIComponent(char.name);
+        viewAll.textContent = 'View all in Gallery \u2192';
+        infoDiv.appendChild(viewAll);
+
+        header.appendChild(infoDiv);
+        body.appendChild(header);
+
+        // Gallery section
+        const gallerySection = document.createElement('div');
+        gallerySection.className = 'char-gallery-section';
+
+        // Form filter chips (only when > 1 form exists)
+        let formChipsEl = null;
+        if (forms.length > 1) {
+            formChipsEl = document.createElement('div');
+            formChipsEl.className = 'char-form-chips';
+
+            const makeChip = (labelText, formValue, active) => {
+                const chip = document.createElement('button');
+                chip.className = 'char-form-chip' + (active ? ' active' : '');
+                chip.textContent = labelText;
+                chip.dataset.form = formValue;
+                return chip;
+            };
+
+            formChipsEl.appendChild(makeChip('All', '', true));
+            [...forms].sort().forEach(f => formChipsEl.appendChild(makeChip(f, f, false)));
+
+            formChipsEl.addEventListener('click', async (e) => {
+                const chip = e.target.closest('.char-form-chip');
+                if (!chip) return;
+                formChipsEl.querySelectorAll('.char-form-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                const filters = { characters: [char.name] };
+                // cleanFormName() strips trailing " Form" to match loadGallery's internal comparison
+                if (chip.dataset.form) filters.form = cleanFormName(chip.dataset.form);
+                const count = thumbCounts.get('char-gallery-' + char.id) ?? (predictThumbsPerRow('#char-gallery-' + char.id) + 2);
+                await loadGallery('char-gallery-' + char.id, count, false, filters);
+            });
+
+            gallerySection.appendChild(formChipsEl);
+        }
+
+        // Gallery element (count limited to one row via predictThumbsPerRow)
+        const galleryEl = document.createElement('div');
+        galleryEl.className = 'gallery';
+        galleryEl.id = 'char-gallery-' + char.id;
+        gallerySection.appendChild(galleryEl);
+
+        body.appendChild(gallerySection);
+        card.appendChild(body);
+        container.appendChild(card);
+
+        galleryLoadQueue.push({ id: 'char-gallery-' + char.id, charName: char.name });
+    }
+
+    // Load all galleries using predictThumbsPerRow for a single clean row
+    await Promise.all(galleryLoadQueue.map(({ id, charName }) => {
+        const count = (predictThumbsPerRow('#' + id) + 2);
+        thumbCounts.set(id, count); // store so chip re-filters reuse the same stable count
+        return loadGallery(id, count, true, { characters: [charName] });
+    }));
+
+    initNSFWContainers();
+
+    // Scroll-reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.remove('char-reveal-hidden');
+            entry.target.classList.add('char-reveal-visible');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.char-card').forEach(c => observer.observe(c));
+});
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "z",
+    "name": "Z",
+    "description": "Me!\nThis is my representation of my own personality, and my fursona. Z is a shapeshifter, mostly because I am a very indecisive person and wanted to give myself the ability to have a bunch of unique styles, and she can change forms to reflect that. She is how I see myself on the inside, just a big fluffy floofball who likes to snuggle.",
+    "featuredArtId": 10000007,
+    "accentColor": "#ff69b4"
+  },
+  {
+    "id": "zenoara",
+    "name": "Zenoara",
+    "description": "Zenoara is a character I made for the D&D campaign I play in with my DM -- Tony. She is a dhampir dog-girl that has the powers of a lilim (low-level succubus) and can charm and manipulate others with her abilities. However, she is extremely kind and caring, especially towards creatures that are lost or in need of help. She created a sanctuary for lost and abandoned creatures where she takes care of them and helps them find a place where they belong in Gravity Falls, behind the second waterfall nobody ever talks about. When she was a kid she was kidnapped and experimented on by a company called ExpanCorp, which is how she got her dog-like appearance. She wishes to take over ExpanCorp and stop it from continuing to harm people and creatures.",
+    "featuredArtId": 10000039,
+    "accentColor": "#802b2f"
+  },
+  {
+    "id": "huginn",
+    "name": "Huginn",
+    "description": "",
+    "featuredArtId": 10000040,
+    "accentColor": "#3a3a64"
+  }
+]
