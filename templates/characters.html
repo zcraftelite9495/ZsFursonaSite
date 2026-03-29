@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // cleanFormName() strips trailing " Form" to match loadGallery's internal comparison
                 if (chip.dataset.form) filters.form = cleanFormName(chip.dataset.form);
                 const count = thumbCounts.get('char-gallery-' + char.id) ?? (predictThumbsPerRow('#char-gallery-' + char.id) + 2);
-                await loadGallery('char-gallery-' + char.id, count, false, filters);
+                await loadGallery('char-gallery-' + char.id, count, true, filters);
             });
 
             gallerySection.appendChild(formChipsEl);

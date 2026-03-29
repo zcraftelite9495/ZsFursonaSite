@@ -9,8 +9,8 @@
 
     <div class="nav-links" id="nav-links" role="menu" aria-hidden="true">
         <a href="{{ url_for('index') }}">Home</a>
-        <a href="{{ url_for('library') }}">Art Gallery</a>
         <a href="{{ url_for('characters') }}">Characters</a>
+        <a href="{{ url_for('library') }}">Art Gallery</a>
         <a href="{{ url_for('favs') }}">My Favs</a>
         {% if session['username'] %}
         <a href="{{ url_for('admin') }}" class="admin-nav-link">Admin</a>
