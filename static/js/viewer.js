@@ -16,6 +16,17 @@ Made with love by ZcraftElite :3
 
 let currentImage = null;
 let currentVersionIndex = 0;
+let _cachedCharacters = null;
+
+async function _getCharacterAccents() {
+    if (!_cachedCharacters) {
+        try {
+            const res = await fetch('/characters.json');
+            _cachedCharacters = await res.json();
+        } catch { _cachedCharacters = []; }
+    }
+    return Object.fromEntries(_cachedCharacters.map(c => [c.name, c.accentColor]));
+}
 
 /* ---- VALUE CLEANING FUNCTIONS ---- */
 /**
@@ -299,6 +310,8 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
         }
 
         if (groupByMainCharacter) {
+            const accentByName = await _getCharacterAccents();
+
             // Group images by mainCharacter
             const groups = new Map();
             images.forEach(img => {
@@ -321,6 +334,11 @@ async function loadGallery(elementId, count = 0, randomize = false, filters = {}
                 const title = document.createElement("h2");
                 title.className = "gallery-character-title";
                 title.textContent = charName;
+                const accent = accentByName[charName];
+                if (accent) {
+                    title.style.setProperty('--char-accent', accent);
+                    title.classList.add('char-accent-gradient');
+                }
 
                 const innerGallery = document.createElement("div");
                 innerGallery.className = "gallery";

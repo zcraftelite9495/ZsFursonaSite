@@ -1003,6 +1003,16 @@ input:checked + .slider::before {
     box-shadow: 0 4px 18px -4px color-mix(in-srgb, var(--char-accent, #ff69b4) 45%, transparent);
 }
 
+.gallery-character-title.char-accent-gradient {
+    background-image: linear-gradient(
+        90deg,
+        var(--char-accent),
+        color-mix(in srgb, var(--char-accent) 40%, white),
+        var(--char-accent)
+    );
+    box-shadow: 0 4px 18px -4px color-mix(in srgb, var(--char-accent) 45%, transparent);
+}
+
 /* Menubar wrapper */
 .gallery-menubar-wrapper {
     position: relative;
@@ -2603,6 +2613,80 @@ to {
     flex: 1;
     font-size: 0.8rem;
     padding: 0.35rem 0.5rem;
+}
+
+/* ---- MANAGE CHARACTERS GRID ---- */
+.admin-characters-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+}
+
+.admin-char-card {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 105, 180, 0.08);
+    border-radius: 12px;
+    display: flex;
+    gap: 1rem;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.admin-char-card:hover {
+    border-color: rgba(255, 105, 180, 0.25);
+}
+
+.admin-char-accent-strip {
+    align-self: stretch;
+    flex-shrink: 0;
+    width: 6px;
+}
+
+.admin-char-thumb {
+    border-radius: 8px;
+    flex-shrink: 0;
+    height: 72px;
+    object-fit: cover;
+    width: 72px;
+}
+
+.admin-char-thumb-empty {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.admin-char-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.admin-char-name {
+    color: var(--text-default);
+    font-size: 1rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-char-id {
+    color: rgba(240, 234, 255, 0.4);
+    font-family: monospace;
+    font-size: 0.78rem;
+}
+
+.admin-char-card .admin-artwork-actions {
+    flex-shrink: 0;
+    padding: 0.75rem;
+}
+
+.admin-input-color {
+    height: 2.6rem;
+    padding: 0.25rem;
 }
 
 /* ---- ADMIN MODAL (Edit) ---- */

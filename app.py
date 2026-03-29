@@ -67,6 +67,18 @@ def save_images(images):
     with open('data/art.json', 'w', encoding='utf-8') as f:
         json.dump(images, f, indent=4, ensure_ascii=False)
 
+# --- CHARACTER LOADER ---
+def load_characters():
+    """Loads the JSON data from characters.json."""
+    with open('data/characters.json', encoding='utf-8') as f:
+        return json.load(f)
+
+# --- CHARACTER SAVER ---
+def save_characters(chars):
+    """Saves the character list back to characters.json."""
+    with open('data/characters.json', 'w', encoding='utf-8') as f:
+        json.dump(chars, f, indent=2, ensure_ascii=False)
+
 # --- ALLOWED FILE CHECK ---
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
@@ -255,11 +267,20 @@ def admin():
     if not session.get('username'):
         return redirect(url_for('index'))
     images = load_images()
+    characters = load_characters()
     artist_files = sorted(
         f.name for f in ARTISTS_DIR.iterdir()
         if f.is_file() and allowed_file(f.name)
     )
-    return render_template('admin.html', images=images, artist_files=artist_files)
+    # Pre-compute featured art thumbnail paths for the character management grid
+    art_by_id = {img['id']: img for img in images}
+    for char in characters:
+        featured = art_by_id.get(char.get('featuredArtId'))
+        char['_thumbSrc'] = (
+            '/static/images/thumbs/' + featured['strippedFilename'] + '.webp'
+            if featured and featured.get('strippedFilename') else None
+        )
+    return render_template('admin.html', images=images, artist_files=artist_files, characters=characters)
 
 # --- AUTH STATUS ---
 @app.route('/api/v1/auth/status')
@@ -476,6 +497,65 @@ def admin_delete(image_id):
         art_list = [a for a in art_list if a["id"] != parent["id"]]
 
     save_images(art_list)
+    return jsonify({"success": True})
+
+# ---- CHARACTER ADMIN ENDPOINTS ----
+
+@app.route('/api/v1/admin/character', methods=['POST'])
+def admin_character_create():
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+    data = request.get_json(force=True)
+    name = (data.get('name') or '').strip()
+    if not name:
+        return jsonify({"error": "Name is required"}), 400
+    chars = load_characters()
+    char_id = name.lower().replace(' ', '_').replace("'", '').replace('"', '')
+    if any(c['id'] == char_id for c in chars):
+        return jsonify({"error": f"Character with ID '{char_id}' already exists"}), 409
+    new_char = {
+        "id": char_id,
+        "name": name,
+        "description": (data.get('description') or '').strip(),
+        "featuredArtId": data.get('featuredArtId') or None,
+        "accentColor": (data.get('accentColor') or '#808080').strip(),
+    }
+    chars.append(new_char)
+    save_characters(chars)
+    return jsonify({"success": True, "entry": new_char})
+
+
+@app.route('/api/v1/admin/character/<char_id>', methods=['POST'])
+def admin_character_edit(char_id):
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+    data = request.get_json(force=True)
+    chars = load_characters()
+    for char in chars:
+        if char['id'] == char_id:
+            if 'name' in data:
+                char['name'] = (data['name'] or '').strip()
+            if 'description' in data:
+                char['description'] = data['description'] or ''
+            if 'featuredArtId' in data:
+                char['featuredArtId'] = data['featuredArtId'] or None
+            if 'accentColor' in data:
+                char['accentColor'] = (data['accentColor'] or '#808080').strip()
+            save_characters(chars)
+            return jsonify({"success": True, "entry": char})
+    return jsonify({"error": f"Character '{char_id}' not found"}), 404
+
+
+@app.route('/api/v1/admin/character/<char_id>/delete', methods=['POST'])
+def admin_character_delete(char_id):
+    if not session.get('username'):
+        return jsonify({"error": "Unauthorized"}), 401
+    chars = load_characters()
+    original_len = len(chars)
+    chars = [c for c in chars if c['id'] != char_id]
+    if len(chars) == original_len:
+        return jsonify({"error": f"Character '{char_id}' not found"}), 404
+    save_characters(chars)
     return jsonify({"success": True})
 
 # ---- API ENDPOINTS ----

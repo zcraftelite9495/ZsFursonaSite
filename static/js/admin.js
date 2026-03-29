@@ -683,3 +683,127 @@ async function doDelete(id) {
         console.error(err);
     }
 }
+
+
+/* ===================================================
+   CHARACTER MANAGEMENT
+   =================================================== */
+
+function openCharModal(char) {
+    const isEdit = char !== null;
+    document.getElementById('char-modal-title').textContent = isEdit ? 'Edit Character' : 'Add Character';
+    document.getElementById('c-id').value          = isEdit ? (char.id            || '')      : '';
+    document.getElementById('c-name').value        = isEdit ? (char.name          || '')      : '';
+    document.getElementById('c-description').value = isEdit ? (char.description   || '')      : '';
+    document.getElementById('c-accentColor').value = isEdit ? (char.accentColor   || '#808080') : '#808080';
+    document.getElementById('c-featuredArtId').value = (isEdit && char.featuredArtId) ? char.featuredArtId : '';
+
+    const status = document.getElementById('char-status');
+    status.textContent = '';
+    status.className = 'admin-status';
+
+    document.getElementById('char-modal').classList.remove('hidden');
+}
+
+function closeCharModal() {
+    document.getElementById('char-modal').classList.add('hidden');
+}
+
+document.getElementById('char-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id     = document.getElementById('c-id').value.trim();
+    const isEdit = id !== '';
+
+    const payload = {
+        name:          document.getElementById('c-name').value.trim(),
+        description:   document.getElementById('c-description').value,
+        accentColor:   document.getElementById('c-accentColor').value,
+        featuredArtId: parseInt(document.getElementById('c-featuredArtId').value) || null,
+    };
+
+    const url    = isEdit ? `/api/v1/admin/character/${encodeURIComponent(id)}` : '/api/v1/admin/character';
+    const saveBtn = document.getElementById('char-save-btn');
+    const status  = document.getElementById('char-status');
+    saveBtn.disabled = true;
+
+    try {
+        const res  = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            status.textContent = isEdit ? 'Character updated!' : 'Character created!';
+            status.className   = 'admin-status success';
+            if (isEdit) {
+                _updateCharCard(data.entry);
+            } else {
+                _addCharCard(data.entry);
+            }
+            setTimeout(() => closeCharModal(), 800);
+        } else {
+            status.textContent = data.error || 'Save failed.';
+            status.className   = 'admin-status error';
+        }
+    } catch (err) {
+        status.textContent = 'Network error — please try again.';
+        status.className   = 'admin-status error';
+        console.error(err);
+    } finally {
+        saveBtn.disabled = false;
+    }
+});
+
+function _updateCharCard(entry) {
+    const card = document.querySelector(`.admin-char-card[data-char-id="${entry.id}"]`);
+    if (!card) return;
+    const strip = card.querySelector('.admin-char-accent-strip');
+    if (strip) strip.style.background = entry.accentColor || '#808080';
+    const nameEl = card.querySelector('.admin-char-name');
+    if (nameEl) nameEl.textContent = entry.name;
+}
+
+function _addCharCard(entry) {
+    const grid = document.getElementById('admin-characters-grid');
+    const card = document.createElement('div');
+    card.className        = 'admin-char-card';
+    card.dataset.charId   = entry.id;
+    const entryJson       = JSON.stringify(entry).replace(/'/g, '&#39;');
+    card.innerHTML = `
+        <div class="admin-char-accent-strip" style="background:${esc(entry.accentColor||'#808080')}"></div>
+        <div class="admin-char-thumb admin-char-thumb-empty"></div>
+        <div class="admin-char-info">
+            <span class="admin-char-name">${esc(entry.name)}</span>
+            <span class="admin-char-id">${esc(entry.id)}</span>
+        </div>
+        <div class="admin-artwork-actions">
+            <button class="admin-btn admin-btn-edit" onclick='openCharModal(${entryJson})'>Edit</button>
+            <button class="admin-btn admin-btn-danger" onclick="confirmDeleteChar('${esc(entry.id)}','${esc(entry.name)}')">Delete</button>
+        </div>`;
+    grid.appendChild(card);
+}
+
+function confirmDeleteChar(id, name) {
+    showPopup({
+        title:   'Delete Character',
+        message: `Are you sure you want to remove <b>${esc(name)}</b> from the database?`,
+        buttons: [
+            { text: 'Delete', onClick: () => doDeleteChar(id) },
+            { text: 'Cancel', onClick: () => {} }
+        ]
+    });
+}
+
+async function doDeleteChar(id) {
+    try {
+        const res  = await fetch(`/api/v1/admin/character/${encodeURIComponent(id)}/delete`, { method: 'POST' });
+        const data = await res.json();
+        if (res.ok && data.success) {
+            const card = document.querySelector(`.admin-char-card[data-char-id="${id}"]`);
+            if (card) card.remove();
+        } else {
+            alert(data.error || 'Delete failed.');
+        }
+    } catch (err) {
+        alert('Network error — please try again.');
+        console.error(err);
+    }
+}

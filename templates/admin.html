@@ -16,6 +16,7 @@
         <div class="admin-tabs">
             <button class="admin-tab active" data-tab="upload">Upload Artwork</button>
             <button class="admin-tab" data-tab="manage">Manage Artwork ({{ images|length }})</button>
+            <button class="admin-tab" data-tab="characters">Characters ({{ characters|length }})</button>
         </div>
 
         <!-- ============================
@@ -206,6 +207,38 @@
             </div>
         </div>
 
+        <!-- ============================
+             TAB: CHARACTERS
+             ============================ -->
+        <div id="tab-characters" class="admin-tab-panel" style="display:none;">
+            <div class="admin-section">
+                <p class="admin-section-title">Characters</p>
+                <div class="admin-characters-grid" id="admin-characters-grid">
+                    {% for char in characters %}
+                    <div class="admin-char-card" data-char-id="{{ char.id }}">
+                        <div class="admin-char-accent-strip" style="background: {{ char.accentColor | default('#808080') }}"></div>
+                        {% if char._thumbSrc %}
+                        <img class="admin-char-thumb" src="{{ char._thumbSrc }}" alt="{{ char.name }}">
+                        {% else %}
+                        <div class="admin-char-thumb admin-char-thumb-empty"></div>
+                        {% endif %}
+                        <div class="admin-char-info">
+                            <span class="admin-char-name">{{ char.name }}</span>
+                            <span class="admin-char-id">{{ char.id }}</span>
+                        </div>
+                        <div class="admin-artwork-actions">
+                            <button class="admin-btn admin-btn-edit"
+                                    onclick='openCharModal({{ char | tojson }})'>Edit</button>
+                            <button class="admin-btn admin-btn-danger"
+                                    onclick="confirmDeleteChar('{{ char.id }}', '{{ char.name | e }}')">Delete</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="admin-btn admin-btn-primary" type="button" onclick="openCharModal(null)">+ Add Character</button>
+            </div>
+        </div>
+
     </div><!-- /page-container -->
 
     <!-- ============================
@@ -360,6 +393,53 @@
                         </button>
                         <div class="admin-alt-status admin-status" id="alt-add-status"></div>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================
+         CHARACTER MODAL (Add / Edit)
+         ============================ -->
+    <div id="char-modal" class="admin-modal-overlay hidden">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <span class="admin-modal-title" id="char-modal-title">Add Character</span>
+                <button class="admin-modal-close" onclick="closeCharModal()" type="button" aria-label="Close">✕</button>
+            </div>
+
+            <form id="char-form" autocomplete="off">
+                <input type="hidden" id="c-id">
+
+                <div class="admin-form-grid">
+
+                    <div class="admin-field">
+                        <label for="c-name">Name</label>
+                        <input class="admin-input" id="c-name" type="text" placeholder="e.g. Zenoara" required>
+                    </div>
+
+                    <div class="admin-field">
+                        <label for="c-accentColor">Accent Color</label>
+                        <input class="admin-input admin-input-color" id="c-accentColor" type="color" value="#808080">
+                    </div>
+
+                    <div class="admin-field full-width">
+                        <label for="c-featuredArtId">Featured Art ID</label>
+                        <input class="admin-input" id="c-featuredArtId" type="number" placeholder="e.g. 10000007">
+                    </div>
+
+                    <div class="admin-field full-width">
+                        <label for="c-description">Description</label>
+                        <textarea class="admin-input" id="c-description" rows="6" placeholder="Character description…"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="admin-status" id="char-status"></div>
+
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-secondary" onclick="closeCharModal()">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-primary" id="char-save-btn">Save</button>
                 </div>
             </form>
         </div>
