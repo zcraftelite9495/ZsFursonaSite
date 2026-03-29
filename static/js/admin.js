@@ -513,7 +513,7 @@ function renderAltList(alts, parentId) {
             });
             if (!payload.isAI) payload.aiModel = null;
             try {
-                const res  = await fetch(`/api/v1/admin/edit/${alt.id}`, {
+                const res  = await fetch(`/api/v1/admin/edit/${row.dataset.altId}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });

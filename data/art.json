@@ -1012,7 +1012,7 @@
                 "isAI": false,
                 "isNSFW": false,
                 "isDiscEmoji": false,
-                "disableDownload": false,
+                "disableDownload": true,
                 "aiModel": null
             }
         ]
