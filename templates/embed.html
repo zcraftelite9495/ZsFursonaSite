@@ -201,8 +201,8 @@
         </div>
     </div>
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
     const imageId = {{ ID|default(None)|tojson }};
+    document.addEventListener('DOMContentLoaded', async () => {
     if (!imageId) return;
 
     const embedContent = document.getElementById('embed-content');
@@ -276,7 +276,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const res = await fetch('/art.json');
         const images = await res.json();
-        const img = images.find(x => String(x.id) === String(imageId));
+        const idStr = String(imageId);
+        let img = null;
+        if (idStr.includes('-')) {
+            const lastDash = idStr.lastIndexOf('-');
+            const parentId = idStr.slice(0, lastDash);
+            const altId = idStr.slice(lastDash + 1);
+            const parentImg = images.find(x => String(x.id) === parentId);
+            if (parentImg) {
+                const altEntry = (parentImg.alternates || []).find(a => String(a.id) === altId);
+                if (altEntry) img = { ...parentImg, ...altEntry };
+            }
+        } else {
+            img = images.find(x => String(x.id) === idStr);
+        }
         if (!img) {
             loader.classList.add('hidden');
             return;
